@@ -39,7 +39,7 @@ export default function SolutionEditorPanel({
 
   return (
     <section className="flex h-full flex-col overflow-hidden rounded-xl border border-slate-200 bg-white shadow-sm lg:col-span-2 dark:border-slate-700 dark:bg-slate-800">
-      {/* 상단바 */}
+      {/** 상단바 */}
       <div className="flex flex-shrink-0 items-center justify-between border-b border-slate-200 bg-slate-50 px-4 py-3 dark:border-slate-700 dark:bg-slate-800/50">
         <div className="flex items-center gap-4">
           <span className="text-sm font-semibold text-slate-700 dark:text-slate-200">
@@ -70,7 +70,7 @@ export default function SolutionEditorPanel({
         </button>
       </div>
 
-      {/* 본문 */}
+      {/** 본문 */}
       <div className="relative flex-grow overflow-hidden bg-[#1e1e1e] text-sm text-slate-300">
         <div className="absolute bottom-0 left-0 top-0 flex w-12 select-none flex-col items-end border-r border-[#333] bg-[#1e1e1e] pr-2 pt-4 text-slate-500">
           {Array.from({ length: 9 }).map((_, idx) => (
@@ -87,7 +87,7 @@ export default function SolutionEditorPanel({
         />
       </div>
 
-      {/* 하단바 */}
+      {/** 하단바 */}
       <div className="flex flex-shrink-0 items-center justify-between border-t border-slate-200 bg-slate-50 px-4 py-3 dark:border-slate-700 dark:bg-slate-800/50">
         <span className="text-xs text-slate-500 dark:text-slate-400">
           Press Cmd+Enter to submit
