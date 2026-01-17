@@ -36,7 +36,8 @@ export default function CounterExamplePage() {
   };
 
   return (
-    <div className="min-h-screen bg-slate-50 text-slate-700 transition-colors duration-300 dark:bg-slate-900 dark:text-slate-200">
+    // ✅ min-h-screen -> h-screen (스크롤 기준 고정)
+    <div className="flex h-screen flex-col overflow-hidden bg-slate-50 text-slate-700 dark:bg-slate-900 dark:text-slate-200">
       <CounterExampleHeader
         onLogoClick={() => console.log('logo')}
         onAllSubmissions={() => console.log('submissions')}
@@ -45,7 +46,8 @@ export default function CounterExamplePage() {
         onSignIn={() => console.log('signin')}
       />
 
-      <main className="relative flex flex-col items-center px-4 py-8 sm:px-6 lg:px-8">
+      {/* ✅ min-h-screen 제거 + flex-1로 남은 영역 차지 + 여기만 스크롤 */}
+      <main className="relative flex-1 overflow-y-auto bg-slate-50 px-4 py-8 pb-24 pt-6 sm:px-6 lg:px-8 dark:bg-slate-900">
         <div className="pointer-events-none fixed right-0 top-20 -z-10 h-96 w-96 rounded-full bg-blue-400/5 blur-3xl" />
         <div className="pointer-events-none fixed bottom-0 left-0 -z-10 h-96 w-96 rounded-full bg-purple-400/5 blur-3xl" />
 
