@@ -8,7 +8,7 @@ type Props = {
   onSignIn?: () => void;
 };
 
-export default function CounterExampleHeader({
+export default function Header({
   onLogoClick,
   onAllSubmissions,
   onAllProblems,
