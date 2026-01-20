@@ -5,7 +5,7 @@ type Props = {
   onContact?: () => void;
 };
 
-export default function FooterLinks({ onAbout, onHelp, onContact }: Props) {
+export default function Footer({ onAbout, onHelp, onContact }: Props) {
   return (
     <footer className="fixed bottom-0 left-0 z-[9999] w-full border-t border-slate-200 bg-white dark:bg-slate-800">
       <div className="mx-auto flex h-16 max-w-7xl items-center justify-between px-4">
