@@ -1,8 +1,8 @@
 import { createBrowserRouter } from 'react-router-dom';
 import App from '@/App';
 import MainPage from '@/pages/MainPage';
-import CounterExamplePage from './pages/CounterExamplePage';
-import SolutionSubmitPage from './pages/SolutionSubmitPage';
+import CounterExamplePage from '@/pages/CounterExamplePage';
+import SolutionSubmitPage from '@/pages/SolutionSubmitPage';
 
 export const router = createBrowserRouter([
   {
