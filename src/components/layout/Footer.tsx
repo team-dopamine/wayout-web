@@ -12,9 +12,15 @@ export default function Footer({ onAbout, onHelp, onContact }: Props) {
         <span className="text-sm text-slate-500">© 2026 WayOut. All rights reserved.</span>
 
         <div className="flex gap-6 text-sm text-slate-500">
-          <button onClick={onAbout}>About</button>
-          <button onClick={onHelp}>Help</button>
-          <button onClick={onContact}>Contact</button>
+          <button type="button" onClick={onAbout}>
+            About
+          </button>
+          <button type="button" onClick={onHelp}>
+            Help
+          </button>
+          <button type="button" onClick={onContact}>
+            Contact
+          </button>
         </div>
       </div>
     </footer>
