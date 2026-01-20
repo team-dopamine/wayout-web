@@ -1,4 +1,4 @@
-/**반례 칮기 - 공통 상수 모음*/
+/**반례 찾기 - 공통 상수 모음*/
 import type { FailedCase, Language } from '@/types/counterexample';
 
 export const LANG_OPTIONS: { value: Language; label: string }[] = [
