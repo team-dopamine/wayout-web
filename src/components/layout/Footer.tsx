@@ -1,4 +1,4 @@
-/**반례 찾기 - 푸터*/
+/**푸터*/
 type Props = {
   onAbout?: () => void;
   onHelp?: () => void;

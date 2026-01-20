@@ -1,4 +1,4 @@
-/**반례 찾기 - 헤더 */
+/** 헤더 */
 
 type Props = {
   onLogoClick?: () => void;
