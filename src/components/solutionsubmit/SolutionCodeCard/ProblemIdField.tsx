@@ -1,5 +1,5 @@
 /** 문제 ID 검색 입력 필드 컴포넌트 */
-import SearchIcon from '@/assets/SearchIcon';
+import MaterialSymbol from '@/components/common/MaterialSymbol';
 
 type Props = {
   value: string;
@@ -19,7 +19,7 @@ export default function ProblemIdField({ value, onChange }: Props) {
       <div className="relative mt-1 rounded-md shadow-sm">
         {/** TODO: 검색 아이콘 클릭 시 검색 되도록 */}
         <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
-          <SearchIcon className="h-4 w-4 text-slate-400" />
+          <MaterialSymbol name="search" className="text-[18px] text-slate-400" />
         </div>
 
         <input

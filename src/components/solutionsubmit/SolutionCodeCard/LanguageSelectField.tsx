@@ -1,6 +1,6 @@
 /** 언어 선택 셀렉트 박스 컴포넌트 */
 import type { LanguageOption } from './types';
-import ArrowDownIcon from '@/assets/ArrowDownIcon';
+import MaterialSymbol from '@/components/common/MaterialSymbol';
 
 type Props = {
   value: string;
@@ -34,7 +34,7 @@ export default function LanguageSelectField({ value, options, onChange }: Props)
         </select>
 
         <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-slate-500">
-          <ArrowDownIcon className="h-3 w-3 text-slate-500" />
+          <MaterialSymbol name="expand_more" className="text-[18px] text-slate-500" />
         </div>
       </div>
     </div>
