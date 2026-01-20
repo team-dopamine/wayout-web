@@ -13,7 +13,7 @@ export default function ProblemIdField({ value, onChange }: Props) {
         htmlFor="problem_id"
         className="block text-sm font-medium text-slate-700 dark:text-slate-300"
       >
-        Problem Number / ID
+        Problem Number
       </label>
 
       <div className="relative mt-1 rounded-md shadow-sm">
