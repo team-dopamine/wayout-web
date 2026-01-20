@@ -1,7 +1,7 @@
 import './App.css';
 import { Outlet } from 'react-router-dom';
 import Header from '@/components/layout/Header';
-import FooterLinks from '@/components/layout/FooterLinks';
+import Footer from './components/layout/Footer';
 
 function App() {
   return (
@@ -20,7 +20,7 @@ function App() {
       </main>
 
       {/** 푸터 */}
-      <FooterLinks
+      <Footer
         onAbout={() => console.log('about')}
         onHelp={() => console.log('help')}
         onContact={() => console.log('contact')}
