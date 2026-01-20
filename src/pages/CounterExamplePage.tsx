@@ -5,23 +5,16 @@ import ProblemInfoCard from '@/components/counterexample/ProblemInfoCard';
 import SolutionEditorPanel from '@/components/counterexample/SolutionEditorPanel';
 import CounterExampleStatusPanel from '@/components/counterexample/CounterExampleStatusPanel';
 import FooterLinks from '@/components/counterexample/FooterLinks';
-import DarkModeToggle from '@/components/counterexample/DarkModeToggle';
 
 import { DEFAULT_CODE, LANG_OPTIONS, MOCK_FAILED_CASES } from '@/constants/counterexample';
 import type { FailedCase, Language } from '@/types/counterexample';
 
 export default function CounterExamplePage() {
-  const [isDark, setIsDark] = useState(false);
   const [language, setLanguage] = useState<Language>('python');
   const [code, setCode] = useState(DEFAULT_CODE);
 
   const failedCases: FailedCase[] = useMemo(() => MOCK_FAILED_CASES, []);
   const failedCount = failedCases.length;
-
-  const handleToggleDark = () => {
-    setIsDark((prev) => !prev);
-    document.documentElement.classList.toggle('dark');
-  };
 
   const handleCopy = async () => {
     try {
@@ -45,7 +38,7 @@ export default function CounterExamplePage() {
         onSignIn={() => console.log('signin')}
       />
 
-      <main className="relative flex-1 overflow-y-auto bg-slate-50 px-4 py-8 pb-24 pt-6 sm:px-6 lg:px-8 dark:bg-slate-900">
+      <main className="relative flex-1 overflow-y-auto bg-slate-50 px-4 py-8 pb-24 pt-6 dark:bg-slate-900 sm:px-6 lg:px-8">
         <div className="pointer-events-none fixed right-0 top-20 -z-10 h-96 w-96 rounded-full bg-blue-400/5 blur-3xl" />
         <div className="pointer-events-none fixed bottom-0 left-0 -z-10 h-96 w-96 rounded-full bg-purple-400/5 blur-3xl" />
 
@@ -79,8 +72,6 @@ export default function CounterExamplePage() {
         onHelp={() => console.log('help')}
         onContact={() => console.log('contact')}
       />
-
-      <DarkModeToggle isDark={isDark} onToggle={handleToggleDark} />
     </div>
   );
 }
