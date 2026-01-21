@@ -1,4 +1,4 @@
-/**반례 찾기 - 헤더 */
+/** 헤더 */
 
 type Props = {
   onLogoClick?: () => void;
@@ -8,7 +8,7 @@ type Props = {
   onSignIn?: () => void;
 };
 
-export default function CounterExampleHeader({
+export default function Header({
   onLogoClick,
   onAllSubmissions,
   onAllProblems,
