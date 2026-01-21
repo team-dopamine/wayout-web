@@ -8,7 +8,7 @@ type Props = {
 
 export default function CounterExampleStatusPanel({ failedCount, cases }: Props) {
   return (
-    <aside className="flex h-full flex-col overflow-hidden rounded-xl border border-slate-200 bg-white shadow-sm lg:col-span-1 dark:border-slate-700 dark:bg-slate-800">
+    <aside className="flex h-full flex-col overflow-hidden rounded-xl border border-slate-200 bg-white shadow-sm dark:border-slate-700 dark:bg-slate-800 lg:col-span-1">
       <div className="flex flex-shrink-0 items-center justify-between border-b border-slate-200 bg-slate-50 px-5 py-4 dark:border-slate-700 dark:bg-slate-800/50">
         <h2 className="flex items-center text-sm font-semibold text-slate-900 dark:text-white">
           <span className="mr-2">⚠️</span>
