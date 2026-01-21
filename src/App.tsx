@@ -24,7 +24,7 @@ function App() {
       <div>
         <DarkModeToggle />
       </div>
-      
+
       {/** 푸터 */}
       <Footer
         onAbout={() => console.log('about')}

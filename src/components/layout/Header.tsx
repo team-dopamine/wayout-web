@@ -66,7 +66,7 @@ export default function Header({
 
         <button
           type="button"
-          className="inline-flex items-center justify-center rounded-md p-2 text-slate-400 hover:bg-slate-100 hover:text-slate-500 md:hidden dark:hover:bg-slate-700"
+          className="inline-flex items-center justify-center rounded-md p-2 text-slate-400 hover:bg-slate-100 hover:text-slate-500 dark:hover:bg-slate-700 md:hidden"
           aria-label="open menu"
         >
           ☰
