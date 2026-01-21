@@ -1,5 +1,6 @@
 import './App.css';
 import { Outlet } from 'react-router-dom';
+import DarkModeToggle from './components/common/DarkModeToggle';
 import Header from '@/components/layout/Header';
 import Footer from '@/components/layout/Footer';
 
@@ -19,6 +20,11 @@ function App() {
         <Outlet />
       </main>
 
+      {/** 다크 모드 토글 */}
+      <div>
+        <DarkModeToggle />
+      </div>
+      
       {/** 푸터 */}
       <Footer
         onAbout={() => console.log('about')}
