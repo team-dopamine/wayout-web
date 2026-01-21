@@ -1,6 +1,6 @@
 /** 커스텀 테스트 케이스 전체 섹션 컴포넌트 */
 import { useState } from 'react';
-import { CustomTestCase, CustomTestCasesChangePayload } from './types';
+import type { CustomTestCase, CustomTestCasesChangePayload } from './types';
 import { CustomTestCaseItem } from './CustomTestCaseItem';
 import { PublicSubmissionCheckbox } from './PublicSubmissionCheckbox';
 
@@ -29,16 +29,16 @@ export default function CustomTestCasesSection({ onChange }: Props) {
   };
 
   return (
-    <section className="border-border-light shadow-soft dark:border-border-dark dark:bg-card-dark rounded-xl border bg-white">
+    <section className="shadow-soft rounded-xl border border-slate-200 bg-white dark:border-slate-700 dark:bg-slate-800">
       {/* 본문 */}
       <div className="space-y-6 px-4 py-5 sm:p-8">
         {/* 헤더 */}
         <div className="flex items-end justify-between">
           <div>
-            <h3 className="text-sm font-medium text-gray-700 dark:text-gray-300">
+            <h3 className="text-sm font-medium text-slate-700 dark:text-slate-200">
               Custom Test Cases
             </h3>
-            <p className="mt-1 text-xs text-gray-500 dark:text-gray-400">
+            <p className="mt-1 text-xs text-slate-500 dark:text-slate-400">
               Validate your solution with custom inputs before submitting.
             </p>
           </div>
@@ -47,9 +47,9 @@ export default function CustomTestCasesSection({ onChange }: Props) {
           <button
             type="button"
             onClick={addCase}
-            className="inline-flex items-center text-xs font-medium text-blue-500 focus:outline-none"
+            className="inline-flex items-center text-xs font-medium text-blue-500"
           >
-            <span className="material-icons mr-1 text-base text-blue-500">add_circle</span>
+            <span className="material-icons mr-1 text-base">add_circle</span>
             Add Case
           </button>
         </div>
@@ -86,20 +86,18 @@ export default function CustomTestCasesSection({ onChange }: Props) {
       </div>
 
       {/* 하단 버튼 영역 */}
-      <div className="flex justify-end gap-3 border-t border-gray-100 bg-gray-50 px-4 py-4 dark:border-gray-700 dark:bg-gray-800/50 sm:px-6">
-        {/* Clear Form */}
+      <div className="flex justify-end gap-3 border-t border-slate-100 bg-slate-50 px-4 py-4 dark:border-slate-700 dark:bg-slate-700/50 sm:px-6">
         <button
           type="button"
           onClick={clearForm}
-          className="focus:ring-primary rounded-md border border-gray-300 bg-white px-4 py-2.5 text-sm font-medium text-gray-700 shadow-sm focus:outline-none focus:ring-2 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-200"
+          className="rounded-md border border-slate-300 bg-white px-4 py-2.5 text-sm font-medium text-slate-700 shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 dark:border-slate-600 dark:bg-slate-700 dark:text-slate-200"
         >
           Clear Form
         </button>
 
-        {/* Submit Solution */}
         <button
           type="button"
-          className="inline-flex items-center rounded-md bg-blue-500 px-6 py-2.5 text-sm font-medium text-white shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+          className="rounded-md bg-blue-500 px-6 py-2.5 text-sm font-medium text-white shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
         >
           Submit Solution
         </button>
