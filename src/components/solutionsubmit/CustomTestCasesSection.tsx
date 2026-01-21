@@ -1,5 +1,5 @@
 /** 커스텀 테스트 케이스 전체 섹션 컴포넌트 */
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import type { CustomTestCase, CustomTestCasesChangePayload } from './types';
 import { CustomTestCaseItem } from './CustomTestCaseItem';
 import { PublicSubmissionCheckbox } from './PublicSubmissionCheckbox';
@@ -12,20 +12,25 @@ export default function CustomTestCasesSection({ onChange }: Props) {
   const [cases, setCases] = useState<CustomTestCase[]>([]);
   const [isPublic, setIsPublic] = useState(false);
 
-  const notifyChange = (nextCases = cases, nextIsPublic = isPublic) => {
-    onChange({ cases: nextCases, isPublic: nextIsPublic });
-  };
+  useEffect(() => {
+    onChange({ cases, isPublic });
+  }, [cases, isPublic, onChange]);
 
   const addCase = () => {
-    const next = [...cases, { id: crypto.randomUUID(), input: '', output: '' }];
-    setCases(next);
-    notifyChange(next);
+    setCases((prev) => [...prev, { id: crypto.randomUUID(), input: '', output: '' }]);
   };
 
   const clearForm = () => {
     setCases([]);
     setIsPublic(false);
-    notifyChange([], false);
+  };
+
+  const updateCase = (id: string, field: 'input' | 'output', value: string) => {
+    setCases((prev) => prev.map((c) => (c.id === id ? { ...c, [field]: value } : c)));
+  };
+
+  const removeCase = (id: string) => {
+    setCases((prev) => prev.filter((c) => c.id !== id));
   };
 
   return (
@@ -61,28 +66,14 @@ export default function CustomTestCasesSection({ onChange }: Props) {
               key={c.id}
               input={c.input}
               output={c.output}
-              onChangeInput={(v) =>
-                setCases((prev) =>
-                  prev.map((item) => (item.id === c.id ? { ...item, input: v } : item)),
-                )
-              }
-              onChangeOutput={(v) =>
-                setCases((prev) =>
-                  prev.map((item) => (item.id === c.id ? { ...item, output: v } : item)),
-                )
-              }
-              onRemove={() => setCases((prev) => prev.filter((item) => item.id !== c.id))}
+              onChangeInput={(v) => updateCase(c.id, 'input', v)}
+              onChangeOutput={(v) => updateCase(c.id, 'output', v)}
+              onRemove={() => removeCase(c.id)}
             />
           ))}
         </div>
 
-        <PublicSubmissionCheckbox
-          checked={isPublic}
-          onChange={(checked) => {
-            setIsPublic(checked);
-            notifyChange(cases, checked);
-          }}
-        />
+        <PublicSubmissionCheckbox checked={isPublic} onChange={setIsPublic} />
       </div>
 
       {/* 하단 버튼 영역 */}
