@@ -2,7 +2,6 @@
 import { useEffect, useState } from 'react';
 import type { CustomTestCase, CustomTestCasesChangePayload } from './types';
 import { CustomTestCaseItem } from './CustomTestCaseItem';
-import { PublicSubmissionCheckbox } from './PublicSubmissionCheckbox';
 
 interface Props {
   onChange: (payload: CustomTestCasesChangePayload) => void;
@@ -10,11 +9,10 @@ interface Props {
 
 export default function CustomTestCasesSection({ onChange }: Props) {
   const [cases, setCases] = useState<CustomTestCase[]>([]);
-  const [isPublic, setIsPublic] = useState(false);
 
   useEffect(() => {
-    onChange({ cases, isPublic });
-  }, [cases, isPublic, onChange]);
+    onChange({ cases, isPublic: false });
+  }, [cases, onChange]);
 
   const addCase = () => {
     setCases((prev) => [...prev, { id: crypto.randomUUID(), input: '', output: '' }]);
@@ -22,7 +20,6 @@ export default function CustomTestCasesSection({ onChange }: Props) {
 
   const clearForm = () => {
     setCases([]);
-    setIsPublic(false);
   };
 
   const updateCase = (id: string, field: 'input' | 'output', value: string) => {
@@ -72,8 +69,6 @@ export default function CustomTestCasesSection({ onChange }: Props) {
             />
           ))}
         </div>
-
-        <PublicSubmissionCheckbox checked={isPublic} onChange={setIsPublic} />
       </div>
 
       {/* 하단 버튼 영역 */}

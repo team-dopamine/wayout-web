@@ -4,6 +4,7 @@ import ProblemIdField from './ProblemIdField';
 import LanguageSelectField from './LanguageSelectField';
 import SourceCodeEditor from './SourceCodeEditor';
 import type { LanguageOption, SolutionCodeCardValue } from './types';
+import { PublicSubmissionCheckbox } from '../PublicSubmissionCheckbox';
 
 type Props = {
   value: SolutionCodeCardValue;
@@ -11,6 +12,9 @@ type Props = {
 
   languageOptions?: LanguageOption[];
   enableLoadFromFile?: boolean;
+
+  isPublic?: boolean;
+  onPublicChange?: (checked: boolean) => void;
 
   className?: string;
 };
@@ -35,13 +39,14 @@ export default function SolutionCodeCard({
   onChange,
   languageOptions,
   enableLoadFromFile = true,
+  isPublic,
+  onPublicChange,
   className,
 }: Props) {
   const options = languageOptions ?? DEFAULT_LANGUAGES;
   const currentLanguage = options.find((o) => o.value === value.language) ?? options[0];
 
   const fileInputRef = useRef<HTMLInputElement | null>(null);
-
   const accept = useMemo(() => '.txt,.py,.js,.ts,.cpp,.c,.java,.go,.rs', []);
 
   const handleLoadFromFileClick = () => {
@@ -60,7 +65,7 @@ export default function SolutionCodeCard({
   return (
     <section
       className={[
-        'overflow-hidden rounded-xl border border-slate-200 bg-white shadow-sm transition-shadow hover:shadow-lg',
+        'overflow-hidden rounded-xl border border-slate-200 bg-white shadow-sm',
         'dark:border-slate-700 dark:bg-slate-800',
         className ?? '',
       ].join(' ')}
@@ -95,6 +100,9 @@ export default function SolutionCodeCard({
           accept={accept}
           onFileSelected={handleFileSelected}
         />
+        {typeof isPublic === 'boolean' && onPublicChange && (
+          <PublicSubmissionCheckbox checked={isPublic} onChange={onPublicChange} />
+        )}
       </div>
     </section>
   );
