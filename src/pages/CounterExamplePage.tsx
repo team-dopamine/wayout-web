@@ -3,21 +3,20 @@ import { useMemo, useState } from 'react';
 import ProblemInfoCard from '@/components/counterexample/ProblemInfoCard';
 import SolutionEditorPanel from '@/components/counterexample/SolutionEditorPanel';
 import CounterExampleStatusPanel from '@/components/counterexample/CounterExampleStatusPanel';
+
 import { DEFAULT_CODE_BY_LANG, LANG_OPTIONS, MOCK_FAILED_CASES } from '@/constants/counterexample';
 import type { FailedCase, Language } from '@/types/counterexample';
 
 export default function CounterExamplePage() {
-  const [language, setLanguage] = useState<Language>('python');
+  const [language, setLanguage] = useState<Language>('c');
   const [code, setCode] = useState(DEFAULT_CODE_BY_LANG.python);
 
   const failedCases: FailedCase[] = useMemo(() => MOCK_FAILED_CASES, []);
   const failedCount = failedCases.length;
 
-  /** 언어 변경 시: 코드가 비어있을 때만 기본 코드 적용 */
   const handleChangeLanguage = (next: Language) => {
     setLanguage(next);
-
-    setCode((prevCode) => (prevCode.trim() === '' ? DEFAULT_CODE_BY_LANG[next] : prevCode));
+    setCode(DEFAULT_CODE_BY_LANG[next]);
   };
 
   const handleCopy = async () => {
@@ -33,9 +32,6 @@ export default function CounterExamplePage() {
   return (
     <div className="flex h-full flex-col overflow-hidden bg-slate-50 text-slate-700 dark:bg-slate-900 dark:text-slate-200">
       <main className="relative flex-1 overflow-y-auto bg-slate-50 px-4 py-8 pb-24 pt-6 dark:bg-slate-900 sm:px-6 lg:px-8">
-        <div className="pointer-events-none fixed right-0 top-20 -z-10 h-96 w-96 rounded-full bg-blue-400/5 blur-3xl" />
-        <div className="pointer-events-none fixed bottom-0 left-0 -z-10 h-96 w-96 rounded-full bg-purple-400/5 blur-3xl" />
-
         <div className="mx-auto w-full max-w-7xl space-y-6">
           <ProblemInfoCard
             problemId="#1042"
