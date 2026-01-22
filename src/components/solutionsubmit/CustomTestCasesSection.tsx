@@ -1,5 +1,5 @@
 /** 커스텀 테스트 케이스 전체 섹션 컴포넌트 */
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import type { CustomTestCase, CustomTestCasesChangePayload } from './types';
 import { CustomTestCaseItem } from './CustomTestCaseItem';
 import FormActionButtons from '../common/FormActionButtons';
@@ -11,9 +11,15 @@ interface Props {
 export default function CustomTestCasesSection({ onChange }: Props) {
   const [cases, setCases] = useState<CustomTestCase[]>([]);
 
+  const onChangeRef = useRef(onChange);
+
   useEffect(() => {
-    onChange({ cases, isPublic: false });
-  }, [cases, onChange]);
+    onChangeRef.current = onChange;
+  });
+
+  useEffect(() => {
+    onChangeRef.current({ cases, isPublic: false });
+  }, [cases]);
 
   const addCase = () => {
     setCases((prev) => [...prev, { id: crypto.randomUUID(), input: '', output: '' }]);
