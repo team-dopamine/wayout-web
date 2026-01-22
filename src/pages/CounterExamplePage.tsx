@@ -9,7 +9,7 @@ import type { FailedCase, Language } from '@/types/counterexample';
 
 export default function CounterExamplePage() {
   const [language, setLanguage] = useState<Language>('c');
-  const [code, setCode] = useState(DEFAULT_CODE_BY_LANG.python);
+  const [code, setCode] = useState(DEFAULT_CODE_BY_LANG.c);
 
   const failedCases: FailedCase[] = useMemo(() => MOCK_FAILED_CASES, []);
   const failedCount = failedCases.length;
