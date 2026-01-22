@@ -1,5 +1,5 @@
 /** 공통 코드 에디터 컴포넌트*/
-import { useCallback, useMemo, useRef, useState } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import CodeMirror from '@uiw/react-codemirror';
 import { oneDark } from '@codemirror/theme-one-dark';
 import { keymap, EditorView } from '@codemirror/view';
@@ -77,6 +77,13 @@ export default function CodeEditor({ language, value, onChange, onSubmit }: Prop
     },
     [attachScrollListener],
   );
+
+  useEffect(() => {
+    return () => {
+      detachScrollRef.current?.();
+    };
+  }, []);
+
   const extensions = useMemo(
     () => [
       indentUnit.of('    '),
