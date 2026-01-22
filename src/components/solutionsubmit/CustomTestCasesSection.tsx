@@ -1,8 +1,8 @@
 /** 커스텀 테스트 케이스 전체 섹션 컴포넌트 */
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import type { CustomTestCase, CustomTestCasesChangePayload } from './types';
 import { CustomTestCaseItem } from './CustomTestCaseItem';
-import { PublicSubmissionCheckbox } from './PublicSubmissionCheckbox';
+import FormActionButtons from '../common/FormActionButtons';
 
 interface Props {
   onChange: (payload: CustomTestCasesChangePayload) => void;
@@ -10,11 +10,16 @@ interface Props {
 
 export default function CustomTestCasesSection({ onChange }: Props) {
   const [cases, setCases] = useState<CustomTestCase[]>([]);
-  const [isPublic, setIsPublic] = useState(false);
+
+  const onChangeRef = useRef(onChange);
 
   useEffect(() => {
-    onChange({ cases, isPublic });
-  }, [cases, isPublic, onChange]);
+    onChangeRef.current = onChange;
+  });
+
+  useEffect(() => {
+    onChangeRef.current({ cases, isPublic: false });
+  }, [cases]);
 
   const addCase = () => {
     setCases((prev) => [...prev, { id: crypto.randomUUID(), input: '', output: '' }]);
@@ -22,7 +27,10 @@ export default function CustomTestCasesSection({ onChange }: Props) {
 
   const clearForm = () => {
     setCases([]);
-    setIsPublic(false);
+  };
+
+  const submit = () => {
+    console.log('submit solution', cases);
   };
 
   const updateCase = (id: string, field: 'input' | 'output', value: string) => {
@@ -72,26 +80,16 @@ export default function CustomTestCasesSection({ onChange }: Props) {
             />
           ))}
         </div>
-
-        <PublicSubmissionCheckbox checked={isPublic} onChange={setIsPublic} />
       </div>
 
       {/* 하단 버튼 영역 */}
       <div className="flex justify-end gap-3 border-t border-slate-100 bg-slate-50 px-4 py-4 dark:border-slate-700 dark:bg-slate-700/50 sm:px-6">
-        <button
-          type="button"
-          onClick={clearForm}
-          className="rounded-md border border-slate-300 bg-white px-4 py-2.5 text-sm font-medium text-slate-700 shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 dark:border-slate-600 dark:bg-slate-700 dark:text-slate-200"
-        >
-          Clear Form
-        </button>
-
-        <button
-          type="button"
-          className="rounded-md bg-blue-500 px-6 py-2.5 text-sm font-medium text-white shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
-        >
-          Submit Solution
-        </button>
+        <FormActionButtons
+          rightLabel="Submit Solution"
+          rightIconName="send"
+          onLeftClick={clearForm}
+          onRightClick={submit}
+        />
       </div>
     </section>
   );
