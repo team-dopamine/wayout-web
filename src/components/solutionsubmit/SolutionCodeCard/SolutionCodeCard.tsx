@@ -5,6 +5,7 @@ import LanguageSelectField from './LanguageSelectField';
 import SourceCodeEditor from './SourceCodeEditor';
 import type { LanguageOption, SolutionCodeCardValue } from './types';
 import { PublicSubmissionCheckbox } from '../PublicSubmissionCheckbox';
+import FormActionButtons from '@/components/common/FormActionButtons';
 
 type Props = {
   value: SolutionCodeCardValue;
@@ -15,6 +16,10 @@ type Props = {
 
   isPublic?: boolean;
   onPublicChange?: (checked: boolean) => void;
+
+  /** ✅ 하단 버튼 액션은 부모가 결정 */
+  onClear?: () => void;
+  onSubmit?: () => void;
 
   className?: string;
 };
@@ -41,6 +46,8 @@ export default function SolutionCodeCard({
   enableLoadFromFile = true,
   isPublic,
   onPublicChange,
+  onClear,
+  onSubmit,
   className,
 }: Props) {
   const options = languageOptions ?? DEFAULT_LANGUAGES;
@@ -60,6 +67,17 @@ export default function SolutionCodeCard({
       const text = await file.text();
       onChange({ ...value, code: text });
     } catch {}
+  };
+
+  // ✅ onClear를 안 넘기면 기본 동작(입력값 초기화)으로 fallback
+  const handleClear = () => {
+    if (onClear) return onClear();
+    onChange({ ...value, problemId: '', code: '' });
+  };
+
+  // ✅ onSubmit이 없으면 아무 동작 안 함(혹은 TODO 처리)
+  const handleSubmit = () => {
+    onSubmit?.();
   };
 
   return (
@@ -100,9 +118,19 @@ export default function SolutionCodeCard({
           accept={accept}
           onFileSelected={handleFileSelected}
         />
+
         {typeof isPublic === 'boolean' && onPublicChange && (
           <PublicSubmissionCheckbox checked={isPublic} onChange={onPublicChange} />
         )}
+      </div>
+
+      <div className="flex justify-end border-t border-slate-100 bg-slate-50 px-4 py-4 dark:border-slate-700 dark:bg-slate-700/50 sm:px-6">
+        <FormActionButtons
+          rightLabel="Submit Solution"
+          rightIconName="send"
+          onLeftClick={handleClear}
+          onRightClick={handleSubmit}
+        />
       </div>
     </section>
   );
