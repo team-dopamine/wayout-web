@@ -2,6 +2,7 @@
 import { useEffect, useState } from 'react';
 import type { CustomTestCase, CustomTestCasesChangePayload } from './types';
 import { CustomTestCaseItem } from './CustomTestCaseItem';
+import FormActionButtons from '../common/FormActionButtons';
 
 interface Props {
   onChange: (payload: CustomTestCasesChangePayload) => void;
@@ -20,6 +21,10 @@ export default function CustomTestCasesSection({ onChange }: Props) {
 
   const clearForm = () => {
     setCases([]);
+  };
+
+  const submit = () => {
+    console.log('submit solution', cases);
   };
 
   const updateCase = (id: string, field: 'input' | 'output', value: string) => {
@@ -73,20 +78,12 @@ export default function CustomTestCasesSection({ onChange }: Props) {
 
       {/* 하단 버튼 영역 */}
       <div className="flex justify-end gap-3 border-t border-slate-100 bg-slate-50 px-4 py-4 dark:border-slate-700 dark:bg-slate-700/50 sm:px-6">
-        <button
-          type="button"
-          onClick={clearForm}
-          className="rounded-md border border-slate-300 bg-white px-4 py-2.5 text-sm font-medium text-slate-700 shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 dark:border-slate-600 dark:bg-slate-700 dark:text-slate-200"
-        >
-          Clear Form
-        </button>
-
-        <button
-          type="button"
-          className="rounded-md bg-blue-500 px-6 py-2.5 text-sm font-medium text-white shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
-        >
-          Submit Solution
-        </button>
+        <FormActionButtons
+          rightLabel="Submit Solution"
+          rightIconName="send"
+          onLeftClick={clearForm}
+          onRightClick={submit}
+        />
       </div>
     </section>
   );
