@@ -20,6 +20,10 @@ export default function SolutionSubmitPage() {
           onChange={setValue}
           isPublic={isPublic}
           onPublicChange={setIsPublic}
+          onClear={() => {
+            setValue({ problemId: '', language: value.language, code: '' });
+          }}
+          onSubmit={() => {}}
         />
 
         {/** TODO: 커스텀 테스트 케이스 상태 연동 필요 */}
