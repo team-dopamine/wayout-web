@@ -3,15 +3,22 @@ import { useMemo, useState } from 'react';
 import ProblemInfoCard from '@/components/counterexample/ProblemInfoCard';
 import SolutionEditorPanel from '@/components/counterexample/SolutionEditorPanel';
 import CounterExampleStatusPanel from '@/components/counterexample/CounterExampleStatusPanel';
-import { DEFAULT_CODE, LANG_OPTIONS, MOCK_FAILED_CASES } from '@/constants/counterexample';
+import { DEFAULT_CODE_BY_LANG, LANG_OPTIONS, MOCK_FAILED_CASES } from '@/constants/counterexample';
 import type { FailedCase, Language } from '@/types/counterexample';
 
 export default function CounterExamplePage() {
   const [language, setLanguage] = useState<Language>('python');
-  const [code, setCode] = useState(DEFAULT_CODE);
+  const [code, setCode] = useState(DEFAULT_CODE_BY_LANG.python);
 
   const failedCases: FailedCase[] = useMemo(() => MOCK_FAILED_CASES, []);
   const failedCount = failedCases.length;
+
+  /** 언어 변경 시: 코드가 비어있을 때만 기본 코드 적용 */
+  const handleChangeLanguage = (next: Language) => {
+    setLanguage(next);
+
+    setCode((prevCode) => (prevCode.trim() === '' ? DEFAULT_CODE_BY_LANG[next] : prevCode));
+  };
 
   const handleCopy = async () => {
     try {
@@ -40,7 +47,7 @@ export default function CounterExamplePage() {
             <SolutionEditorPanel
               language={language}
               languageOptions={LANG_OPTIONS}
-              onChangeLanguage={setLanguage}
+              onChangeLanguage={handleChangeLanguage}
               code={code}
               onChangeCode={setCode}
               onCopy={handleCopy}
