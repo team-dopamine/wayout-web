@@ -34,7 +34,7 @@ export default function Header({
           <button
             type="button"
             className="text-sm font-medium text-slate-600 transition-colors hover:text-blue-500 dark:text-slate-300 dark:hover:text-blue-500"
-            onClick={() => navigate('/all-submissions')}
+            onClick={() => navigate('/submissions')}
           >
             All Submissions
           </button>

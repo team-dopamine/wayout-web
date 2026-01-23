@@ -12,7 +12,7 @@ export const router = createBrowserRouter([
       { path: '/', element: <MainPage /> },
       { path: '/counter-example', element: <CounterExamplePage /> },
       { path: '/solution-submit', element: <SolutionSubmitPage /> },
-      { path: '/all-submissions', element: <SubmissionsPage /> },
+      { path: '/submissions', element: <SubmissionsPage /> },
     ],
   },
 ]);
