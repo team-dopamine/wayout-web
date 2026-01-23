@@ -23,7 +23,7 @@ const FEATURES = [
     iconWrapClassName: 'bg-orange-50 text-orange-600 dark:bg-orange-900/30 dark:text-orange-400',
     title: 'Recent Attempts',
     description: "View the community's latest generated counter-examples.",
-    href: '#',
+    href: '/all-submissions',
   },
 ];
 
