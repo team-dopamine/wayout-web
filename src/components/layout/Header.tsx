@@ -4,19 +4,11 @@ import { useNavigate } from 'react-router-dom';
 
 type Props = {
   onLogoClick?: () => void;
-  onAllSubmissions?: () => void;
-  onAllProblems?: () => void;
   onSubmitSolution?: () => void;
   onSignIn?: () => void;
 };
 
-export default function Header({
-  onLogoClick,
-  onAllSubmissions,
-  onAllProblems,
-  onSubmitSolution,
-  onSignIn,
-}: Props) {
+export default function Header({ onLogoClick, onSubmitSolution, onSignIn }: Props) {
   const navigate = useNavigate();
   return (
     <header className="sticky top-0 z-50 w-full border-b border-slate-200 bg-white/80 backdrop-blur-md dark:border-slate-700 dark:bg-slate-800/80">
@@ -42,7 +34,7 @@ export default function Header({
           <button
             type="button"
             className="text-sm font-medium text-slate-600 transition-colors hover:text-blue-500 dark:text-slate-300 dark:hover:text-blue-500"
-            onClick={onAllProblems}
+            onClick={() => navigate('/problems')}
           >
             All Problems
           </button>

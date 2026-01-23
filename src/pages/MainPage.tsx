@@ -16,7 +16,7 @@ const FEATURES = [
     iconWrapClassName: 'bg-purple-50 text-purple-600 dark:bg-purple-900/30 dark:text-purple-400',
     title: 'Browse Problems',
     description: 'Explore a database of problems with known tricky cases.',
-    href: '#',
+    href: '/problems',
   },
   {
     icon: 'history',

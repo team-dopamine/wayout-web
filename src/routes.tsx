@@ -3,7 +3,8 @@ import App from '@/App';
 import MainPage from '@/pages/MainPage';
 import CounterExamplePage from '@/pages/CounterExamplePage';
 import SolutionSubmitPage from '@/pages/SolutionSubmitPage';
-import SubmissionsPage from './pages/SubmissionsPage';
+import SubmissionsPage from '@/pages/SubmissionsPage';
+import ProblemsPage from '@/pages/ProblemsPage';
 
 export const router = createBrowserRouter([
   {
@@ -13,6 +14,7 @@ export const router = createBrowserRouter([
       { path: '/counter-example', element: <CounterExamplePage /> },
       { path: '/solution-submit', element: <SolutionSubmitPage /> },
       { path: '/submissions', element: <SubmissionsPage /> },
+      { path: '/problems', element: <ProblemsPage /> },
     ],
   },
 ]);

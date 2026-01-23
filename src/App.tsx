@@ -10,8 +10,6 @@ function App() {
       {/** 헤더 */}
       <Header
         onLogoClick={() => console.log('logo')}
-        onAllSubmissions={() => console.log('all submissions')}
-        onAllProblems={() => console.log('all problems')}
         onSubmitSolution={() => console.log('submit solution')}
         onSignIn={() => console.log('sign in')}
       />
