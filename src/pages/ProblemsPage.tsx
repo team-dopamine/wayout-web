@@ -48,7 +48,7 @@ export default function ProblemsPage() {
                 </div>
                 <input
                   type="text"
-                  placeholder="문제 제목 또는 ID로 검색하세요..."
+                  placeholder="문제 제목 또는 번호로 검색하세요..."
                   value={searchTerm}
                   onChange={(e) => setSearchTerm(e.target.value)}
                   className="block w-full rounded-lg border border-slate-200 bg-white py-3 pl-10 pr-3 leading-5 placeholder-slate-400 focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500 dark:border-slate-700 dark:bg-slate-800 dark:text-white dark:placeholder-slate-500 sm:text-sm"

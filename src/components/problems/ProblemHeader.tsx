@@ -1,4 +1,4 @@
-const HEADERS = ['ID', '제목', '사용자', '총 제출자', '맞춘 제출자'];
+const HEADERS = ['번호', '제목', '사용자', '총 반례 찾기 횟수', '반례 찾은 횟수'];
 
 const ProblemHeader = () => (
   <thead className="bg-gray-50 dark:bg-slate-800/80">
