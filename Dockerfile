@@ -1,4 +1,4 @@
-FROM node:20-alpine
+FROM node:21.2.0-alpine
 WORKDIR /app
 RUN npm install -g serve
 COPY build ./build
