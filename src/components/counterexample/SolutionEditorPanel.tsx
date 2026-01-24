@@ -1,6 +1,8 @@
 /** 반례 찾기 - 솔루션 편집기 패널 */
 import type { Language } from '@/types/counterexample';
 
+import CodeEditor from '@/components/common/CodeEditor';
+
 type LangOption = { value: Language; label: string };
 
 type Props = {
@@ -29,14 +31,6 @@ export default function SolutionEditorPanel({
   onFindCounterExample,
   onSubmit,
 }: Props) {
-  const handleKeyDown: React.KeyboardEventHandler<HTMLTextAreaElement> = (e) => {
-    const isCmdEnter = (e.metaKey || e.ctrlKey) && e.key === 'Enter';
-    if (isCmdEnter) {
-      e.preventDefault();
-      onSubmit();
-    }
-  };
-
   return (
     <section className="flex h-full flex-col overflow-hidden rounded-xl border border-slate-200 bg-white shadow-sm dark:border-slate-700 dark:bg-slate-800 lg:col-span-2">
       {/** 상단바 */}
@@ -70,21 +64,9 @@ export default function SolutionEditorPanel({
         </button>
       </div>
 
-      {/** 본문 */}
-      <div className="relative flex-grow overflow-hidden bg-[#1e1e1e] text-sm text-slate-300">
-        <div className="absolute bottom-0 left-0 top-0 flex w-12 select-none flex-col items-end border-r border-[#333] bg-[#1e1e1e] pr-2 pt-4 text-slate-500">
-          {Array.from({ length: 9 }).map((_, idx) => (
-            <div key={idx}>{idx + 1}</div>
-          ))}
-        </div>
-
-        <textarea
-          value={code}
-          onChange={(e) => onChangeCode(e.target.value)}
-          onKeyDown={handleKeyDown}
-          spellCheck={false}
-          className="h-full w-full resize-none bg-transparent p-4 pl-14 font-mono text-slate-300 outline-none"
-        />
+      {/** 본문: 공통 CodeEditor 사용 */}
+      <div className="relative flex-grow overflow-hidden">
+        <CodeEditor language={language} value={code} onChange={onChangeCode} onSubmit={onSubmit} />
       </div>
 
       {/** 하단바 */}

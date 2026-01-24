@@ -2,12 +2,13 @@
 import { useState } from 'react';
 import { SolutionCodeCard } from '@/components/solutionsubmit/SolutionCodeCard';
 import { CustomTestCasesSection } from '@/components/solutionsubmit';
+import { DEFAULT_CODE_BY_LANG } from '@/constants/counterexample';
 
 export default function SolutionSubmitPage() {
   const [value, setValue] = useState({
     problemId: '',
     language: 'c',
-    code: '',
+    code: DEFAULT_CODE_BY_LANG.c,
   });
 
   const [isPublic, setIsPublic] = useState(false);

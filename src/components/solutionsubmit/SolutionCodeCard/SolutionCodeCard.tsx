@@ -6,6 +6,9 @@ import SourceCodeEditor from './SourceCodeEditor';
 import type { LanguageOption, SolutionCodeCardValue } from './types';
 import { PublicSubmissionCheckbox } from '../PublicSubmissionCheckbox';
 import FormActionButtons from '@/components/common/FormActionButtons';
+import { DEFAULT_CODE_BY_LANG } from '@/constants/counterexample';
+
+import type { EditorLang } from '@/constants/editor';
 
 type Props = {
   value: SolutionCodeCardValue;
@@ -17,7 +20,6 @@ type Props = {
   isPublic?: boolean;
   onPublicChange?: (checked: boolean) => void;
 
-  /** ✅ 하단 버튼 액션은 부모가 결정 */
   onClear?: () => void;
   onSubmit?: () => void;
 
@@ -69,13 +71,11 @@ export default function SolutionCodeCard({
     } catch {}
   };
 
-  // ✅ onClear를 안 넘기면 기본 동작(입력값 초기화)으로 fallback
   const handleClear = () => {
     if (onClear) return onClear();
     onChange({ ...value, problemId: '', code: '' });
   };
 
-  // ✅ onSubmit이 없으면 아무 동작 안 함(혹은 TODO 처리)
   const handleSubmit = () => {
     onSubmit?.();
   };
@@ -101,7 +101,17 @@ export default function SolutionCodeCard({
             <LanguageSelectField
               value={value.language}
               options={options}
-              onChange={(language) => onChange({ ...value, language })}
+              onChange={(nextLang) => {
+                const lang = (['c', 'cpp', 'java', 'python'] as const).includes(nextLang as any)
+                  ? (nextLang as EditorLang)
+                  : 'cpp';
+
+                onChange({
+                  ...value,
+                  language: nextLang,
+                  code: DEFAULT_CODE_BY_LANG[lang],
+                });
+              }}
             />
           </div>
         </div>
@@ -109,6 +119,7 @@ export default function SolutionCodeCard({
         <SourceCodeEditor
           label="Source Code"
           filename={currentLanguage.filename}
+          language={value.language}
           value={value.code}
           onChange={(code) => onChange({ ...value, code })}
           placeholder={DEFAULT_PLACEHOLDER}
