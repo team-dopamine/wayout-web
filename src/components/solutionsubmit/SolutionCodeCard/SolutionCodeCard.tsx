@@ -134,7 +134,8 @@ export default function SolutionCodeCard({
           onFileSelected={handleFileSelected}
           isPublic={typeof isPublic === 'boolean' ? isPublic : undefined}
           onPublicChange={onPublicChange}
-          onFindCounterExample={() => console.log('find counterexample')}
+          // TODO: onFindCounterExample 핸들러 구현 필요
+          onFindCounterExample={() => {}}
         />
       </div>
     </section>
