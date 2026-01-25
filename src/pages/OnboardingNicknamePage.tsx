@@ -1,4 +1,4 @@
-/** 최초 로그인 시 닉네임을 입력받는 온보딩 페이지를 렌더링한다 */
+/** 온보딩 페이지 */
 
 import BackgroundBlobs from '@/components/onboarding/BackgroundBlobs';
 import BrandHeader from '@/components/onboarding/BrandHeader';

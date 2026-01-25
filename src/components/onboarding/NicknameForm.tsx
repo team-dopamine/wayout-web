@@ -1,4 +1,4 @@
-/** 닉네임 입력 및 제출 버튼을 포함한 폼 UI를 렌더링한다 */
+/** 닉네임 입력 및 버튼 컴포넌트 */
 
 import { useMemo, useState } from 'react';
 import MaterialSymbol from '@/components/common/MaterialSymbol';

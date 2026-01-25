@@ -1,4 +1,4 @@
-/** 온보딩 페이지 상단 브랜드 영역(아이콘/타이틀/서브텍스트)을 렌더링한다 */
+/** 온보딩 페이지 상단 로고 */
 
 import MaterialSymbol from '@/components/common/MaterialSymbol';
 

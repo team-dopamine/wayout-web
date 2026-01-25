@@ -1,4 +1,4 @@
-/** 닉네임 입력 폼을 포함하는 카드 레이아웃을 렌더링한다 */
+/** 닉네임 입력 폼 포함 카드 */
 
 import NicknameForm from './NicknameForm';
 

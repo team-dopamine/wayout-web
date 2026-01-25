@@ -1,4 +1,4 @@
-/** 온보딩 페이지 배경의 흐릿한 컬러 블롭 효과를 렌더링한다 */
+/** 온보딩 페이지 배경 */
 
 export default function BackgroundBlobs() {
   return (
