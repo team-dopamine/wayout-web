@@ -1,7 +1,6 @@
-/** 공통 CodeEditor 기반 소스코드 입력 카드 (SolutionEditorPanel 스타일) */
+/** 공통 CodeEditor 기반 소스코드 입력 카드 */
 import CodeEditor from '@/components/common/CodeEditor';
 import type { EditorLang } from '@/constants/editor';
-/** ✅ 아래 import 누락 방지 */
 import { PublicSubmissionCheckbox } from '@/components/common/PublicSubmissionCheckbox';
 
 type Props = {
@@ -49,13 +48,10 @@ export default function SourceCodeEditor({
 }: Props) {
   return (
     <section className="flex h-full flex-col overflow-hidden rounded-xl border border-slate-200 bg-white shadow-sm dark:border-slate-700 dark:bg-slate-800">
-      {/* ✅ 상단바 (SolutionEditorPanel과 동일) */}
       <div className="flex flex-shrink-0 items-center justify-between border-b border-slate-200 bg-slate-50 px-4 py-3 dark:border-slate-700 dark:bg-slate-800/50">
         <div className="flex items-center gap-4">
           <span className="text-sm font-semibold text-slate-700 dark:text-slate-200">{label}</span>
           <div className="h-4 w-px bg-slate-300 dark:bg-slate-600" />
-
-          {/* ✅ 언어 선택: SolutionEditorPanel select 스타일 그대로 */}
           <select
             value={language}
             onChange={(e) => onChangeLanguage(e.target.value as EditorLang)}
@@ -69,7 +65,6 @@ export default function SourceCodeEditor({
           </select>
         </div>
 
-        {/* ✅ 우측 액션들: Load from file + Copy */}
         <div className="flex items-center gap-3">
           {enableLoadFromFile && (
             <>
@@ -104,12 +99,10 @@ export default function SourceCodeEditor({
         </div>
       </div>
 
-      {/* ✅ 본문: CodeEditor 디자인 그대로 */}
       <div className="relative flex-grow overflow-hidden">
         <CodeEditor language={language} value={value} onChange={onChange} onSubmit={onSubmit} />
       </div>
 
-      {/* ✅ 하단바 (SolutionEditorPanel과 동일) */}
       <div className="flex flex-shrink-0 items-center justify-between border-t border-slate-200 bg-slate-50 px-4 py-3 dark:border-slate-700 dark:bg-slate-800/50">
         {typeof isPublic === 'boolean' && onPublicChange ? (
           <div className="-mt-2">
