@@ -5,6 +5,7 @@ import CounterExamplePage from '@/pages/CounterExamplePage';
 import SolutionSubmitPage from '@/pages/SolutionSubmitPage';
 import SubmissionsPage from '@/pages/SubmissionsPage';
 import ProblemsPage from '@/pages/ProblemsPage';
+import OnboardingNicknamePage from './pages/OnboardingNicknamePage';
 
 export const router = createBrowserRouter([
   {
@@ -15,6 +16,7 @@ export const router = createBrowserRouter([
       { path: '/solution-submit', element: <SolutionSubmitPage /> },
       { path: '/submissions', element: <SubmissionsPage /> },
       { path: '/problems', element: <ProblemsPage /> },
+      { path: '/onboarding', element: <OnboardingNicknamePage /> },
     ],
   },
 ]);
