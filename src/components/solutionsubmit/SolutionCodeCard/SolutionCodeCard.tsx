@@ -1,13 +1,12 @@
-/** 문제 ID, 언어 선택, 소스코드 입력(파일 로드 포함)을 한 카드 UI 컴포넌트 */
-import { useMemo, useRef } from 'react';
-import ProblemIdField from './ProblemIdField';
-import LanguageSelectField from './LanguageSelectField';
+/** 문제 풀이 코드를 작성하고 제출하는 솔루션 입력 카드 컴포넌트 */
+
+import { useCallback, useMemo, useRef, useState } from 'react';
+
 import SourceCodeEditor from './SourceCodeEditor';
 import type { LanguageOption, SolutionCodeCardValue } from './types';
-import { PublicSubmissionCheckbox } from '../PublicSubmissionCheckbox';
-import FormActionButtons from '@/components/common/FormActionButtons';
-import { DEFAULT_CODE_BY_LANG } from '@/constants/counterexample';
 
+import ProblemInfoCard from '@/components/common/ProblemInfoCard';
+import { DEFAULT_CODE_BY_LANG } from '@/constants/counterexample';
 import type { EditorLang } from '@/constants/editor';
 
 type Props = {
@@ -24,6 +23,12 @@ type Props = {
   onSubmit?: () => void;
 
   className?: string;
+
+  problemInfo?: {
+    problemId: string;
+    title: string;
+    badgeText?: string;
+  };
 };
 
 const DEFAULT_LANGUAGES: LanguageOption[] = [
@@ -32,14 +37,6 @@ const DEFAULT_LANGUAGES: LanguageOption[] = [
   { value: 'java', label: 'Java', filename: 'main.java' },
   { value: 'python', label: 'Python 3', filename: 'main.py' },
 ];
-
-const DEFAULT_PLACEHOLDER = `import sys
-def solve():
-    # Your code here
-    pass
-if __name__ == '__main__':
-    solve()
-`;
 
 export default function SolutionCodeCard({
   value,
@@ -51,34 +48,55 @@ export default function SolutionCodeCard({
   onClear,
   onSubmit,
   className,
+  problemInfo,
 }: Props) {
   const options = languageOptions ?? DEFAULT_LANGUAGES;
-  const currentLanguage = options.find((o) => o.value === value.language) ?? options[0];
+
+  const [activeTab, setActiveTab] = useState<'find' | 'status' | 'contribute' | 'correct'>('find');
 
   const fileInputRef = useRef<HTMLInputElement | null>(null);
   const accept = useMemo(() => '.txt,.py,.js,.ts,.cpp,.c,.java,.go,.rs', []);
 
-  const handleLoadFromFileClick = () => {
+  const handleChangeLanguage = useCallback(
+    (nextLang: string) => {
+      const lang = (['c', 'cpp', 'java', 'python'] as const).includes(nextLang as any)
+        ? (nextLang as EditorLang)
+        : 'cpp';
+
+      onChange({
+        ...value,
+        language: nextLang,
+        code: DEFAULT_CODE_BY_LANG[lang],
+      });
+    },
+    [onChange, value],
+  );
+
+  const handleCopy = useCallback(async () => {
+    try {
+      await navigator.clipboard.writeText(value.code);
+    } catch {}
+  }, [value.code]);
+
+  const handleLoadFromFileClick = useCallback(() => {
     if (!enableLoadFromFile) return;
     fileInputRef.current?.click();
-  };
+  }, [enableLoadFromFile]);
 
-  const handleFileSelected = async (file: File | null) => {
-    if (!file) return;
-    try {
-      const text = await file.text();
-      onChange({ ...value, code: text });
-    } catch {}
-  };
+  const handleFileSelected = useCallback(
+    async (file: File | null) => {
+      if (!file) return;
+      try {
+        const text = await file.text();
+        onChange({ ...value, code: text });
+      } catch {}
+    },
+    [onChange, value],
+  );
 
-  const handleClear = () => {
-    if (onClear) return onClear();
-    onChange({ ...value, problemId: '', code: '' });
-  };
-
-  const handleSubmit = () => {
+  const handleSubmit = useCallback(() => {
     onSubmit?.();
-  };
+  }, [onSubmit]);
 
   return (
     <section
@@ -88,59 +106,36 @@ export default function SolutionCodeCard({
         className ?? '',
       ].join(' ')}
     >
-      <div className="space-y-8 px-4 py-5 sm:p-8">
-        <div className="grid grid-cols-1 gap-x-4 gap-y-6 sm:grid-cols-6">
-          <div className="sm:col-span-4">
-            <ProblemIdField
-              value={value.problemId}
-              onChange={(problemId) => onChange({ ...value, problemId })}
-            />
-          </div>
-
-          <div className="sm:col-span-2">
-            <LanguageSelectField
-              value={value.language}
-              options={options}
-              onChange={(nextLang) => {
-                const lang = (['c', 'cpp', 'java', 'python'] as const).includes(nextLang as any)
-                  ? (nextLang as EditorLang)
-                  : 'cpp';
-
-                onChange({
-                  ...value,
-                  language: nextLang,
-                  code: DEFAULT_CODE_BY_LANG[lang],
-                });
-              }}
-            />
-          </div>
-        </div>
+      <div className="space-y-6 px-4 py-5 sm:p-8">
+        <ProblemInfoCard
+          problemId={problemInfo?.problemId ?? '#'}
+          title={problemInfo?.title ?? 'Problem'}
+          badgeText={problemInfo?.badgeText}
+          activeTab={activeTab}
+          onTabChange={setActiveTab}
+        />
 
         <SourceCodeEditor
-          label="Source Code"
-          filename={currentLanguage.filename}
-          language={value.language}
+          label="Solution Code"
+          language={value.language as EditorLang}
+          languageOptions={options.map((o) => ({
+            value: o.value as EditorLang,
+            label: o.label,
+          }))}
+          onChangeLanguage={handleChangeLanguage}
           value={value.code}
           onChange={(code) => onChange({ ...value, code })}
-          placeholder={DEFAULT_PLACEHOLDER}
+          onCopy={handleCopy}
+          onSubmit={handleSubmit}
           enableLoadFromFile={enableLoadFromFile}
           onLoadFromFile={handleLoadFromFileClick}
           fileInputRef={fileInputRef}
           accept={accept}
           onFileSelected={handleFileSelected}
-        />
-
-        {typeof isPublic === 'boolean' && onPublicChange && (
-          <PublicSubmissionCheckbox checked={isPublic} onChange={onPublicChange} />
-        )}
-      </div>
-
-      <div className="flex justify-end border-t border-slate-100 bg-slate-50 px-4 py-4 dark:border-slate-700 dark:bg-slate-700/50 sm:px-6">
-        <FormActionButtons
-          rightLabel="Submit Solution"
-          rightIconName="send"
-          onLeftClick={handleClear}
-          onRightClick={handleSubmit}
+          isPublic={typeof isPublic === 'boolean' ? isPublic : undefined}
+          onPublicChange={onPublicChange}
+          // TODO: onFindCounterExample 핸들러 구현 필요
+          onFindCounterExample={() => {}}
         />
       </div>
     </section>

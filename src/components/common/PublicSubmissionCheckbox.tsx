@@ -1,4 +1,4 @@
-/** 코드 공개 여부 설정용 체크박스 컴포넌트 */
+/** 코드 공개 여부 설정용 체크박스 공통 컴포넌트 */
 interface Props {
   checked: boolean;
   onChange: (checked: boolean) => void;
@@ -6,7 +6,7 @@ interface Props {
 
 export function PublicSubmissionCheckbox({ checked, onChange }: Props) {
   return (
-    <div className="flex items-start border-t border-gray-100 pt-4 dark:border-gray-700/50">
+    <div className="flex items-start pt-4 dark:border-gray-700/50">
       <input
         type="checkbox"
         checked={checked}
