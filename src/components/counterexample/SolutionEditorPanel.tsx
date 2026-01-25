@@ -2,6 +2,7 @@
 import type { Language } from '@/types/counterexample';
 
 import CodeEditor from '@/components/common/CodeEditor';
+import { PublicSubmissionCheckbox } from '@/components/common/PublicSubmissionCheckbox';
 
 type LangOption = { value: Language; label: string };
 
@@ -16,8 +17,9 @@ type Props = {
   onCopy: () => void;
   onRunExample: () => void;
   onFindCounterExample: () => void;
-
   onSubmit: () => void; // Cmd/Ctrl + Enter
+  isPublic: boolean;
+  onPublicChange: (checked: boolean) => void;
 };
 
 export default function SolutionEditorPanel({
@@ -28,8 +30,10 @@ export default function SolutionEditorPanel({
   onChangeCode,
   onCopy,
   onRunExample,
-  onFindCounterExample,
   onSubmit,
+  onFindCounterExample,
+  isPublic,
+  onPublicChange,
 }: Props) {
   return (
     <section className="flex h-full flex-col overflow-hidden rounded-xl border border-slate-200 bg-white shadow-sm dark:border-slate-700 dark:bg-slate-800 lg:col-span-2">
@@ -64,26 +68,19 @@ export default function SolutionEditorPanel({
         </button>
       </div>
 
-      {/** 본문: 공통 CodeEditor 사용 */}
+      {/** 공통 CodeEditor 사용 */}
       <div className="relative flex-grow overflow-hidden">
         <CodeEditor language={language} value={code} onChange={onChangeCode} onSubmit={onSubmit} />
       </div>
 
       {/** 하단바 */}
       <div className="flex flex-shrink-0 items-center justify-between border-t border-slate-200 bg-slate-50 px-4 py-3 dark:border-slate-700 dark:bg-slate-800/50">
-        <span className="text-xs text-slate-500 dark:text-slate-400">
-          Press Cmd+Enter to submit
-        </span>
+        <div className="-mt-2">
+          <PublicSubmissionCheckbox checked={isPublic} onChange={onPublicChange} />
+        </div>
 
+        {/** Find Counter-example 버튼 */}
         <div className="flex items-center gap-3">
-          <button
-            type="button"
-            className="text-sm font-medium text-slate-700 transition-colors hover:text-slate-900 dark:text-slate-200 dark:hover:text-white"
-            onClick={onRunExample}
-          >
-            Run Example
-          </button>
-
           <button
             type="button"
             className="inline-flex items-center rounded-md bg-blue-500 px-4 py-2 text-sm font-medium text-white shadow-sm transition-colors hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500"
