@@ -15,7 +15,6 @@ type Props = {
   onChangeCode: (next: string) => void;
 
   onCopy: () => void;
-  onRunExample: () => void;
   onFindCounterExample: () => void;
   onSubmit: () => void; // Cmd/Ctrl + Enter
   isPublic: boolean;
@@ -29,7 +28,6 @@ export default function SolutionEditorPanel({
   code,
   onChangeCode,
   onCopy,
-  onRunExample,
   onSubmit,
   onFindCounterExample,
   isPublic,

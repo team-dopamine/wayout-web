@@ -51,7 +51,6 @@ export default function CounterExamplePage() {
               code={code}
               onChangeCode={setCode}
               onCopy={handleCopy}
-              onRunExample={() => console.log('run example')}
               onFindCounterExample={handleSubmit}
               onSubmit={handleSubmit}
               isPublic={isPublic}
