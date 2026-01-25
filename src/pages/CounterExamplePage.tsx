@@ -31,7 +31,7 @@ export default function CounterExamplePage() {
   };
 
   return (
-    <div className="flex h-full flex-col overflow-hidden bg-slate-50 text-slate-700 dark:bg-slate-900 dark:text-slate-200">
+    <div className="flex min-h-screen flex-col overflow-hidden bg-slate-50 text-slate-700 dark:bg-slate-900 dark:text-slate-200">
       <main className="relative flex-1 overflow-y-auto bg-slate-50 px-4 py-8 pb-24 pt-6 dark:bg-slate-900 sm:px-6 lg:px-8">
         <div className="mx-auto w-full max-w-7xl space-y-6">
           <ProblemInfoCard
