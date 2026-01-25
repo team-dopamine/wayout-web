@@ -1,13 +1,11 @@
-/** 문제 ID, 언어 선택, 소스코드 입력(파일 로드 포함)을 한 카드 UI 컴포넌트 */
-import { useMemo, useRef } from 'react';
-import ProblemIdField from './ProblemIdField';
-import LanguageSelectField from './LanguageSelectField';
+import { useMemo, useRef, useState } from 'react';
 import SourceCodeEditor from './SourceCodeEditor';
+import LanguageSelectField from './LanguageSelectField';
 import type { LanguageOption, SolutionCodeCardValue } from './types';
-import { PublicSubmissionCheckbox } from '../PublicSubmissionCheckbox';
+import { PublicSubmissionCheckbox } from '@/components/common/PublicSubmissionCheckbox';
 import FormActionButtons from '@/components/common/FormActionButtons';
+import ProblemInfoCard from '@/components/common/ProblemInfoCard';
 import { DEFAULT_CODE_BY_LANG } from '@/constants/counterexample';
-
 import type { EditorLang } from '@/constants/editor';
 
 type Props = {
@@ -24,6 +22,12 @@ type Props = {
   onSubmit?: () => void;
 
   className?: string;
+
+  problemInfo?: {
+    problemId: string;
+    title: string;
+    badgeText?: string;
+  };
 };
 
 const DEFAULT_LANGUAGES: LanguageOption[] = [
@@ -51,9 +55,13 @@ export default function SolutionCodeCard({
   onClear,
   onSubmit,
   className,
+  problemInfo,
 }: Props) {
   const options = languageOptions ?? DEFAULT_LANGUAGES;
   const currentLanguage = options.find((o) => o.value === value.language) ?? options[0];
+
+  /**ProblemInfoCard 탭 전환 상태*/
+  const [activeTab, setActiveTab] = useState<'find' | 'status' | 'contribute' | 'correct'>('find');
 
   const fileInputRef = useRef<HTMLInputElement | null>(null);
   const accept = useMemo(() => '.txt,.py,.js,.ts,.cpp,.c,.java,.go,.rs', []);
@@ -73,7 +81,7 @@ export default function SolutionCodeCard({
 
   const handleClear = () => {
     if (onClear) return onClear();
-    onChange({ ...value, problemId: '', code: '' });
+    onChange({ ...value, code: '' });
   };
 
   const handleSubmit = () => {
@@ -88,16 +96,18 @@ export default function SolutionCodeCard({
         className ?? '',
       ].join(' ')}
     >
-      <div className="space-y-8 px-4 py-5 sm:p-8">
-        <div className="grid grid-cols-1 gap-x-4 gap-y-6 sm:grid-cols-6">
-          <div className="sm:col-span-4">
-            <ProblemIdField
-              value={value.problemId}
-              onChange={(problemId) => onChange({ ...value, problemId })}
-            />
-          </div>
-
-          <div className="sm:col-span-2">
+      <div className="space-y-6 px-4 py-5 sm:p-8">
+        {/** 상단: 문제 정보 */}
+        <div className="space-y-3">
+          <ProblemInfoCard
+            problemId={problemInfo?.problemId ?? '#'}
+            title={problemInfo?.title ?? 'Problem'}
+            badgeText={problemInfo?.badgeText}
+            activeTab={activeTab}
+            onTabChange={setActiveTab}
+          />
+          {/** 문제정보 박스 하단 */}
+          <div className="w-full">
             <LanguageSelectField
               value={value.language}
               options={options}
