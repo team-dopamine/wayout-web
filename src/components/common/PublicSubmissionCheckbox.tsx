@@ -6,7 +6,7 @@ interface Props {
 
 export function PublicSubmissionCheckbox({ checked, onChange }: Props) {
   return (
-    <div className="flex items-start border-t border-gray-100 pt-4 dark:border-gray-700/50">
+    <div className="flex items-start pt-4 dark:border-gray-700/50">
       <input
         type="checkbox"
         checked={checked}
