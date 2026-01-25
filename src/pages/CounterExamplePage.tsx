@@ -11,6 +11,7 @@ export default function CounterExamplePage() {
   const [language, setLanguage] = useState<Language>('c');
   const [code, setCode] = useState(DEFAULT_CODE_BY_LANG.c);
   const [isPublic, setIsPublic] = useState(false);
+  const [activeTab, setActiveTab] = useState<'find' | 'status' | 'contribute' | 'correct'>('find');
 
   const failedCases: FailedCase[] = useMemo(() => MOCK_FAILED_CASES, []);
   const failedCount = failedCases.length;
@@ -38,8 +39,8 @@ export default function CounterExamplePage() {
             problemId="#1042"
             title="Maximum Subarray Sum"
             badgeText="Counterexamples Found"
-            activeTab="find"
-            onTabChange={(key) => console.log('tab:', key)}
+            activeTab={activeTab}
+            onTabChange={setActiveTab}
           />
 
           <div className="grid h-[700px] grid-cols-1 gap-6 lg:grid-cols-3">
