@@ -43,9 +43,9 @@ export default function CustomTestCasesSection({ onChange }: Props) {
 
   return (
     <section className="shadow-soft rounded-xl border border-slate-200 bg-white dark:border-slate-700 dark:bg-slate-800">
-      {/* 본문 */}
+      {/** 본문 */}
       <div className="space-y-6 px-4 py-5 sm:p-8">
-        {/* 헤더 */}
+        {/** 헤더 */}
         <div className="flex items-end justify-between">
           <div>
             <h3 className="text-sm font-medium text-slate-700 dark:text-slate-200">
@@ -56,7 +56,7 @@ export default function CustomTestCasesSection({ onChange }: Props) {
             </p>
           </div>
 
-          {/* Add Case */}
+          {/** Add Case */}
           <button
             type="button"
             onClick={addCase}
@@ -67,7 +67,7 @@ export default function CustomTestCasesSection({ onChange }: Props) {
           </button>
         </div>
 
-        {/* 테스트 케이스 목록 */}
+        {/** 테스트 케이스 목록 */}
         <div className="space-y-4">
           {cases.map((c) => (
             <CustomTestCaseItem
@@ -82,7 +82,7 @@ export default function CustomTestCasesSection({ onChange }: Props) {
         </div>
       </div>
 
-      {/* 하단 버튼 영역 */}
+      {/** 하단 버튼 영역 */}
       <div className="flex justify-end gap-3 border-t border-slate-100 bg-slate-50 px-4 py-4 dark:border-slate-700 dark:bg-slate-700/50 sm:px-6">
         <FormActionButtons
           rightLabel="Submit Solution"
