@@ -3,22 +3,25 @@
 import { useNavigate } from 'react-router-dom';
 
 type Props = {
-  onLogoClick?: () => void;
   onSubmitSolution?: () => void;
   onSignIn?: () => void;
 };
 
-export default function Header({ onLogoClick, onSubmitSolution, onSignIn }: Props) {
+export default function Header({ onSubmitSolution, onSignIn }: Props) {
   const navigate = useNavigate();
   return (
-    <header className="sticky top-0 z-50 w-full border-b border-slate-200 bg-white/80 backdrop-blur-md dark:border-slate-700 dark:bg-slate-800/80">
+    <header className="w-full border-b border-slate-200 bg-white/80 backdrop-blur-md dark:border-slate-700 dark:bg-slate-800/80">
       <div className="mx-auto flex h-16 max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8">
-        <button type="button" className="group flex items-center gap-2" onClick={onLogoClick}>
+        <button
+          type="button"
+          className="group flex items-center gap-2"
+          onClick={() => navigate('/')}
+        >
           <span className="text-3xl text-blue-500 transition-transform group-hover:scale-110">
             {'</>'}
           </span>
           <span className="text-xl font-bold tracking-tight text-slate-900 dark:text-white">
-            WayOut
+            WAyout
           </span>
         </button>
 
@@ -28,7 +31,7 @@ export default function Header({ onLogoClick, onSubmitSolution, onSignIn }: Prop
             className="text-sm font-medium text-slate-600 transition-colors hover:text-blue-500 dark:text-slate-300 dark:hover:text-blue-500"
             onClick={() => navigate('/submissions')}
           >
-            All Submissions
+            전체 제출 목록
           </button>
 
           <button
@@ -36,16 +39,7 @@ export default function Header({ onLogoClick, onSubmitSolution, onSignIn }: Prop
             className="text-sm font-medium text-slate-600 transition-colors hover:text-blue-500 dark:text-slate-300 dark:hover:text-blue-500"
             onClick={() => navigate('/problems')}
           >
-            All Problems
-          </button>
-
-          <button
-            type="button"
-            className="relative cursor-default text-sm font-medium text-blue-500"
-            onClick={onSubmitSolution}
-          >
-            Submit Solution
-            <span className="absolute -bottom-5 left-0 h-0.5 w-full rounded-t-lg bg-blue-500" />
+            전체 문제 목록
           </button>
 
           <div className="h-5 w-px bg-slate-200 dark:bg-slate-700" />
@@ -55,7 +49,7 @@ export default function Header({ onLogoClick, onSubmitSolution, onSignIn }: Prop
             className="inline-flex items-center rounded-md bg-blue-500 px-4 py-2 text-sm font-medium text-white shadow-sm transition-colors hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500"
             onClick={onSignIn}
           >
-            Sign in
+            로그인
           </button>
         </nav>
 

@@ -8,11 +8,7 @@ function App() {
   return (
     <div className="flex min-h-screen flex-col">
       {/** 헤더 */}
-      <Header
-        onLogoClick={() => console.log('logo')}
-        onSubmitSolution={() => console.log('submit solution')}
-        onSignIn={() => console.log('sign in')}
-      />
+      <Header onSignIn={() => console.log('sign in')} />
 
       <main className="flex-1">
         <Outlet />
