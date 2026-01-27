@@ -3,7 +3,7 @@ export default function HeroSection() {
     <div className="space-y-4">
       {/* 상단 아이콘 박스 */}
       <div className="mb-4 inline-flex items-center justify-center rounded-full bg-blue-50 p-4 dark:bg-blue-900/30">
-        <span className="material-icons text-5xl text-blue-600 dark:text-blue-400 md:text-6xl">
+        <span className="material-symbols-outlined text-5xl text-blue-600 dark:text-blue-400 md:text-6xl">
           bug_report
         </span>
       </div>
