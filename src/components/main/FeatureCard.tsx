@@ -20,10 +20,10 @@ export default function FeatureCard({
     >
       <div className="mb-4 flex items-center justify-between">
         <div className={`rounded-lg p-2.5 ${iconWrapClassName}`}>
-          <span className="material-icons block text-2xl">{icon}</span>
+          <span className="material-symbols-outlined block text-2xl">{icon}</span>
         </div>
 
-        <span className="material-icons text-slate-300 transition-colors group-hover:text-blue-500">
+        <span className="material-symbols-outlined text-slate-300 transition-colors group-hover:text-blue-500">
           arrow_forward
         </span>
       </div>
