@@ -3,11 +3,10 @@
 import { useNavigate } from 'react-router-dom';
 
 type Props = {
-  onSubmitSolution?: () => void;
   onSignIn?: () => void;
 };
 
-export default function Header({ onSubmitSolution, onSignIn }: Props) {
+export default function Header({ onSignIn }: Props) {
   const navigate = useNavigate();
   return (
     <header className="w-full border-b border-slate-200 bg-white/80 backdrop-blur-md dark:border-slate-700 dark:bg-slate-800/80">
