@@ -3,10 +3,11 @@
 import { useNavigate } from 'react-router-dom';
 
 type Props = {
+  isAuthed: boolean;
   onSignIn?: () => void;
 };
 
-export default function Header({ onSignIn }: Props) {
+export default function Header({ isAuthed, onSignIn }: Props) {
   const navigate = useNavigate();
   return (
     <header className="w-full border-b border-slate-200 bg-white/80 backdrop-blur-md dark:border-slate-700 dark:bg-slate-800/80">
@@ -43,13 +44,24 @@ export default function Header({ onSignIn }: Props) {
 
           <div className="h-5 w-px bg-slate-200 dark:bg-slate-700" />
 
-          <button
-            type="button"
-            className="inline-flex items-center rounded-md bg-blue-500 px-4 py-2 text-sm font-medium text-white shadow-sm transition-colors hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500"
-            onClick={onSignIn}
-          >
-            로그인
-          </button>
+          {isAuthed ? (
+            <button
+              type="button"
+              className="inline-flex items-center rounded-md bg-slate-700 px-4 py-2 text-sm font-medium text-white shadow-sm"
+              disabled
+              title="로그아웃은 추후 구현 예정"
+            >
+              로그아웃
+            </button>
+          ) : (
+            <button
+              type="button"
+              className="inline-flex items-center rounded-md bg-blue-500 px-4 py-2 text-sm font-medium text-white shadow-sm"
+              onClick={onSignIn}
+            >
+              로그인
+            </button>
+          )}
         </nav>
 
         <button
