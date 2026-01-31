@@ -7,16 +7,28 @@ import Header from '@/components/layout/Header';
 import Footer from '@/components/layout/Footer';
 import api from './apis/api';
 import { ensureAuthBootstrapped } from './apis/auth/setupAuthInterceptors';
-import { getAccessToken } from '@/apis/auth/tokenStore';
+import { getAccessToken, clearAccessToken } from '@/apis/auth/tokenStore';
 
 function App() {
   const [isAuthed, setIsAuthed] = useState(false);
 
   useEffect(() => {
+    let cancelled = false;
+
     (async () => {
-      await ensureAuthBootstrapped(api);
-      setIsAuthed(Boolean(getAccessToken()));
+      try {
+        await ensureAuthBootstrapped(api);
+      } catch (e) {
+        clearAccessToken();
+      } finally {
+        if (cancelled) return;
+        setIsAuthed(Boolean(getAccessToken()));
+      }
     })();
+
+    return () => {
+      cancelled = true;
+    };
   }, []);
 
   return (
