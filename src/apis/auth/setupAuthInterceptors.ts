@@ -35,19 +35,22 @@ export function ensureAuthBootstrapped(instance: AxiosInstance): Promise<void> {
 
 export function setupAuthInterceptors(instance: AxiosInstance): void {
   instance.interceptors.request.use(async (config) => {
+    const url = config.url ?? '';
+
+    if (url.includes('/auth/reissue')) {
+      return config;
+    }
     await ensureAuthBootstrapped(instance);
 
     const token = getAccessToken();
-    const url = config.url ?? '';
 
-    if (token && !url.includes('/auth/reissue')) {
+    if (token) {
       config.headers = config.headers ?? {};
       config.headers.Authorization = `Bearer ${token}`;
     }
 
     return config;
   });
-
   let reissuePromise: Promise<void> | null = null;
 
   instance.interceptors.response.use(
