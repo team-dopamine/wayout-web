@@ -9,6 +9,7 @@ export function useAuthBootstrap() {
   const [isAuthInitialized, setIsAuthInitialized] = useState(false);
 
   useEffect(() => {
+    const abortController = new AbortController();
     const currentAccessToken = session.getAccessToken();
     setIsAuthed(currentAccessToken !== null);
 
@@ -20,11 +21,14 @@ export function useAuthBootstrap() {
       try {
         await bootstrapAuth(api);
       } finally {
-        setIsAuthInitialized(true);
+        if (!abortController.signal.aborted) {
+          setIsAuthInitialized(true);
+        }
       }
     })();
 
     return () => {
+      abortController.abort();
       unsubscribe();
     };
   }, []);
