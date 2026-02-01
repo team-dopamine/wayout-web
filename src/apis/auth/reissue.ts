@@ -1,10 +1,15 @@
 /** accessToken 재발급 요청 API 호출 */
-import type { AxiosError, AxiosInstance } from 'axios';
+import { type AxiosError, type AxiosInstance, isAxiosError } from 'axios';
 
 export async function requestReissue(axiosInstance: AxiosInstance): Promise<void> {
   try {
     await axiosInstance.post('/auth/reissue');
   } catch (unknownError) {
+    if (!isAxiosError(unknownError)) {
+      throw unknownError instanceof Error
+        ? unknownError
+        : new Error('요청 중 알 수 없는 오류가 발생했습니다.');
+    }
     const axiosError = unknownError as AxiosError<{ message?: string }>;
 
     if (axiosError.response) {
