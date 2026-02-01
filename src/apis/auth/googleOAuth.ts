@@ -1,4 +1,4 @@
-/** 헤더 로그인 클릭 시 백엔드 Google OAuth 시작 엔드포인트로 리다이렉트하는 유틸 */
+/** 헤더 로그인 클릭 시 백엔드 Google OAuth 시작 엔드포인트로 리다이렉트 */
 export function startGoogleOAuth(): void {
   const baseUrl = process.env.REACT_APP_API_BASE_URL;
 
