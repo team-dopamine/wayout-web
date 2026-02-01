@@ -51,7 +51,7 @@ export default function Header({ isAuthed, onSignIn, onLogout }: Props) {
               <button
                 type="button"
                 className="inline-flex items-center rounded-md bg-indigo-500 px-4 py-2 text-sm font-medium text-white shadow-sm transition-colors hover:bg-indigo-600 dark:bg-emerald-600 dark:hover:bg-emerald-700"
-                onClick={() => navigate('/onboarding')}
+                onClick={() => navigate('/profile')}
               >
                 마이페이지
               </button>
