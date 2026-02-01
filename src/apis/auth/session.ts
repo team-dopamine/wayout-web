@@ -67,11 +67,12 @@ export const session = {
 export function consumeAccessTokenFromCookie(): boolean {
   const accessTokenFromCookie = readCookieValue(ACCESS_TOKEN_COOKIE_NAME);
 
-  if (accessTokenFromCookie === null) {
+  const trimmedToken = accessTokenFromCookie?.trim();
+  if (!trimmedToken) {
     return false;
   }
 
-  session.setAccessToken(accessTokenFromCookie);
+  session.setAccessToken(trimmedToken);
   deleteCookieValue(ACCESS_TOKEN_COOKIE_NAME);
   return true;
 }
