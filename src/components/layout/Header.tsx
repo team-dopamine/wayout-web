@@ -2,11 +2,17 @@
 
 import { useNavigate } from 'react-router-dom';
 
-type Props = {
-  isAuthed: boolean;
-  onSignIn?: () => void;
-  onLogout?: () => void;
-};
+type Props =
+  | {
+      isAuthed: true;
+      onLogout: () => void;
+      onSignIn?: () => void;
+    }
+  | {
+      isAuthed: false;
+      onSignIn?: () => void;
+      onLogout?: never;
+    };
 
 export default function Header({ isAuthed, onSignIn, onLogout }: Props) {
   const navigate = useNavigate();
