@@ -1,20 +1,27 @@
+/** accessToken 재발급 요청 API 호출 */
 import type { AxiosError, AxiosInstance } from 'axios';
 
-export async function requestReissue(instance: AxiosInstance): Promise<void> {
+export async function requestReissue(axiosInstance: AxiosInstance): Promise<void> {
   try {
-    await instance.post('/auth/reissue');
-  } catch (err) {
-    const error = err as AxiosError<{ message?: string }>;
+    await axiosInstance.post('/auth/reissue');
+  } catch (unknownError) {
+    const axiosError = unknownError as AxiosError<{ message?: string }>;
 
-    if (error.response?.data?.message) {
-      throw new Error(error.response.data.message);
+    if (axiosError.response) {
+      const responseMessage = axiosError.response.data?.message;
+      const statusCode = axiosError.response.status;
+
+      if (responseMessage) {
+        throw new Error(responseMessage);
+      }
+
+      throw new Error(`오류 발생 (status: ${statusCode})`);
     }
-    if (error.response) {
-      throw new Error(`오류 발생 (status: ${error.response.status})`);
-    }
-    if (error.request) {
+
+    if (axiosError.request) {
       throw new Error('서버로부터 응답이 없습니다.');
     }
+
     throw new Error('요청 중 알 수 없는 오류가 발생했습니다.');
   }
 }
