@@ -8,7 +8,11 @@ export default function AuthOAuthRedirectPage() {
   const navigate = useNavigate();
 
   useEffect(() => {
-    consumeAccessTokenFromCookie();
+    const consumed = consumeAccessTokenFromCookie();
+    if (!consumed) {
+      navigate('/', { replace: true });
+      return;
+    }
 
     const params = new URLSearchParams(window.location.search);
     const isNewMember = params.get('isNewMember') === 'true';
