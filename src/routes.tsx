@@ -5,8 +5,8 @@ import CounterExamplePage from '@/pages/CounterExamplePage';
 import SolutionSubmitPage from '@/pages/SolutionSubmitPage';
 import SubmissionsPage from '@/pages/SubmissionsPage';
 import ProblemsPage from '@/pages/ProblemsPage';
-import OnboardingNicknamePage from './pages/OnboardingNicknamePage';
-import AuthOAuthRedirectPage from './pages/AuthOAuthRedirectPage';
+import OnboardingNicknamePage from '@/pages/OnboardingNicknamePage';
+import AuthOAuthRedirectPage from '@/pages/AuthOAuthRedirectPage';
 
 export const router = createBrowserRouter([
   {
