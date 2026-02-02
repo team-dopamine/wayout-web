@@ -25,11 +25,12 @@ type Props = {
   isPublic?: boolean;
   onPublicChange?: (checked: boolean) => void;
 
-  onFindCounterExample?: () => void;
+  /** 정답 제출 버튼 클릭 */
+  onSubmitSolution?: () => void;
 };
 
 export default function SourceCodeEditor({
-  label = 'Solution Code',
+  label = '정답 코드',
   language,
   languageOptions,
   onChangeLanguage,
@@ -39,7 +40,7 @@ export default function SourceCodeEditor({
   onSubmit,
   isPublic,
   onPublicChange,
-  onFindCounterExample,
+  onSubmitSolution,
 }: Props) {
   return (
     <section className="flex h-full flex-col overflow-hidden rounded-xl border border-slate-200 bg-white shadow-sm dark:border-slate-700 dark:bg-slate-800">
@@ -85,12 +86,12 @@ export default function SourceCodeEditor({
           <span className="text-xs text-slate-500 dark:text-slate-400"> </span>
         )}
 
-        {onFindCounterExample ? (
+        {onSubmitSolution ? (
           <div className="flex items-center gap-3">
             <button
               type="button"
               className="inline-flex items-center rounded-md bg-blue-500 px-4 py-2 text-sm font-medium text-white shadow-sm transition-colors hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500"
-              onClick={onFindCounterExample}
+              onClick={onSubmitSolution}
             >
               정답 제출하기
             </button>

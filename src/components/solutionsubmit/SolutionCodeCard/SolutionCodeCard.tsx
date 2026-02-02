@@ -116,7 +116,7 @@ export default function SolutionCodeCard({
         />
 
         <SourceCodeEditor
-          label="Solution Code"
+          label="정답 코드"
           language={value.language as EditorLang}
           languageOptions={options.map((o) => ({
             value: o.value as EditorLang,
@@ -134,8 +134,7 @@ export default function SolutionCodeCard({
           onFileSelected={handleFileSelected}
           isPublic={typeof isPublic === 'boolean' ? isPublic : undefined}
           onPublicChange={onPublicChange}
-          // TODO: onFindCounterExample 핸들러 구현 필요
-          onFindCounterExample={() => {}}
+          onSubmitSolution={handleSubmit}
         />
       </div>
     </section>
