@@ -3,23 +3,34 @@ import { Outlet } from 'react-router-dom';
 import DarkModeToggle from './components/common/DarkModeToggle';
 import Header from '@/components/layout/Header';
 import Footer from '@/components/layout/Footer';
+import { startGoogleOAuth } from './apis/auth/googleOAuth';
+import { useAuthBootstrap } from '@/hooks/useAuthBootstrap';
+import { session } from './apis/auth/session';
 
 function App() {
+  const { isAuthed, isAuthInitialized } = useAuthBootstrap();
+
+  // TODO: 추후 로그아웃 연동 시 수정
+  const handleLogout = () => {
+    session.clearAccessToken();
+    window.location.href = '/';
+  };
+
   return (
     <div className="flex min-h-screen flex-col">
-      {/** 헤더 */}
-      <Header onSignIn={() => console.log('sign in')} />
+      {isAuthInitialized &&
+        (isAuthed ? (
+          <Header isAuthed={true} onLogout={handleLogout} />
+        ) : (
+          <Header isAuthed={false} onSignIn={startGoogleOAuth} />
+        ))}
 
       <main className="flex-1">
         <Outlet />
       </main>
 
-      {/** 다크 모드 토글 */}
-      <div>
-        <DarkModeToggle />
-      </div>
+      <DarkModeToggle />
 
-      {/** 푸터 */}
       <Footer
         onAbout={() => console.log('about')}
         onHelp={() => console.log('help')}
