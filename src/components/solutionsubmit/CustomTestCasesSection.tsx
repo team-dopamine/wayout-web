@@ -52,7 +52,7 @@ export default function CustomTestCasesSection({ onChange }: Props) {
               커스텀 테스트 케이스
             </h3>
             <p className="mt-1 text-xs text-slate-500 dark:text-slate-400">
-              엣지 케이스를 직접 추가해 코드 동작을 확인할 수 있습니다.
+              엣지 케이스를 직접 추가해 반례를 찾는 데 기여할 수 있습니다.
             </p>
           </div>
 
