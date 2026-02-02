@@ -16,6 +16,7 @@ type Props = {
 
   onCopy: () => void;
   onFindCounterExample: () => void;
+
   onSubmit: () => void; // Cmd/Ctrl + Enter
   isPublic: boolean;
   onPublicChange: (checked: boolean) => void;
@@ -39,7 +40,7 @@ export default function SolutionEditorPanel({
       <div className="flex flex-shrink-0 items-center justify-between border-b border-slate-200 bg-slate-50 px-4 py-3 dark:border-slate-700 dark:bg-slate-800/50">
         <div className="flex items-center gap-4">
           <span className="text-sm font-semibold text-slate-700 dark:text-slate-200">
-            Solution Code
+            정답 코드
           </span>
           <div className="h-4 w-px bg-slate-300 dark:bg-slate-600" />
 
