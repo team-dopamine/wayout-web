@@ -49,21 +49,20 @@ export default function CustomTestCasesSection({ onChange }: Props) {
         <div className="flex items-end justify-between">
           <div>
             <h3 className="text-sm font-medium text-slate-700 dark:text-slate-200">
-              Custom Test Cases
+              커스텀 테스트 케이스
             </h3>
             <p className="mt-1 text-xs text-slate-500 dark:text-slate-400">
-              Validate your solution with custom inputs before submitting.
+              엣지 케이스를 직접 추가해 반례를 찾는 데 기여할 수 있습니다.
             </p>
           </div>
 
-          {/** Add Case */}
+          {/** 케이스 추가 */}
           <button
             type="button"
             onClick={addCase}
             className="inline-flex items-center text-xs font-medium text-blue-500"
           >
-            <span className="material-icons mr-1 text-base">add_circle</span>
-            Add Case
+            <span className="Material-symbols-outlined mr-1 text-base">add_circle</span>추가하기
           </button>
         </div>
 
@@ -85,7 +84,7 @@ export default function CustomTestCasesSection({ onChange }: Props) {
       {/** 하단 버튼 영역 */}
       <div className="flex justify-end gap-3 border-t border-slate-100 bg-slate-50 px-4 py-4 dark:border-slate-700 dark:bg-slate-700/50 sm:px-6">
         <FormActionButtons
-          rightLabel="Submit Solution"
+          rightLabel="테스트 케이스 제출하기"
           rightIconName="send"
           onLeftClick={clearForm}
           onRightClick={submit}

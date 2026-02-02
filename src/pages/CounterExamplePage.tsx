@@ -31,6 +31,10 @@ export default function CounterExamplePage() {
     console.log('submit', { language, code });
   };
 
+  const handleFindCounterExample = () => {
+    console.log('find counterexample', { language, code, isPublic });
+  };
+
   return (
     <div className="flex min-h-screen flex-col overflow-hidden bg-slate-50 text-slate-700 dark:bg-slate-900 dark:text-slate-200">
       <main className="relative flex-1 overflow-y-auto bg-slate-50 px-4 py-8 pb-24 pt-6 dark:bg-slate-900 sm:px-6 lg:px-8">
@@ -51,7 +55,7 @@ export default function CounterExamplePage() {
               code={code}
               onChangeCode={setCode}
               onCopy={handleCopy}
-              onFindCounterExample={handleSubmit}
+              onFindCounterExample={handleFindCounterExample}
               onSubmit={handleSubmit}
               isPublic={isPublic}
               onPublicChange={setIsPublic}

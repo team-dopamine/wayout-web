@@ -1,4 +1,4 @@
-/**반례 찾기 - 반례 상태 패널 */
+/** 반례 찾기 - 반례 상태 패널 */
 import type { FailedCase } from '@/types/counterexample';
 
 type Props = {
@@ -12,7 +12,7 @@ export default function CounterExampleStatusPanel({ failedCount, cases }: Props)
       <div className="flex flex-shrink-0 items-center justify-between border-b border-slate-200 bg-slate-50 px-5 py-4 dark:border-slate-700 dark:bg-slate-800/50">
         <h2 className="flex items-center text-sm font-semibold text-slate-900 dark:text-white">
           <span className="mr-2">⚠️</span>
-          Counterexample Status
+          실행 결과
         </h2>
 
         <span className="rounded-full bg-red-100 px-2.5 py-0.5 text-xs font-medium text-red-800 dark:bg-red-900/30 dark:text-red-300">
@@ -22,7 +22,7 @@ export default function CounterExampleStatusPanel({ failedCount, cases }: Props)
 
       <div className="flex-grow space-y-4 overflow-y-auto bg-white p-5 dark:bg-slate-800">
         <p className="mb-2 text-xs text-slate-500 dark:text-slate-400">
-          The following test cases failed with your submitted solution.
+          제출한 코드에서 실패한 테스트 케이스입니다.
         </p>
 
         {cases.map((tc) => (
@@ -33,7 +33,7 @@ export default function CounterExampleStatusPanel({ failedCount, cases }: Props)
             <div className="mb-3 flex items-center justify-between border-b border-red-100 pb-2 dark:border-red-900/30">
               <span className="flex items-center text-xs font-medium text-red-700 dark:text-red-400">
                 <span className="mr-1">✖</span>
-                Test Case #{tc.id}
+                Test Case#{tc.id}
               </span>
               <span className="font-mono text-xs text-red-600 opacity-75 dark:text-red-400">
                 {tc.timeMs}ms
@@ -43,7 +43,7 @@ export default function CounterExampleStatusPanel({ failedCount, cases }: Props)
             <div className="space-y-3">
               <div>
                 <span className="text-[10px] font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400">
-                  Input
+                  입력값
                 </span>
                 <div className="mt-1 overflow-x-auto whitespace-nowrap rounded border border-slate-200 bg-white p-2 font-mono text-xs text-slate-700 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-300">
                   {tc.input}
@@ -53,7 +53,7 @@ export default function CounterExampleStatusPanel({ failedCount, cases }: Props)
               <div className="grid grid-cols-2 gap-2">
                 <div>
                   <span className="text-[10px] font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400">
-                    Expected
+                    예상 출력
                   </span>
                   <div className="mt-1 inline-block rounded border border-green-100 bg-green-50 px-2 py-1 font-mono text-xs text-green-600 dark:border-green-900/30 dark:bg-green-900/20 dark:text-green-400">
                     {tc.expected}
@@ -62,7 +62,7 @@ export default function CounterExampleStatusPanel({ failedCount, cases }: Props)
 
                 <div>
                   <span className="text-[10px] font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400">
-                    Your Output
+                    실제 출력
                   </span>
                   <div className="mt-1 inline-block rounded border border-red-100 bg-red-50 px-2 py-1 font-mono text-xs font-bold text-red-600 dark:border-red-900/30 dark:bg-red-900/20 dark:text-red-400">
                     {tc.output}
