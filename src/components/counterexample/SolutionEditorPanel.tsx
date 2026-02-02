@@ -60,7 +60,7 @@ export default function SolutionEditorPanel({
           type="button"
           onClick={onCopy}
           className="text-slate-400 transition-colors hover:text-slate-600 dark:hover:text-slate-200"
-          aria-label="copy code"
+          aria-label="코드 복사"
         >
           ⧉
         </button>
@@ -77,15 +77,14 @@ export default function SolutionEditorPanel({
           <PublicSubmissionCheckbox checked={isPublic} onChange={onPublicChange} />
         </div>
 
-        {/** Find Counter-example 버튼 */}
+        {/** 반례 찾기 버튼 */}
         <div className="flex items-center gap-3">
           <button
             type="button"
             className="inline-flex items-center rounded-md bg-blue-500 px-4 py-2 text-sm font-medium text-white shadow-sm transition-colors hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500"
             onClick={onFindCounterExample}
           >
-            <span className="mr-2">🐞</span>
-            Find Counterexample
+            반례 찾기
           </button>
         </div>
       </div>

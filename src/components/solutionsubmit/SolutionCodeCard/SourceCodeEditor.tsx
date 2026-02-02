@@ -4,7 +4,7 @@ import type { EditorLang } from '@/constants/editor';
 import { PublicSubmissionCheckbox } from '@/components/common/PublicSubmissionCheckbox';
 
 type Props = {
-  label?: string; // "Solution Code" (옵션)
+  label?: string;
   language: EditorLang;
   languageOptions: { value: EditorLang; label: string }[];
   onChangeLanguage: (next: EditorLang) => void;
@@ -37,11 +37,6 @@ export default function SourceCodeEditor({
   onChange,
   onCopy,
   onSubmit,
-  enableLoadFromFile = true,
-  onLoadFromFile,
-  fileInputRef,
-  accept,
-  onFileSelected,
   isPublic,
   onPublicChange,
   onFindCounterExample,
@@ -66,33 +61,11 @@ export default function SourceCodeEditor({
         </div>
 
         <div className="flex items-center gap-3">
-          {enableLoadFromFile && (
-            <>
-              <button
-                type="button"
-                onClick={onLoadFromFile}
-                className="text-xs font-medium text-blue-500 hover:text-blue-600"
-              >
-                Load from file
-              </button>
-
-              {fileInputRef && onFileSelected && (
-                <input
-                  ref={fileInputRef}
-                  type="file"
-                  accept={accept}
-                  className="hidden"
-                  onChange={(e) => onFileSelected(e.target.files?.[0] ?? null)}
-                />
-              )}
-            </>
-          )}
-
           <button
             type="button"
             onClick={onCopy}
             className="text-slate-400 transition-colors hover:text-slate-600 dark:hover:text-slate-200"
-            aria-label="copy code"
+            aria-label="코드 복사"
           >
             ⧉
           </button>
@@ -119,8 +92,7 @@ export default function SourceCodeEditor({
               className="inline-flex items-center rounded-md bg-blue-500 px-4 py-2 text-sm font-medium text-white shadow-sm transition-colors hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500"
               onClick={onFindCounterExample}
             >
-              <span className="mr-2">🐞</span>
-              Find Counterexample
+              정답 제출하기
             </button>
           </div>
         ) : null}

@@ -17,10 +17,9 @@ type Props = {
 };
 
 const DEFAULT_TABS: ProblemInfoTab[] = [
-  { key: 'find', label: 'Find Counter-example' },
-  { key: 'status', label: 'Submission Status' },
-  { key: 'contribute', label: 'Contribute' },
-  { key: 'correct', label: 'Correct Code' },
+  { key: 'find', label: '반례 찾기' },
+  { key: 'status', label: '제출 현황' },
+  { key: 'contribute', label: '기여하기' },
 ];
 
 export default function ProblemInfoCard({
