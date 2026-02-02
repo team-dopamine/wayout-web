@@ -152,7 +152,7 @@ const PageButton = ({ icon, isFirst, isLast, disabled, onClick }: PageButtonProp
       isFirst ? 'rounded-l-md' : ''
     } ${isLast ? 'rounded-r-md' : ''} ${disabled ? 'cursor-not-allowed opacity-50' : ''}`}
   >
-    <span className="material-icons text-xl">{icon}</span>
+    <span className="material-symbols-outlined text-xl">{icon}</span>
   </button>
 );
 
