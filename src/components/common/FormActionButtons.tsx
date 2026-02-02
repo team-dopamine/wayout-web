@@ -11,7 +11,7 @@ type Props = {
 };
 
 export default function FormActionButtons({
-  leftLabel = 'Clear Form',
+  leftLabel = '초기화',
   rightLabel,
   onLeftClick,
   onRightClick,
