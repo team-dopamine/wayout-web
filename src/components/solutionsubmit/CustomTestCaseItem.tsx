@@ -22,7 +22,7 @@ export function CustomTestCaseItem({
         className="absolute right-3 top-2 text-red-500 opacity-0 transition-opacity group-hover:opacity-100"
         aria-label="Remove test case"
       >
-        <span className="Material-symbols-outlined text-lg">close</span>
+        <span className="material-symbols-outlined text-lg">close</span>
       </button>
 
       <div className="grid grid-cols-1 gap-4 md:grid-cols-2">

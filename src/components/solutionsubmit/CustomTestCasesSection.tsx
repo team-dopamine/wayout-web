@@ -62,7 +62,7 @@ export default function CustomTestCasesSection({ onChange }: Props) {
             onClick={addCase}
             className="inline-flex items-center text-xs font-medium text-blue-500"
           >
-            <span className="Material-symbols-outlined mr-1 text-base">add_circle</span>추가하기
+            <span className="material-symbols-outlined mr-1 text-base">add_circle</span>추가하기
           </button>
         </div>
 

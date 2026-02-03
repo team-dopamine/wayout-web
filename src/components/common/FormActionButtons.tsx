@@ -35,7 +35,7 @@ export default function FormActionButtons({
         className="inline-flex items-center rounded-md bg-blue-500 px-6 py-2.5 text-sm font-medium text-white shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 disabled:cursor-not-allowed disabled:opacity-50"
       >
         {rightIconName ? (
-          <span className="material-icons mr-2 text-sm">{rightIconName}</span>
+          <span className="material-symbols-outlined mr-2 text-sm">{rightIconName}</span>
         ) : null}
         {rightLabel}
       </button>
