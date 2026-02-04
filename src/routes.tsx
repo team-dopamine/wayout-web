@@ -3,23 +3,38 @@ import App from '@/App';
 import MainPage from '@/pages/MainPage';
 import CounterExamplePage from '@/pages/CounterExamplePage';
 import SolutionSubmitPage from '@/pages/SolutionSubmitPage';
-import SubmissionsPage from '@/pages/SubmissionsPage';
 import ProblemsPage from '@/pages/ProblemsPage';
 import OnboardingNicknamePage from './pages/OnboardingNicknamePage';
 import AuthOAuthRedirectPage from './pages/AuthOAuthRedirectPage';
 import MyProfilePage from './pages/MyProfilePage';
+
+import ProblemShellLayout from '@/components/layout/ProblemShellLayout';
+import ProblemSubmissionsPage from './pages/ProblemSubmissionPage';
+
+// (선택) 기존 전체 제출 피드 페이지를 살리고 싶다면
+import SubmissionsPage from '@/pages/SubmissionsPage';
 
 export const router = createBrowserRouter([
   {
     element: <App />,
     children: [
       { path: '/', element: <MainPage /> },
-      { path: '/counter-example', element: <CounterExamplePage /> },
-      { path: '/solution-submit', element: <SolutionSubmitPage /> },
+
+      {
+        element: <ProblemShellLayout />,
+        children: [
+          { path: '/counter-example', element: <CounterExamplePage /> },
+          { path: '/solution-submit', element: <SolutionSubmitPage /> },
+
+          // TODO: 추후 API 연동 후 링크 변경
+          { path: '/submissions/id', element: <ProblemSubmissionsPage /> },
+        ],
+      },
+
       { path: '/submissions', element: <SubmissionsPage /> },
+
       { path: '/problems', element: <ProblemsPage /> },
       { path: '/onboarding', element: <OnboardingNicknamePage /> },
-      /** 백엔드 OAuth 로그인 이후 리다이렉트 처리 */
       { path: '/auth/oauth', element: <AuthOAuthRedirectPage /> },
       { path: '/profile', element: <MyProfilePage /> },
     ],
