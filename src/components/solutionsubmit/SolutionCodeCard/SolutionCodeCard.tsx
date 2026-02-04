@@ -1,11 +1,10 @@
 /** 문제 풀이 코드를 작성하고 제출하는 솔루션 입력 카드 컴포넌트 */
 
-import { useCallback, useMemo, useRef, useState } from 'react';
+import { useCallback, useMemo, useRef } from 'react';
 
 import SourceCodeEditor from './SourceCodeEditor';
 import type { LanguageOption, SolutionCodeCardValue } from './types';
 
-import ProblemInfoCard from '@/components/common/ProblemInfoCard';
 import { DEFAULT_CODE_BY_LANG } from '@/constants/counterexample';
 import type { EditorLang } from '@/constants/editor';
 
@@ -23,12 +22,6 @@ type Props = {
   onSubmit?: () => void;
 
   className?: string;
-
-  problemInfo?: {
-    problemId: string;
-    title: string;
-    badgeText?: string;
-  };
 };
 
 const DEFAULT_LANGUAGES: LanguageOption[] = [
@@ -48,11 +41,8 @@ export default function SolutionCodeCard({
   onClear,
   onSubmit,
   className,
-  problemInfo,
 }: Props) {
   const options = languageOptions ?? DEFAULT_LANGUAGES;
-
-  const [activeTab, setActiveTab] = useState<'find' | 'status' | 'contribute' | 'correct'>('find');
 
   const fileInputRef = useRef<HTMLInputElement | null>(null);
   const accept = useMemo(() => '.txt,.py,.js,.ts,.cpp,.c,.java,.go,.rs', []);
@@ -107,14 +97,6 @@ export default function SolutionCodeCard({
       ].join(' ')}
     >
       <div className="space-y-6 px-4 py-5 sm:p-8">
-        <ProblemInfoCard
-          problemId={problemInfo?.problemId ?? '#'}
-          title={problemInfo?.title ?? 'Problem'}
-          badgeText={problemInfo?.badgeText}
-          activeTab={activeTab}
-          onTabChange={setActiveTab}
-        />
-
         <SourceCodeEditor
           label="정답 코드"
           language={value.language as EditorLang}
