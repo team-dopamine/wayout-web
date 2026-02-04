@@ -1,5 +1,5 @@
 /** 문제 정보와 관련 기능 탭을 함께 표시하는 상단 카드 공통 컴포넌트 */
-type ProblemInfoTabKey = 'find' | 'status' | 'contribute' | 'correct';
+type ProblemInfoTabKey = 'find' | 'status' | 'contribute';
 
 type ProblemInfoTab = {
   key: ProblemInfoTabKey;

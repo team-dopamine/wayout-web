@@ -1,7 +1,7 @@
 import { Outlet, useLocation, useNavigate } from 'react-router-dom';
 import ProblemInfoCard from '@/components/common/ProblemInfoCard';
 
-type TabKey = 'find' | 'status' | 'contribute' | 'correct';
+type TabKey = 'find' | 'status' | 'contribute';
 
 export default function ProblemShellLayout() {
   const navigate = useNavigate();
