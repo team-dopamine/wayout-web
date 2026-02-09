@@ -16,9 +16,14 @@ export class AuthMeError extends Error {
 
   constructor(status: AuthMeErrorCode, message?: string) {
     super(message ?? '인증 상태를 확인할 수 없습니다.');
+
+    this.name = 'AuthMeError';
+
     this.status = status;
+    Object.setPrototypeOf(this, AuthMeError.prototype);
   }
 }
+
 /**로그인 확인 API */
 const getAuthApi = async (): Promise<AuthMeResponse> => {
   try {
