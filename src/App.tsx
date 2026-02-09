@@ -13,8 +13,9 @@ function App() {
   const handleLogout = async () => {
     try {
       await postSignOutApi();
-    } finally {
       window.location.replace('/');
+    } catch (error) {
+      alert('로그아웃에 실패했습니다.');
     }
   };
 
