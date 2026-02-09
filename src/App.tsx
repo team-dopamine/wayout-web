@@ -6,6 +6,7 @@ import Footer from '@/components/layout/Footer';
 import { startGoogleOAuth } from '@/apis/auth/googleOAuth';
 import { useAuthBootstrap } from '@/hooks/useAuthBootstrap';
 import postSignOutApi from './apis/auth/postSignOutApi';
+import { SignOutError } from '@/apis/auth/postSignOutApi';
 
 function App() {
   const { isAuthed, isAuthInitialized } = useAuthBootstrap();
@@ -15,6 +16,10 @@ function App() {
       await postSignOutApi();
       window.location.replace('/');
     } catch (error) {
+      if (error instanceof SignOutError && error.status === 401) {
+        window.location.replace('/');
+        return;
+      }
       alert('로그아웃에 실패했습니다.');
     }
   };
