@@ -10,7 +10,6 @@ const api = axios.create({
   withCredentials: true,
 });
 
-/** 인증 인터셉터 등록 */
 setupAuthInterceptors(api);
 
 export default api;

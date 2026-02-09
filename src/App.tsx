@@ -3,16 +3,13 @@ import { Outlet } from 'react-router-dom';
 import DarkModeToggle from './components/common/DarkModeToggle';
 import Header from '@/components/layout/Header';
 import Footer from '@/components/layout/Footer';
-import { startGoogleOAuth } from './apis/auth/googleOAuth';
+import { startGoogleOAuth } from '@/apis/auth/googleOAuth';
 import { useAuthBootstrap } from '@/hooks/useAuthBootstrap';
-import { session } from './apis/auth/session';
 
 function App() {
   const { isAuthed, isAuthInitialized } = useAuthBootstrap();
 
-  // TODO: 추후 로그아웃 연동 시 수정
   const handleLogout = () => {
-    session.clearAccessToken();
     window.location.href = '/';
   };
 
