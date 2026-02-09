@@ -5,12 +5,17 @@ import Header from '@/components/layout/Header';
 import Footer from '@/components/layout/Footer';
 import { startGoogleOAuth } from '@/apis/auth/googleOAuth';
 import { useAuthBootstrap } from '@/hooks/useAuthBootstrap';
+import postSignOutApi from './apis/auth/postSignOutApi';
 
 function App() {
   const { isAuthed, isAuthInitialized } = useAuthBootstrap();
 
-  const handleLogout = () => {
-    window.location.href = '/';
+  const handleLogout = async () => {
+    try {
+      await postSignOutApi();
+    } finally {
+      window.location.replace('/');
+    }
   };
 
   return (
