@@ -11,8 +11,8 @@ import MyProfilePage from './pages/MyProfilePage';
 import ProblemShellLayout from '@/components/layout/ProblemShellLayout';
 import ProblemSubmissionsPage from './pages/ProblemSubmissionPage';
 
-// (선택) 기존 전체 제출 피드 페이지를 살리고 싶다면
 import SubmissionsPage from '@/pages/SubmissionsPage';
+import NotFoundPage from './pages/NotFoundPage';
 
 export const router = createBrowserRouter([
   {
@@ -37,6 +37,7 @@ export const router = createBrowserRouter([
       { path: '/onboarding', element: <OnboardingNicknamePage /> },
       { path: '/auth/oauth', element: <AuthOAuthRedirectPage /> },
       { path: '/profile', element: <MyProfilePage /> },
+      { path: '*', element: <NotFoundPage /> },
     ],
   },
 ]);
