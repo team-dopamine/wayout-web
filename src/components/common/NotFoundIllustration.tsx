@@ -24,7 +24,7 @@ export default function NotFoundIllustration() {
         <FloatingCode className="left-[-3rem] top-0 text-blue-500">while(true) {'{'}</FloatingCode>
         <FloatingCode className="bottom-4 right-[-4rem] text-purple-500">return NULL;</FloatingCode>
         <FloatingCode className="right-0 top-[-2rem] text-orange-500">
-          // Segment fault
+          {'// Segment fault'}
         </FloatingCode>
         <FloatingCode className="bottom-0 left-[-5rem] text-green-500">
           if (node == undefined)
