@@ -4,15 +4,15 @@ import MainPage from '@/pages/MainPage';
 import CounterExamplePage from '@/pages/CounterExamplePage';
 import SolutionSubmitPage from '@/pages/SolutionSubmitPage';
 import ProblemsPage from '@/pages/ProblemsPage';
-import OnboardingNicknamePage from './pages/OnboardingNicknamePage';
-import AuthOAuthRedirectPage from './pages/AuthOAuthRedirectPage';
-import MyProfilePage from './pages/MyProfilePage';
+import OnboardingNicknamePage from '@/pages/OnboardingNicknamePage';
+import AuthOAuthRedirectPage from '@/pages/AuthOAuthRedirectPage';
+import MyProfilePage from '@/pages/MyProfilePage';
 
 import ProblemShellLayout from '@/components/layout/ProblemShellLayout';
-import ProblemSubmissionsPage from './pages/ProblemSubmissionPage';
+import ProblemSubmissionsPage from '@/pages/ProblemSubmissionPage';
 
 import SubmissionsPage from '@/pages/SubmissionsPage';
-import NotFoundPage from './pages/NotFoundPage';
+import NotFoundPage from '@/pages/NotFoundPage';
 
 export const router = createBrowserRouter([
   {
