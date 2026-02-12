@@ -1,6 +1,7 @@
-import React, { useMemo, useState } from 'react';
+import { useMemo, useState } from 'react';
 import SubmissionTable, { Submission } from '@/components/submissions/SubmissionTable';
 import Pagination from '@/components/common/Pagination';
+import { usePagination } from '@/hooks/usePagination';
 
 // Mock Data
 const mockSubmissions: Submission[] = Array.from({ length: 100 }, (_, i) => ({
@@ -16,21 +17,16 @@ export default function SubmissionsPage() {
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 8;
 
-  const totalPages = Math.ceil(mockSubmissions.length / itemsPerPage);
+  const submissions = useMemo(() => mockSubmissions, []);
 
-  // 페이지 범위 안전장치(데이터 길이 변경 시 대비)
-  const safePage = Math.min(Math.max(currentPage, 1), totalPages || 1);
-
-  const { indexOfFirstItem, indexOfLastItem, currentItems } = useMemo(() => {
-    const indexOfLast = safePage * itemsPerPage;
-    const indexOfFirst = indexOfLast - itemsPerPage;
-
-    return {
-      indexOfFirstItem: indexOfFirst,
-      indexOfLastItem: indexOfLast,
-      currentItems: mockSubmissions.slice(indexOfFirst, indexOfLast),
-    };
-  }, [safePage, itemsPerPage]);
+  const {
+    totalPages,
+    currentPage: safePage,
+    indexOfFirstItem,
+    indexOfLastItem,
+    currentItems,
+    totalItems,
+  } = usePagination(submissions, currentPage, itemsPerPage);
 
   return (
     <div className="flex min-h-screen flex-col bg-slate-50 text-slate-900 transition-colors duration-300 dark:bg-slate-900 dark:text-white">
@@ -51,10 +47,8 @@ export default function SubmissionsPage() {
             <div className="hidden sm:flex sm:flex-1 sm:items-center sm:justify-between">
               <p className="text-sm text-slate-700 dark:text-slate-400">
                 Showing <span className="font-medium">{indexOfFirstItem + 1}</span> to{' '}
-                <span className="font-medium">
-                  {Math.min(indexOfLastItem, mockSubmissions.length)}
-                </span>{' '}
-                of <span className="font-medium">{mockSubmissions.length}</span> results
+                <span className="font-medium">{Math.min(indexOfLastItem, totalItems)}</span> of{' '}
+                <span className="font-medium">{totalItems}</span> results
               </p>
 
               <Pagination
