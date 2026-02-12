@@ -1,4 +1,4 @@
-import { useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import { Submission } from './SubmissionTable';
 
 interface SubmissionRowProps {
@@ -6,33 +6,28 @@ interface SubmissionRowProps {
 }
 
 const SubmissionRow = ({ data }: SubmissionRowProps) => {
-  const navigate = useNavigate();
-  const goTo = (path: string) => () => navigate(path);
-
   return (
     <tr className="transition-colors hover:bg-slate-50 dark:hover:bg-slate-800/50">
       {/* 제출번호 */}
       <td className="whitespace-nowrap px-6 py-4 text-sm">
-        <button
-          type="button"
-          onClick={goTo(`/submission/${data.id}`)}
-          className="inline-block cursor-pointer font-medium text-blue-600 hover:text-blue-500 hover:underline"
+        <Link
+          to={`/submission/${data.id}`}
+          className="inline-block font-medium text-blue-600 hover:text-blue-500 hover:underline"
         >
           {data.id}
-        </button>
+        </Link>
         <div className="text-xs text-slate-400">{data.time}</div>
       </td>
 
       {/* 유저 */}
       <td className="whitespace-nowrap px-6 py-4 text-sm font-medium dark:text-white">
-        <button
-          type="button"
-          onClick={goTo(`/profile/${data.user}`)}
-          className="block max-w-[180px] cursor-pointer truncate text-left hover:text-blue-600 hover:underline dark:hover:text-blue-400"
+        <Link
+          to={`/profile/${data.user}`}
+          className="block max-w-[180px] truncate text-left hover:text-blue-600 hover:underline dark:hover:text-blue-400"
           title={data.user}
         >
           {data.user}
-        </button>
+        </Link>
       </td>
 
       {/* 문제 */}
