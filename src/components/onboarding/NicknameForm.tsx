@@ -5,13 +5,20 @@ import { patchMyNickname } from '@/apis/members';
 const MAX_LENGTH = 12;
 const NICKNAME_REGEX = /^[a-zA-Z0-9_]+$/;
 
-export default function NicknameForm() {
+type Props = {
+  onSuccess: () => void;
+};
+
+export default function NicknameForm({ onSuccess }: Props) {
   const [nickname, setNickname] = useState('');
   const [isLoading, setIsLoading] = useState(false);
 
   const trimmedNickname = nickname.trim();
 
-  const isValid = trimmedNickname.length > 0 && NICKNAME_REGEX.test(trimmedNickname);
+  const isValid =
+    trimmedNickname.length > 0 &&
+    trimmedNickname.length <= MAX_LENGTH &&
+    NICKNAME_REGEX.test(trimmedNickname);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setNickname(e.target.value);
@@ -24,7 +31,7 @@ export default function NicknameForm() {
     try {
       setIsLoading(true);
       await patchMyNickname({ nickname: trimmedNickname });
-      alert('닉네임이 성공적으로 변경되었습니다.');
+      onSuccess();
     } catch (error) {
       console.error(error);
       alert('닉네임 변경에 실패했습니다.');

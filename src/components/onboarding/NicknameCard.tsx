@@ -1,8 +1,21 @@
 /** 닉네임 입력 폼 포함 카드 */
 
+import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import NicknameForm from './NicknameForm';
 
 export default function NicknameCard() {
+  const [isCompleted, setIsCompleted] = useState(false);
+  const navigate = useNavigate();
+
+  const handleSuccess = () => {
+    setIsCompleted(true);
+
+    setTimeout(() => {
+      navigate('/');
+    }, 800);
+  };
+
   return (
     <section className="overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm transition-shadow hover:shadow-md dark:border-slate-700 dark:bg-slate-800">
       <div className="px-6 py-10">
@@ -15,11 +28,15 @@ export default function NicknameCard() {
           </p>
         </div>
 
-        <NicknameForm />
+        <NicknameForm onSuccess={handleSuccess} />
       </div>
 
       <div className="h-1.5 w-full bg-slate-100 dark:bg-slate-700">
-        <div className="h-full w-2/3 bg-blue-500" />
+        <div
+          className={`h-full bg-blue-500 transition-all duration-700 ease-out ${
+            isCompleted ? 'w-full' : 'w-0'
+          }`}
+        />
       </div>
     </section>
   );
