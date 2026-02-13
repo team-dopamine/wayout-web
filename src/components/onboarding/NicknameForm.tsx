@@ -1,38 +1,36 @@
-/** 닉네임 입력 및 버튼 컴포넌트 */
-
-import { useMemo, useState } from 'react';
+import { useState } from 'react';
 import MaterialSymbol from '@/components/common/MaterialSymbol';
-
-type Props = {
-  /** 제출 시 실행될 콜백(추후 API 연동 시 사용) */
-  onSubmitNickname?: (nickname: string) => void;
-};
+import { patchMyNickname } from '@/apis/members';
 
 const MAX_LENGTH = 12;
 const NICKNAME_REGEX = /^[a-zA-Z0-9_]+$/;
 
-export default function NicknameForm({ onSubmitNickname }: Props) {
-  const [nickname, setNickname] = useState<string>('');
+export default function NicknameForm() {
+  const [nickname, setNickname] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
 
-  const isValid =
-    nickname.length > 0 && nickname.length <= MAX_LENGTH && NICKNAME_REGEX.test(nickname);
+  const trimmedNickname = nickname.trim();
 
-  const helperText = useMemo(() => {
-    if (!nickname) return '최대 12글자까지 가능합니다.';
-    if (isValid) return '최대 12글자까지 가능합니다.';
-    // TODO: 닉네임 설정 제한에 따라 변경
-    return '영문, 숫자, 언더스코어(_)만 사용할 수 있습니다.';
-  }, [nickname, isValid]);
+  const isValid = trimmedNickname.length > 0 && NICKNAME_REGEX.test(trimmedNickname);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const value = e.target.value.slice(0, MAX_LENGTH);
-    setNickname(value);
+    setNickname(e.target.value);
   };
 
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    if (!isValid) return;
-    onSubmitNickname?.(nickname);
+    if (!isValid || isLoading) return;
+
+    try {
+      setIsLoading(true);
+      await patchMyNickname({ nickname: trimmedNickname });
+      alert('닉네임이 성공적으로 변경되었습니다.');
+    } catch (error) {
+      console.error(error);
+      alert('닉네임 변경에 실패했습니다.');
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (
@@ -59,25 +57,28 @@ export default function NicknameForm({ onSubmitNickname }: Props) {
             placeholder="e.g. algo_master"
             value={nickname}
             onChange={handleChange}
-            aria-invalid={!isValid && nickname.length > 0}
             className="block w-full rounded-xl border border-slate-300 bg-white py-3 pl-11 pr-4 text-sm text-slate-900 transition-all placeholder:text-slate-400 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 dark:border-slate-600 dark:bg-slate-900 dark:text-white"
           />
         </div>
 
-        <p className="mt-2 flex items-center text-[11px] text-slate-400 dark:text-slate-400">
+        <p
+          className={`mt-2 flex items-center text-[11px] ${
+            isValid || !trimmedNickname ? 'text-slate-400' : 'text-red-500'
+          }`}
+        >
           <MaterialSymbol name="info" className="mr-1 text-[14px]" />
-          {helperText}
+          영문, 숫자, 언더스코어(_)만 사용할 수 있습니다.
         </p>
       </div>
 
       <div className="pt-2">
         <button
           type="submit"
-          disabled={!isValid}
-          className="inline-flex w-full transform items-center justify-center rounded-xl bg-blue-500 px-6 py-3.5 text-sm font-semibold text-white shadow-sm transition-all hover:-translate-y-0.5 hover:bg-blue-600 active:scale-[0.98] disabled:cursor-not-allowed disabled:opacity-50"
+          disabled={!isValid || isLoading}
+          className="inline-flex w-full items-center justify-center rounded-xl bg-blue-500 px-6 py-3.5 text-sm font-semibold text-white shadow-sm transition-all hover:-translate-y-0.5 hover:bg-blue-600 active:scale-[0.98] disabled:cursor-not-allowed disabled:opacity-50"
         >
-          Get Started
-          <MaterialSymbol name="arrow_forward" className="ml-2 text-lg" />
+          {isLoading ? 'Saving...' : 'Get Started'}
+          {!isLoading && <MaterialSymbol name="arrow_forward" className="ml-2 text-lg" />}
         </button>
       </div>
     </form>
