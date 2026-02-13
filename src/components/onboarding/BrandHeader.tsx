@@ -8,7 +8,7 @@ export default function BrandHeader() {
       <div className="flex items-center gap-2">
         <MaterialSymbol name="code_off" className="text-4xl text-blue-500" />
         <span className="text-2xl font-bold tracking-tight text-slate-900 dark:text-white">
-          WayOut
+          WAyout
         </span>
       </div>
     </div>
