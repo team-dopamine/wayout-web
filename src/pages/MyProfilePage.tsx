@@ -61,6 +61,17 @@ export default function MyProfilePage() {
             setActiveTab={setActiveTab}
             contributions={filteredContributions}
           />
+
+          <div className="mt-6 flex justify-end">
+            <button
+              type="button"
+              onClick={handleWithdraw}
+              disabled={isWithdrawing}
+              className="rounded-lg border border-blue-500 bg-blue-500 px-5 py-2.5 text-sm font-semibold text-white shadow-lg transition hover:bg-blue-600 focus:outline-none focus:ring-4 focus:ring-blue-500/30 disabled:cursor-not-allowed disabled:opacity-60"
+            >
+              {isWithdrawing ? '탈퇴 처리 중...' : '탈퇴하기'}
+            </button>
+          </div>
         </section>
       </main>
     </div>

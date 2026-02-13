@@ -17,7 +17,7 @@ interface SubmissionTableProps {
 const SubmissionTable = ({ submissions }: SubmissionTableProps) => {
   return (
     <div className="overflow-x-auto rounded-xl border border-slate-200 dark:border-slate-700">
-      <table className="min-w-full divide-y divide-slate-200 dark:divide-slate-700">
+      <table className="w-full min-w-[900px] table-fixed divide-y divide-slate-200 dark:divide-slate-700">
         <SubmissionHeader />
         <tbody className="divide-y divide-slate-200 dark:divide-slate-700">
           {submissions.map((item) => (
