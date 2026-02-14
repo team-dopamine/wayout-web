@@ -6,6 +6,8 @@ import ContributionsSection, {
 } from '@/components/profile/ContributionsSection';
 import { mockContributions } from '@/components/profile/profile.mock';
 import { patchMyNickname } from '@/apis/members';
+import { withdraw } from '@/apis/auth/withdraw';
+import { patchMyNickname } from '@/apis/members';
 
 const filterMap: Record<TabKey, (rows: Contribution[]) => Contribution[]> = {
   all: (rows) => rows,
@@ -16,9 +18,45 @@ const filterMap: Record<TabKey, (rows: Contribution[]) => Contribution[]> = {
 export default function MyProfilePage() {
   const [nickname, setNickname] = useState('초기 닉네임');
   const [activeTab, setActiveTab] = useState<TabKey>('all');
+  const [isWithdrawing, setIsWithdrawing] = useState(false);
+  const [isSaving, setIsSaving] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
 
   const filteredContributions = useMemo(() => filterMap[activeTab](mockContributions), [activeTab]);
+
+  const handleSaveNickname = async () => {
+    const trimmed = nickname.trim();
+    if (!trimmed) return;
+
+    try {
+      setIsSaving(true);
+      await patchMyNickname({ nickname: trimmed });
+      alert('닉네임이 변경됐어요!');
+    } catch (e) {
+      alert('닉네임 변경에 실패했어요.');
+    } finally {
+      setIsSaving(false);
+    }
+  };
+
+  const handleWithdraw = async () => {
+    const confirmed = window.confirm('정말로 탈퇴하시겠습니까?\n탈퇴시 모든 정보가 삭제됩니다.');
+
+    if (!confirmed) return;
+
+    try {
+      setIsWithdrawing(true);
+      await withdraw();
+
+      alert('탈퇴가 완료되었습니다.');
+      window.location.replace('/');
+    } catch (e) {
+      console.error(e);
+      alert('탈퇴에 실패했어요. 잠시 후 다시 시도해주세요.');
+    } finally {
+      setIsWithdrawing(false);
+    }
+  };
 
   const handleSaveNickname = async () => {
     const trimmed = nickname.trim();
@@ -61,6 +99,17 @@ export default function MyProfilePage() {
             setActiveTab={setActiveTab}
             contributions={filteredContributions}
           />
+
+          <div className="mt-6 flex justify-end">
+            <button
+              type="button"
+              onClick={handleWithdraw}
+              disabled={isWithdrawing}
+              className="rounded-lg border border-blue-500 bg-blue-500 px-5 py-2.5 text-sm font-semibold text-white shadow-lg transition hover:bg-blue-600 focus:outline-none focus:ring-4 focus:ring-blue-500/30 disabled:cursor-not-allowed disabled:opacity-60"
+            >
+              {isWithdrawing ? '탈퇴 처리 중...' : '탈퇴하기'}
+            </button>
+          </div>
         </section>
       </main>
     </div>
