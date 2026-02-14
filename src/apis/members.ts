@@ -7,6 +7,6 @@ export type PatchMyNicknameRequest = {
 };
 
 export async function patchMyNickname(body: PatchMyNicknameRequest) {
-  const res = await api.patch('/members/me', body);
+  const res = await api.patch('/members/me/nickname', body);
   return res.data;
 }
