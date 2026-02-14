@@ -7,7 +7,6 @@ import ContributionsSection, {
 import { mockContributions } from '@/components/profile/profile.mock';
 import { patchMyNickname } from '@/apis/members';
 import { withdraw } from '@/apis/auth/withdraw';
-import { patchMyNickname } from '@/apis/members';
 
 const filterMap: Record<TabKey, (rows: Contribution[]) => Contribution[]> = {
   all: (rows) => rows,
@@ -19,7 +18,6 @@ export default function MyProfilePage() {
   const [nickname, setNickname] = useState('초기 닉네임');
   const [activeTab, setActiveTab] = useState<TabKey>('all');
   const [isWithdrawing, setIsWithdrawing] = useState(false);
-  const [isSaving, setIsSaving] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
 
   const filteredContributions = useMemo(() => filterMap[activeTab](mockContributions), [activeTab]);
@@ -55,21 +53,6 @@ export default function MyProfilePage() {
       alert('탈퇴에 실패했어요. 잠시 후 다시 시도해주세요.');
     } finally {
       setIsWithdrawing(false);
-    }
-  };
-
-  const handleSaveNickname = async () => {
-    const trimmed = nickname.trim();
-    if (!trimmed) return;
-
-    try {
-      setIsSaving(true);
-      await patchMyNickname({ nickname: trimmed });
-      alert('닉네임이 변경됐어요!');
-    } catch (e) {
-      alert('닉네임 변경에 실패했어요.');
-    } finally {
-      setIsSaving(false);
     }
   };
 
