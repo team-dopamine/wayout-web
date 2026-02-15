@@ -21,10 +21,10 @@ export default function NicknameCard() {
       <div className="px-6 py-10">
         <div className="mb-8 text-center">
           <h1 className="text-2xl font-bold tracking-tight text-slate-900 dark:text-white">
-            Set Your Nickname
+            닉네임을 설정해주세요
           </h1>
           <p className="mt-2 text-sm text-slate-600 dark:text-slate-300">
-            This is how you'll appear on leaderboards and submissions.
+            제출 기록에 표시될 닉네임이에요.
           </p>
         </div>
 
