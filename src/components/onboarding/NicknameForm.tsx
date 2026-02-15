@@ -1,9 +1,9 @@
 import { useState } from 'react';
 import MaterialSymbol from '@/components/common/MaterialSymbol';
-import { patchMyNickname } from '@/apis/members';
+import { updateMyNickname } from '@/apis/members/members';
 
 const MAX_LENGTH = 12;
-const NICKNAME_REGEX = /^[a-zA-Z0-9_]+$/;
+const NICKNAME_REGEX = /^[a-zA-Z0-9]+$/;
 
 type Props = {
   onSuccess: () => void;
@@ -11,32 +11,38 @@ type Props = {
 
 export default function NicknameForm({ onSuccess }: Props) {
   const [nickname, setNickname] = useState('');
-  const [isLoading, setIsLoading] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const trimmedNickname = nickname.trim();
+  const trimmed = nickname.trim();
 
-  const isValid =
-    trimmedNickname.length > 0 &&
-    trimmedNickname.length <= MAX_LENGTH &&
-    NICKNAME_REGEX.test(trimmedNickname);
+  const hasValue = trimmed.length > 0;
+  const matchesPattern = NICKNAME_REGEX.test(trimmed);
+  const isValid = hasValue && matchesPattern;
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setNickname(e.target.value);
+  const getHelperText = () => {
+    if (!hasValue) return `최대 ${MAX_LENGTH}자까지 입력 가능합니다.`;
+    if (!matchesPattern) return '영문, 숫자만 사용할 수 있습니다.';
+    return '사용 가능한 닉네임입니다.';
+  };
+
+  const getHelperColor = () => {
+    if (!hasValue || isValid) return 'text-slate-400';
+    return 'text-red-500';
   };
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    if (!isValid || isLoading) return;
+    if (!isValid || isSubmitting) return;
 
     try {
-      setIsLoading(true);
-      await patchMyNickname({ nickname: trimmedNickname });
+      setIsSubmitting(true);
+      await updateMyNickname({ nickname: trimmed });
       onSuccess();
     } catch (error) {
       console.error(error);
       alert('닉네임 변경에 실패했습니다.');
     } finally {
-      setIsLoading(false);
+      setIsSubmitting(false);
     }
   };
 
@@ -47,45 +53,35 @@ export default function NicknameForm({ onSuccess }: Props) {
           htmlFor="nickname"
           className="mb-2 block text-sm font-medium text-slate-700 dark:text-slate-200"
         >
-          Username
+          사용자 이름
         </label>
 
-        <div className="relative">
-          <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3.5">
-            <MaterialSymbol name="alternate_email" className="text-xl text-slate-400" />
-          </div>
+        <input
+          id="nickname"
+          name="nickname"
+          type="text"
+          maxLength={MAX_LENGTH}
+          placeholder="예: algomaster"
+          value={nickname}
+          onChange={(e) => setNickname(e.target.value)}
+          aria-invalid={!isValid && hasValue}
+          className="block w-full rounded-xl border border-slate-300 bg-white px-4 py-3 text-sm text-slate-900 outline-none placeholder:text-slate-400 focus:border-slate-300 focus:outline-none focus:ring-0 active:outline-none dark:border-slate-600 dark:bg-slate-900 dark:text-white"
+        />
 
-          <input
-            id="nickname"
-            name="nickname"
-            type="text"
-            required
-            maxLength={MAX_LENGTH}
-            placeholder="e.g. algo_master"
-            value={nickname}
-            onChange={handleChange}
-            className="block w-full rounded-xl border border-slate-300 bg-white py-3 pl-11 pr-4 text-sm text-slate-900 transition-all placeholder:text-slate-400 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 dark:border-slate-600 dark:bg-slate-900 dark:text-white"
-          />
-        </div>
-
-        <p
-          className={`mt-2 flex items-center text-[11px] ${
-            isValid || !trimmedNickname ? 'text-slate-400' : 'text-red-500'
-          }`}
-        >
+        <p className={`mt-2 flex items-center text-[11px] ${getHelperColor()}`}>
           <MaterialSymbol name="info" className="mr-1 text-[14px]" />
-          영문, 숫자, 언더스코어(_)만 사용할 수 있습니다.
+          {getHelperText()}
         </p>
       </div>
 
       <div className="pt-2">
         <button
           type="submit"
-          disabled={!isValid || isLoading}
+          disabled={!isValid || isSubmitting}
           className="inline-flex w-full items-center justify-center rounded-xl bg-blue-500 px-6 py-3.5 text-sm font-semibold text-white shadow-sm transition-all hover:-translate-y-0.5 hover:bg-blue-600 active:scale-[0.98] disabled:cursor-not-allowed disabled:opacity-50"
         >
-          {isLoading ? 'Saving...' : 'Get Started'}
-          {!isLoading && <MaterialSymbol name="arrow_forward" className="ml-2 text-lg" />}
+          {isSubmitting ? '저장 중...' : '시작하기'}
+          {!isSubmitting && <MaterialSymbol name="arrow_forward" className="ml-2 text-lg" />}
         </button>
       </div>
     </form>
