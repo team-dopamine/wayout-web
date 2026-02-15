@@ -1,12 +1,15 @@
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState, useCallback } from 'react';
 import ProfileSettings from '@/components/profile/ProfileSettings';
 import ContributionsSection, {
   type TabKey,
   type Contribution,
 } from '@/components/profile/ContributionsSection';
 import { mockContributions } from '@/components/profile/profile.mock';
-import { patchMyNickname } from '@/apis/members';
 import { withdraw } from '@/apis/auth/withdraw';
+import { updateMyNickname, getMyProfile } from '@/apis/members/members';
+
+const MAX_LENGTH = 12;
+const NICKNAME_REGEX = /^[a-zA-Z0-9]+$/;
 
 const filterMap: Record<TabKey, (rows: Contribution[]) => Contribution[]> = {
   all: (rows) => rows,
@@ -14,59 +17,100 @@ const filterMap: Record<TabKey, (rows: Contribution[]) => Contribution[]> = {
   incorrect: (rows) => rows.filter((c) => c.type === 'Incorrect Code'),
 };
 
+const validateNickname = (value: string): string | null => {
+  const trimmed = value.trim();
+
+  if (!trimmed) return '닉네임을 입력해주세요.';
+  if (trimmed.length > MAX_LENGTH) return `닉네임은 최대 ${MAX_LENGTH}자까지 가능합니다.`;
+  if (!NICKNAME_REGEX.test(trimmed)) return '닉네임은 영문, 숫자만 사용할 수 있습니다.';
+
+  return null;
+};
+
 export default function MyProfilePage() {
-  const [nickname, setNickname] = useState('초기 닉네임');
+  const [nickname, setNickname] = useState('');
+  const [email, setEmail] = useState('');
   const [activeTab, setActiveTab] = useState<TabKey>('all');
   const [isWithdrawing, setIsWithdrawing] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchMyProfile = async () => {
+      try {
+        const data = await getMyProfile();
+        setNickname(data.nickname);
+        setEmail(data.email);
+      } catch (error) {
+        console.error(error);
+        alert('프로필 정보를 불러오지 못했어요.');
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    fetchMyProfile();
+  }, []);
 
   const filteredContributions = useMemo(() => filterMap[activeTab](mockContributions), [activeTab]);
 
-  const handleSaveNickname = async () => {
-    const trimmed = nickname.trim();
-    if (!trimmed) return;
+  const handleSaveNickname = useCallback(async () => {
+    const errorMessage = validateNickname(nickname);
+    if (errorMessage) {
+      alert(errorMessage);
+      return;
+    }
 
     try {
       setIsSaving(true);
-      await patchMyNickname({ nickname: trimmed });
+      await updateMyNickname({
+        nickname: nickname.trim().slice(0, MAX_LENGTH),
+      });
       alert('닉네임이 변경됐어요!');
-    } catch (e) {
+    } catch (error) {
+      console.error(error);
       alert('닉네임 변경에 실패했어요.');
     } finally {
       setIsSaving(false);
     }
-  };
+  }, [nickname]);
 
-  const handleWithdraw = async () => {
-    const confirmed = window.confirm('정말로 탈퇴하시겠습니까?\n탈퇴시 모든 정보가 삭제됩니다.');
-
+  const handleWithdraw = useCallback(async () => {
+    const confirmed = window.confirm('정말로 탈퇴하시겠습니까?\n탈퇴 시 모든 정보가 삭제됩니다.');
     if (!confirmed) return;
 
     try {
       setIsWithdrawing(true);
       await withdraw();
-
-      alert('탈퇴가 완료되었습니다.');
       window.location.replace('/');
-    } catch (e) {
-      console.error(e);
+    } catch (error) {
+      console.error(error);
       alert('탈퇴에 실패했어요. 잠시 후 다시 시도해주세요.');
     } finally {
       setIsWithdrawing(false);
     }
-  };
+  }, []);
+
+  if (isLoading) {
+    return (
+      <div className="flex min-h-screen items-center justify-center">
+        <p className="text-sm text-slate-500">프로필을 불러오는 중...</p>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-[#f8fafc] text-slate-900 dark:bg-[#0f172a] dark:text-slate-100">
       <main className="mx-auto max-w-7xl space-y-16 px-4 py-10 sm:px-6 lg:px-8">
-        <h1 className="text-3xl font-bold text-slate-900 dark:text-slate-100">내 프로필</h1>
+        <h1 className="text-3xl font-bold">내 프로필</h1>
 
         <section>
-          <h2 className="text-xl font-bold text-slate-800 dark:text-slate-100">프로필 편집</h2>
+          <h2 className="text-xl font-bold">프로필 편집</h2>
           <hr className="my-6 border-slate-200 dark:border-slate-800" />
 
           <ProfileSettings
             nickname={nickname}
+            email={email}
             setNickname={setNickname}
             onSave={handleSaveNickname}
             isSaving={isSaving}
@@ -74,7 +118,7 @@ export default function MyProfilePage() {
         </section>
 
         <section>
-          <h2 className="text-xl font-bold text-slate-800 dark:text-slate-100">기여한 코드</h2>
+          <h2 className="text-xl font-bold">기여한 코드</h2>
           <hr className="my-6 border-slate-200 dark:border-slate-800" />
 
           <ContributionsSection

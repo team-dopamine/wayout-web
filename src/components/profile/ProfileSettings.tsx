@@ -4,14 +4,27 @@ import MaterialSymbol from '@/components/common/MaterialSymbol';
 type Props = {
   nickname: string;
   setNickname: React.Dispatch<React.SetStateAction<string>>;
+  email: string;
   onSave: () => void;
   isSaving: boolean;
 };
 
-export default function ProfileSettings({ nickname, setNickname, onSave, isSaving }: Props) {
+export default function ProfileSettings({ nickname, setNickname, email, onSave, isSaving }: Props) {
   return (
     <div className="max-w-2xl rounded-xl border border-slate-200/80 bg-white/80 p-8 shadow-xl backdrop-blur-md dark:border-slate-700/80 dark:bg-slate-800/70 dark:shadow-none">
       <div className="grid gap-6">
+        <div>
+          <label className="mb-1.5 block text-sm font-medium text-slate-700 dark:text-slate-300">
+            이메일
+          </label>
+          <input
+            type="text"
+            value={email}
+            readOnly
+            className="w-full cursor-not-allowed rounded-lg border border-slate-200 bg-slate-100 px-4 py-2.5 pr-10 text-slate-500 dark:border-slate-700 dark:bg-slate-900/60 dark:text-slate-400"
+          />
+        </div>
+
         <div>
           <label className="mb-1.5 block text-sm font-medium text-slate-700 dark:text-slate-300">
             사용자 이름
@@ -20,6 +33,7 @@ export default function ProfileSettings({ nickname, setNickname, onSave, isSavin
             type="text"
             value={nickname}
             onChange={(e) => setNickname(e.target.value)}
+            maxLength={12}
             spellCheck={false}
             className="w-full rounded-lg border border-slate-200 bg-white px-4 py-2.5 text-slate-900 focus:border-slate-200 focus:outline-none focus:ring-0 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-100"
           />
