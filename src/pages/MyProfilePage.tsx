@@ -7,24 +7,12 @@ import ContributionsSection, {
 import { mockContributions } from '@/components/profile/profile.mock';
 import { withdraw } from '@/apis/auth/withdraw';
 import { updateMyNickname, getMyProfile } from '@/apis/members/members';
-
-const MAX_LENGTH = 12;
-const NICKNAME_REGEX = /^[a-zA-Z0-9]+$/;
+import { MAX_LENGTH, validateNickname } from '@/constants/nickname';
 
 const filterMap: Record<TabKey, (rows: Contribution[]) => Contribution[]> = {
   all: (rows) => rows,
   correct: (rows) => rows.filter((c) => c.type === 'Correct Code'),
   incorrect: (rows) => rows.filter((c) => c.type === 'Incorrect Code'),
-};
-
-const validateNickname = (value: string): string | null => {
-  const trimmed = value.trim();
-
-  if (!trimmed) return '닉네임을 입력해주세요.';
-  if (trimmed.length > MAX_LENGTH) return `닉네임은 최대 ${MAX_LENGTH}자까지 가능합니다.`;
-  if (!NICKNAME_REGEX.test(trimmed)) return '닉네임은 영문, 숫자만 사용할 수 있습니다.';
-
-  return null;
 };
 
 export default function MyProfilePage() {
@@ -55,17 +43,16 @@ export default function MyProfilePage() {
   const filteredContributions = useMemo(() => filterMap[activeTab](mockContributions), [activeTab]);
 
   const handleSaveNickname = useCallback(async () => {
-    const errorMessage = validateNickname(nickname);
-    if (errorMessage) {
-      alert(errorMessage);
+    const trimmed = nickname.trim();
+
+    if (!validateNickname(trimmed)) {
+      alert(`닉네임은 최대 ${MAX_LENGTH}자, 영문, 숫자만 사용할 수 있습니다.`);
       return;
     }
 
     try {
       setIsSaving(true);
-      await updateMyNickname({
-        nickname: nickname.trim().slice(0, MAX_LENGTH),
-      });
+      await updateMyNickname({ nickname: trimmed });
       alert('닉네임이 변경됐어요!');
     } catch (error) {
       console.error(error);
