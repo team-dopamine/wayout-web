@@ -25,6 +25,7 @@ export default function SolutionSubmitPage() {
     const problemId = Number(value.problemId);
     if (!Number.isInteger(problemId) || problemId <= 0) {
       console.error('[기여하기] Invalid problemId detected. Current value:', value.problemId);
+      alert('유효하지 않은 문제 ID 입니다.');
       return;
     }
 
