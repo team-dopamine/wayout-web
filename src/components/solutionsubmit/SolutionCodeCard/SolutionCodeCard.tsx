@@ -25,7 +25,6 @@ type Props = {
 };
 
 const DEFAULT_LANGUAGES: LanguageOption[] = [
-  { value: 'c', label: 'C', filename: 'main.c' },
   { value: 'cpp', label: 'C++', filename: 'main.cpp' },
   { value: 'java', label: 'Java', filename: 'main.java' },
   { value: 'python', label: 'Python 3', filename: 'main.py' },
@@ -49,7 +48,7 @@ export default function SolutionCodeCard({
 
   const handleChangeLanguage = useCallback(
     (nextLang: string) => {
-      const lang = (['c', 'cpp', 'java', 'python'] as const).includes(nextLang as any)
+      const lang = (['cpp', 'java', 'python'] as const).includes(nextLang as any)
         ? (nextLang as EditorLang)
         : 'cpp';
 

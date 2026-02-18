@@ -2,7 +2,6 @@
 import type { FailedCase, Language } from '@/types/counterexample';
 
 export const LANG_OPTIONS: { value: Language; label: string }[] = [
-  { value: 'c', label: 'C' },
   { value: 'cpp', label: 'C++' },
   { value: 'java', label: 'Java' },
   { value: 'python', label: 'Python 3' },
@@ -36,21 +35,7 @@ class Solution {
     }
 }
 `,
-  c: `#include <stdio.h>
 
-int max(int a, int b) { return a > b ? a : b; }
-
-int maxSubArray(int* nums, int n) {
-    int maxSum = nums[0];
-    int currentSum = nums[0];
-
-    for (int i = 1; i < n; i++) {
-        currentSum = max(nums[i], currentSum + nums[i]);
-        maxSum = max(maxSum, currentSum);
-    }
-    return maxSum;
-}
-`,
   cpp: `#include <bits/stdc++.h>
 using namespace std;
 
