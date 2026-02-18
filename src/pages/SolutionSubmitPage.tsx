@@ -2,7 +2,7 @@ import { useCallback, useState } from 'react';
 import { SolutionCodeCard } from '@/components/solutionsubmit/SolutionCodeCard';
 import { CustomTestCasesSection } from '@/components/solutionsubmit';
 import { DEFAULT_CODE_BY_LANG } from '@/constants/counterexample';
-import { postSolutionApi, type PostSolutionRequest } from '@/apis/solutions/postSolutionApi';
+import { postSolutionApi } from '@/apis/solutions/postSolutionApi';
 
 const LANGUAGE_MAP = {
   cpp: 'CPP',
@@ -25,11 +25,14 @@ export default function SolutionSubmitPage() {
     const problemId = Number(value.problemId);
     if (!Number.isInteger(problemId) || problemId <= 0) {
       console.error('[기여하기] Invalid problemId detected. Current value:', value.problemId);
-      alert('유효하지 않은 문제 ID 입니다.');
       return;
     }
 
-    const language: PostSolutionRequest['language'] = LANGUAGE_MAP[value.language as ClientLang];
+    const language = LANGUAGE_MAP[value.language as ClientLang];
+    if (!language) {
+      console.error('[기여하기] Invalid language detected. Current value:', value.language);
+      return;
+    }
 
     const sourceCode = value.code.trim();
     if (!sourceCode) {
