@@ -2,8 +2,7 @@ import { useCallback, useState } from 'react';
 import { SolutionCodeCard } from '@/components/solutionsubmit/SolutionCodeCard';
 import { CustomTestCasesSection } from '@/components/solutionsubmit';
 import { DEFAULT_CODE_BY_LANG } from '@/constants/counterexample';
-import { postSolutionApi } from '@/apis/solutions/postSolutionApi';
-import type { PostSolutionRequest } from '@/apis/solutions/postSolutionApi';
+import { postSolutionApi, type PostSolutionRequest } from '@/apis/solutions/postSolutionApi';
 
 const LANGUAGE_MAP = {
   cpp: 'CPP',
