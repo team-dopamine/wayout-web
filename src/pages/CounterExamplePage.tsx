@@ -7,8 +7,8 @@ import { DEFAULT_CODE_BY_LANG, LANG_OPTIONS, MOCK_FAILED_CASES } from '@/constan
 import type { FailedCase, Language } from '@/types/counterexample';
 
 export default function CounterExamplePage() {
-  const [language, setLanguage] = useState<Language>('c');
-  const [code, setCode] = useState(DEFAULT_CODE_BY_LANG.c);
+  const [language, setLanguage] = useState<Language>('cpp');
+  const [code, setCode] = useState(DEFAULT_CODE_BY_LANG.cpp);
   const [isPublic, setIsPublic] = useState(false);
 
   const failedCases: FailedCase[] = useMemo(() => MOCK_FAILED_CASES, []);

@@ -4,7 +4,7 @@ import { python } from '@codemirror/lang-python';
 import { java } from '@codemirror/lang-java';
 import { cpp } from '@codemirror/lang-cpp';
 
-export type EditorLang = 'c' | 'cpp' | 'java' | 'python';
+export type EditorLang = 'cpp' | 'java' | 'python';
 
 export function getLanguageExtension(lang: EditorLang): Extension {
   switch (lang) {
@@ -13,9 +13,6 @@ export function getLanguageExtension(lang: EditorLang): Extension {
     case 'java':
       return java();
     case 'cpp':
-      return cpp();
-    case 'c':
-    default:
       return cpp();
   }
 }
