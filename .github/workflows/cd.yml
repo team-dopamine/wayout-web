@@ -63,6 +63,7 @@ jobs:
           script: |
             docker stop wayout-web || true
             docker rm wayout-web || true
-            docker image prune -af
+            docker image rm ${{ secrets.DOCKER_USERNAME }}/wayout-web || true
+            docker image prune -af --filter "until=168h"
             docker pull ${{ secrets.DOCKER_USERNAME }}/wayout-web
             docker run -d -p 3000:80 --name wayout-web ${{ secrets.DOCKER_USERNAME }}/wayout-web
