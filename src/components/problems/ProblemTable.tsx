@@ -1,4 +1,3 @@
-import { getproblem } from '@/apis/problems/problems';
 import ProblemHeader from './ProblemHeader';
 import ProblemRow from './ProblemRow';
 import { Problem } from '@/apis/problems/problems.type';
