@@ -1,18 +1,28 @@
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import ProblemTable from '../components/problems/ProblemTable';
-import { MOCK_PROBLEMS } from '@/components/problems/problems.mock';
+import { getproblem } from '@/apis/problems/problems';
+import { Problem } from '@/apis/problems/problems.type';
 
 export default function ProblemsPage() {
-  const [searchTerm, setSearchTerm] = useState('');
+  const [searchTerm, setSearchTerm] = useState<string>('');
+
+  const [data, setData] = useState<Problem[]>([]);
+  useEffect(() => {
+    (async () => {
+      const data = await getproblem();
+      setData(data);
+    })();
+    console.log(data);
+  }, []);
 
   // 검색 필터링 로직
   const filteredRows = useMemo(() => {
-    return MOCK_PROBLEMS.filter(
-      (p) =>
-        p.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        p.id.toString().includes(searchTerm),
+    return data.filter(
+      (content) =>
+        content.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        content.problemId.toString().includes(searchTerm),
     );
-  }, [searchTerm]);
+  }, [data, searchTerm]);
 
   return (
     <div className="flex min-h-screen flex-col bg-slate-50 text-slate-900 transition-colors duration-300 dark:bg-slate-950 dark:text-slate-100">
@@ -60,7 +70,7 @@ export default function ProblemsPage() {
             <ProblemTable problems={filteredRows} />
 
             {/* 하단 푸터 영역 */}
-            <div className="flex items-center justify-between border-t border-slate-200 bg-white px-4 py-3 dark:border-slate-800 dark:bg-slate-900 sm:px-6">
+            {/* <div className="flex items-center justify-between border-t border-slate-200 bg-white px-4 py-3 dark:border-slate-800 dark:bg-slate-900 sm:px-6">
               <div className="text-sm text-slate-500 dark:text-slate-400">
                 총{' '}
                 <span className="font-medium text-slate-900 dark:text-white">
@@ -68,7 +78,7 @@ export default function ProblemsPage() {
                 </span>
                 개의 결과
               </div>
-            </div>
+            {/* </div> */}
           </div>
         </div>
       </main>
