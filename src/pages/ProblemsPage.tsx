@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState } from 'react';
 import ProblemTable from '../components/problems/ProblemTable';
-import { getproblem } from '@/apis/problems/problems';
+import { getProblem } from '@/apis/problems/problems';
 import { Problem } from '@/apis/problems/problems.type';
 
 export default function ProblemsPage() {
@@ -9,10 +9,9 @@ export default function ProblemsPage() {
   const [data, setData] = useState<Problem[]>([]);
   useEffect(() => {
     (async () => {
-      const data = await getproblem();
+      const data = await getProblem();
       setData(data);
     })();
-    console.log(data);
   }, []);
 
   // 검색 필터링 로직
@@ -20,7 +19,7 @@ export default function ProblemsPage() {
     return data.filter(
       (content) =>
         content.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        content.problemId.toString().includes(searchTerm),
+        content.problemNo.toString().includes(searchTerm),
     );
   }, [data, searchTerm]);
 
