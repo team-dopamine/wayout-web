@@ -67,7 +67,7 @@ export default function SolutionSubmitPage() {
         onSubmit={handleSubmitSolution}
       />
 
-      <CustomTestCasesSection onChange={() => {}} />
+      <CustomTestCasesSection problemId={Number(value.problemId)} onChange={() => {}} />
     </section>
   );
 }
