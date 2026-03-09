@@ -32,20 +32,31 @@ export default function CustomTestCasesSection({ problemId, onChange }: Props) {
   };
 
   const submit = async () => {
-    const validCases = cases.filter((c) => c.input.trim() !== '' && c.output.trim() !== '');
-
-    if (validCases.length === 0) {
-      alert('입력값과 출력값을 모두 작성해주세요.');
-      return;
-    }
-
-    if (!problemId || problemId <= 0) {
+    if (!Number.isInteger(problemId) || problemId <= 0) {
       alert('유효한 문제 번호가 필요합니다.');
       return;
     }
 
+    const hasIncompleteCase = cases.some((c) => {
+      const hasInput = c.input.trim() !== '';
+      const hasOutput = c.output.trim() !== '';
+      return hasInput !== hasOutput;
+    });
+
+    if (hasIncompleteCase) {
+      alert('입력값과 출력값을 모두 작성하거나, 작성 중인 행을 삭제해주세요.');
+      return;
+    }
+
+    const validCases = cases.filter((c) => c.input.trim() !== '' && c.output.trim() !== '');
+
+    if (validCases.length === 0) {
+      alert('제출할 테스트 케이스를 1개 이상 작성해주세요.');
+      return;
+    }
+
     try {
-      await Promise.all(
+      const results = await Promise.allSettled(
         validCases.map((c) =>
           postTestcasesApi({
             problemId,
@@ -55,8 +66,33 @@ export default function CustomTestCasesSection({ problemId, onChange }: Props) {
         ),
       );
 
-      alert('테스트 케이스가 등록되었습니다.');
-      setCases([]);
+      const failedCaseIds = validCases
+        .filter((_, index) => results[index].status === 'rejected')
+        .map((c) => c.id);
+
+      const successCount = results.filter((result) => result.status === 'fulfilled').length;
+
+      if (failedCaseIds.length === 0) {
+        alert('테스트 케이스가 등록되었습니다.');
+        setCases([]);
+        return;
+      }
+
+      setCases((prev) =>
+        prev.filter((c) => {
+          const isEmpty = c.input.trim() === '' && c.output.trim() === '';
+          const isFailed = failedCaseIds.includes(c.id);
+
+          return isEmpty || isFailed;
+        }),
+      );
+
+      if (successCount === 0) {
+        alert('테스트 케이스 등록에 실패했습니다.');
+        return;
+      }
+
+      alert(`${successCount}개의 테스트 케이스가 등록되었습니다.`);
     } catch (error) {
       alert('테스트 케이스 등록에 실패했습니다.');
     }
