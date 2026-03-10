@@ -3,19 +3,21 @@ import { useEffect, useRef, useState } from 'react';
 import type { CustomTestCase, CustomTestCasesChangePayload } from './types';
 import { CustomTestCaseItem } from './CustomTestCaseItem';
 import FormActionButtons from '../common/FormActionButtons';
+import { postTestcasesApi } from '@/apis/testcases/postTestcasesApi';
 
 interface Props {
+  problemId: number;
   onChange: (payload: CustomTestCasesChangePayload) => void;
 }
 
-export default function CustomTestCasesSection({ onChange }: Props) {
+export default function CustomTestCasesSection({ problemId, onChange }: Props) {
   const [cases, setCases] = useState<CustomTestCase[]>([]);
 
   const onChangeRef = useRef(onChange);
 
   useEffect(() => {
     onChangeRef.current = onChange;
-  });
+  }, [onChange]);
 
   useEffect(() => {
     onChangeRef.current({ cases, isPublic: false });
@@ -29,8 +31,71 @@ export default function CustomTestCasesSection({ onChange }: Props) {
     setCases([]);
   };
 
-  const submit = () => {
-    console.log('submit solution', cases);
+  const submit = async () => {
+    if (!Number.isInteger(problemId) || problemId <= 0) {
+      alert('유효한 문제 번호가 필요합니다.');
+      return;
+    }
+
+    const hasIncompleteCase = cases.some((c) => {
+      const hasInput = c.input.trim() !== '';
+      const hasOutput = c.output.trim() !== '';
+      return hasInput !== hasOutput;
+    });
+
+    if (hasIncompleteCase) {
+      alert('입력값과 출력값을 모두 작성하거나, 작성 중인 행을 삭제해주세요.');
+      return;
+    }
+
+    const validCases = cases.filter((c) => c.input.trim() !== '' && c.output.trim() !== '');
+
+    if (validCases.length === 0) {
+      alert('제출할 테스트 케이스를 1개 이상 작성해주세요.');
+      return;
+    }
+
+    try {
+      const results = await Promise.allSettled(
+        validCases.map((c) =>
+          postTestcasesApi({
+            problemId,
+            input: c.input.trim(),
+            output: c.output.trim(),
+          }),
+        ),
+      );
+
+      const failedCaseIds = validCases
+        .filter((_, index) => results[index].status === 'rejected')
+        .map((c) => c.id);
+
+      const successCount = results.filter((result) => result.status === 'fulfilled').length;
+
+      if (failedCaseIds.length === 0) {
+        alert('테스트 케이스가 등록되었습니다.');
+        setCases([]);
+        return;
+      }
+
+      setCases((prev) =>
+        prev.filter((c) => {
+          const isEmpty = c.input.trim() === '' && c.output.trim() === '';
+          const isFailed = failedCaseIds.includes(c.id);
+
+          return isEmpty || isFailed;
+        }),
+      );
+
+      if (successCount === 0) {
+        alert('테스트 케이스 등록에 실패했습니다.');
+        return;
+      }
+
+      alert(`${successCount}개의 테스트 케이스가 등록되었습니다.`);
+    } catch (error) {
+      alert('테스트 케이스 등록에 실패했습니다.');
+    }
   };
 
   const updateCase = (id: string, field: 'input' | 'output', value: string) => {
@@ -62,7 +127,8 @@ export default function CustomTestCasesSection({ onChange }: Props) {
             onClick={addCase}
             className="inline-flex items-center text-xs font-medium text-blue-500"
           >
-            <span className="material-symbols-outlined mr-1 text-base">add_circle</span>추가하기
+            <span className="material-symbols-outlined mr-1 text-base">add_circle</span>
+            추가하기
           </button>
         </div>
 
