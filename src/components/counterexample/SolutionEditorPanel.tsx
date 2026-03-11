@@ -17,9 +17,10 @@ type Props = {
   onCopy: () => void;
   onFindCounterExample: () => void;
 
-  onSubmit: () => void; // Cmd/Ctrl + Enter
+  onSubmit: () => void;
   isPublic: boolean;
   onPublicChange: (checked: boolean) => void;
+  isFindingCounterExample: boolean;
 };
 
 export default function SolutionEditorPanel({
@@ -33,6 +34,7 @@ export default function SolutionEditorPanel({
   onFindCounterExample,
   isPublic,
   onPublicChange,
+  isFindingCounterExample,
 }: Props) {
   return (
     <section className="flex h-full flex-col overflow-hidden rounded-xl border border-slate-200 bg-white shadow-sm dark:border-slate-700 dark:bg-slate-800 lg:col-span-2">
@@ -66,12 +68,10 @@ export default function SolutionEditorPanel({
           ⧉
         </button>
       </div>
-
       {/** 공통 CodeEditor 사용 */}
       <div className="relative flex-grow overflow-hidden">
         <CodeEditor language={language} value={code} onChange={onChangeCode} onSubmit={onSubmit} />
       </div>
-
       {/** 하단바 */}
       <div className="flex flex-shrink-0 items-center justify-between border-t border-slate-200 bg-slate-50 px-4 py-3 dark:border-slate-700 dark:bg-slate-800/50">
         <div className="-mt-2">
@@ -82,10 +82,11 @@ export default function SolutionEditorPanel({
         <div className="flex items-center gap-3">
           <button
             type="button"
-            className="inline-flex items-center rounded-md bg-blue-500 px-4 py-2 text-sm font-medium text-white shadow-sm transition-colors hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500"
             onClick={onFindCounterExample}
+            disabled={isFindingCounterExample}
+            className="inline-flex items-center rounded-md bg-blue-500 px-4 py-2 text-sm font-medium text-white shadow-sm transition-colors hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 disabled:cursor-not-allowed disabled:opacity-60"
           >
-            반례 찾기
+            {isFindingCounterExample ? '반례 찾는 중...' : '반례 찾기'}
           </button>
         </div>
       </div>
