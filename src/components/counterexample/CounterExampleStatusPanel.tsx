@@ -4,23 +4,39 @@ import type { FailedCase } from '@/types/counterexample';
 type Props = {
   failedCount: number;
   cases: FailedCase[];
+  isLoading: boolean;
+  hasSearched: boolean;
 };
 
-export default function CounterExampleStatusPanel({ failedCount, cases }: Props) {
-  return (
-    <aside className="flex h-full flex-col overflow-hidden rounded-xl border border-slate-200 bg-white shadow-sm dark:border-slate-700 dark:bg-slate-800 lg:col-span-1">
-      <div className="flex flex-shrink-0 items-center justify-between border-b border-slate-200 bg-slate-50 px-5 py-4 dark:border-slate-700 dark:bg-slate-800/50">
-        <h2 className="flex items-center text-sm font-semibold text-slate-900 dark:text-white">
-          <span className="mr-2">⚠️</span>
-          실행 결과
-        </h2>
+export default function CounterExampleStatusPanel({
+  failedCount,
+  cases,
+  isLoading,
+  hasSearched,
+}: Props) {
+  let content: React.ReactNode;
 
-        <span className="rounded-full bg-red-100 px-2.5 py-0.5 text-xs font-medium text-red-800 dark:bg-red-900/30 dark:text-red-300">
-          {failedCount} Failed
-        </span>
+  if (isLoading) {
+    content = (
+      <div className="flex h-full items-center justify-center text-sm text-slate-500 dark:text-slate-400">
+        반례를 탐색하고 있습니다...
       </div>
-
-      <div className="flex-grow space-y-4 overflow-y-auto bg-white p-5 dark:bg-slate-800">
+    );
+  } else if (!hasSearched) {
+    content = (
+      <div className="flex h-full items-center justify-center text-sm text-slate-500 dark:text-slate-400">
+        아직 실행 결과가 없습니다.
+      </div>
+    );
+  } else if (cases.length === 0) {
+    content = (
+      <div className="flex h-full items-center justify-center text-sm text-slate-500 dark:text-slate-400">
+        발견된 반례가 없습니다.
+      </div>
+    );
+  } else {
+    content = (
+      <div className="space-y-4">
         <p className="mb-2 text-xs text-slate-500 dark:text-slate-400">
           제출한 코드에서 실패한 테스트 케이스입니다.
         </p>
@@ -33,11 +49,14 @@ export default function CounterExampleStatusPanel({ failedCount, cases }: Props)
             <div className="mb-3 flex items-center justify-between border-b border-red-100 pb-2 dark:border-red-900/30">
               <span className="flex items-center text-xs font-medium text-red-700 dark:text-red-400">
                 <span className="mr-1">✖</span>
-                Test Case#{tc.id}
+                Test Case #{tc.id}
               </span>
-              <span className="font-mono text-xs text-red-600 opacity-75 dark:text-red-400">
-                {tc.timeMs}ms
-              </span>
+
+              {tc.timeMs !== undefined && (
+                <span className="font-mono text-xs text-red-600 opacity-75 dark:text-red-400">
+                  {tc.timeMs}ms
+                </span>
+              )}
             </div>
 
             <div className="space-y-3">
@@ -45,7 +64,7 @@ export default function CounterExampleStatusPanel({ failedCount, cases }: Props)
                 <span className="text-[10px] font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400">
                   입력값
                 </span>
-                <div className="mt-1 overflow-x-auto whitespace-nowrap rounded border border-slate-200 bg-white p-2 font-mono text-xs text-slate-700 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-300">
+                <div className="mt-1 overflow-x-auto whitespace-pre-wrap rounded border border-slate-200 bg-white p-2 font-mono text-xs text-slate-700 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-300">
                   {tc.input}
                 </div>
               </div>
@@ -73,6 +92,23 @@ export default function CounterExampleStatusPanel({ failedCount, cases }: Props)
           </div>
         ))}
       </div>
+    );
+  }
+
+  return (
+    <aside className="flex h-full flex-col overflow-hidden rounded-xl border border-slate-200 bg-white shadow-sm dark:border-slate-700 dark:bg-slate-800 lg:col-span-1">
+      <div className="flex flex-shrink-0 items-center justify-between border-b border-slate-200 bg-slate-50 px-5 py-4 dark:border-slate-700 dark:bg-slate-800/50">
+        <h2 className="flex items-center text-sm font-semibold text-slate-900 dark:text-white">
+          <span className="mr-2">⚠️</span>
+          실행 결과
+        </h2>
+
+        <span className="rounded-full bg-red-100 px-2.5 py-0.5 text-xs font-medium text-red-800 dark:bg-red-900/30 dark:text-red-300">
+          {failedCount} Failed
+        </span>
+      </div>
+
+      <div className="flex-grow overflow-y-auto bg-white p-5 dark:bg-slate-800">{content}</div>
     </aside>
   );
 }
