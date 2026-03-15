@@ -95,7 +95,7 @@ export default function SolutionCodeCard({
         className ?? '',
       ].join(' ')}
     >
-      <div className="space-y-6 px-4 py-5 sm:p-8">
+      <div className="h-[600px]">
         <SourceCodeEditor
           label="정답 코드"
           language={value.language as EditorLang}

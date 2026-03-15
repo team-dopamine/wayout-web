@@ -83,7 +83,7 @@ export default function CounterExamplePage() {
   }, [code, isPublic, language, problemId]);
 
   return (
-    <div className="grid h-[700px] grid-cols-1 gap-6 lg:grid-cols-3">
+    <div className="grid h-[700px] min-h-0 grid-cols-1 gap-6 lg:grid-cols-3">
       <SolutionEditorPanel
         language={language}
         languageOptions={LANG_OPTIONS}

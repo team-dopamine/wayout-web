@@ -56,16 +56,18 @@ export default function SolutionSubmitPage() {
 
   return (
     <section className="space-y-8">
-      <SolutionCodeCard
-        value={value}
-        onChange={setValue}
-        isPublic={isPublic}
-        onPublicChange={setIsPublic}
-        onClear={() => {
-          setValue((prev) => ({ ...prev, problemId: '', code: '' }));
-        }}
-        onSubmit={handleSubmitSolution}
-      />
+      <div className="h-[700px]">
+        <SolutionCodeCard
+          value={value}
+          onChange={setValue}
+          isPublic={isPublic}
+          onPublicChange={setIsPublic}
+          onClear={() => {
+            setValue((prev) => ({ ...prev, problemId: '', code: '' }));
+          }}
+          onSubmit={handleSubmitSolution}
+        />
+      </div>
 
       <CustomTestCasesSection problemId={Number(value.problemId)} onChange={() => {}} />
     </section>
