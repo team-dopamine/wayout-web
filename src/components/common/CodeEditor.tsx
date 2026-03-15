@@ -3,8 +3,7 @@ import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import CodeMirror from '@uiw/react-codemirror';
 import { oneDark } from '@codemirror/theme-one-dark';
 import { keymap, EditorView } from '@codemirror/view';
-import { defaultKeymap, historyKeymap, indentWithTab } from '@codemirror/commands';
-import { history } from '@codemirror/commands';
+import { defaultKeymap, historyKeymap, indentWithTab, history } from '@codemirror/commands';
 import { EditorState } from '@codemirror/state';
 import { indentUnit } from '@codemirror/language';
 
@@ -42,15 +41,31 @@ export default function CodeEditor({ language, value, onChange, onSubmit }: Prop
   const editorTheme = useMemo(
     () =>
       EditorView.theme({
-        '&': { height: '100%' },
-        '&.cm-editor': { height: '100%', backgroundColor: 'transparent' },
+        '&': {
+          height: '100%',
+          width: '100%',
+        },
+        '&.cm-editor': {
+          height: '100%',
+          width: '100%',
+          backgroundColor: 'transparent',
+        },
         '.cm-scroller': {
+          height: '100%',
+          overflowX: 'auto',
+          overflowY: 'auto',
           fontFamily:
             'ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace',
         },
-        '.cm-gutters': { display: 'none' },
-        '.cm-content': { padding: '1rem 1rem 1rem 3.5rem' },
-        '.cm-line': { lineHeight: '1.5rem' },
+        '.cm-content': {
+          padding: '1rem 1rem 1rem 3.5rem',
+        },
+        '.cm-gutters': {
+          display: 'none',
+        },
+        '.cm-line': {
+          lineHeight: '1.5rem',
+        },
       }),
     [],
   );
@@ -58,7 +73,9 @@ export default function CodeEditor({ language, value, onChange, onSubmit }: Prop
   const attachScrollListener = useCallback((view: EditorView) => {
     detachScrollRef.current?.();
 
-    const onScroll = () => setScrollTop(view.scrollDOM.scrollTop);
+    const onScroll = () => {
+      setScrollTop(view.scrollDOM.scrollTop);
+    };
     view.scrollDOM.addEventListener('scroll', onScroll, { passive: true });
 
     detachScrollRef.current = () => {
@@ -72,7 +89,6 @@ export default function CodeEditor({ language, value, onChange, onSubmit }: Prop
       viewRef.current = view;
       setLineCount(Math.max(1, view.state.doc.lines));
       setScrollTop(view.scrollDOM.scrollTop);
-
       attachScrollListener(view);
     },
     [attachScrollListener],
@@ -88,20 +104,18 @@ export default function CodeEditor({ language, value, onChange, onSubmit }: Prop
     () => [
       indentUnit.of('    '),
       EditorState.tabSize.of(4),
-
       history(),
       keymap.of([...defaultKeymap, ...historyKeymap, indentWithTab]),
-
       languageExtension,
+      oneDark,
       editorTheme,
     ],
     [languageExtension, editorTheme],
   );
 
   return (
-    <div className="relative h-full w-full overflow-hidden bg-[#1e1e1e] text-sm text-slate-300">
-      {/** 왼쪽 라인넘버 UI */}
-      <div className="pointer-events-none absolute bottom-0 left-0 top-0 w-12 select-none border-r border-[#333] bg-[#1e1e1e] pr-2 text-slate-500">
+    <div className="relative h-full min-h-0 w-full overflow-hidden rounded-md bg-[#1e1e1e] text-sm text-slate-300">
+      <div className="pointer-events-none absolute inset-y-0 left-0 z-10 w-12 select-none border-r border-[#333] bg-[#1e1e1e] pr-2 text-slate-500">
         <div className="pt-4 text-right" style={{ transform: `translateY(-${scrollTop}px)` }}>
           {Array.from({ length: lineCount }).map((_, idx) => (
             <div key={idx} className="leading-6">
@@ -111,27 +125,33 @@ export default function CodeEditor({ language, value, onChange, onSubmit }: Prop
         </div>
       </div>
 
-      <CodeMirror
-        value={value}
-        onChange={(val) => onChange(val)}
-        onKeyDown={handleKeyDown}
-        spellCheck={false}
-        theme={oneDark}
-        height="100%"
-        extensions={extensions}
-        basicSetup={{
-          lineNumbers: false,
-          foldGutter: false,
-          highlightActiveLineGutter: false,
-          autocompletion: true,
-          bracketMatching: true,
-          closeBrackets: true,
-          highlightSelectionMatches: true,
-          indentOnInput: true,
-        }}
-        onCreateEditor={handleCreateEditor}
-        onUpdate={(vu) => setLineCount(Math.max(1, vu.state.doc.lines))}
-      />
+      <div className="absolute inset-0 min-h-0">
+        <CodeMirror
+          className="h-full"
+          value={value}
+          onChange={(val) => onChange(val)}
+          onKeyDown={handleKeyDown}
+          spellCheck={false}
+          height="100%"
+          minHeight="100%"
+          maxHeight="100%"
+          extensions={extensions}
+          basicSetup={{
+            lineNumbers: false,
+            foldGutter: false,
+            highlightActiveLineGutter: false,
+            autocompletion: true,
+            bracketMatching: true,
+            closeBrackets: true,
+            highlightSelectionMatches: true,
+            indentOnInput: true,
+          }}
+          onCreateEditor={handleCreateEditor}
+          onUpdate={(vu) => {
+            setLineCount(Math.max(1, vu.state.doc.lines));
+          }}
+        />
+      </div>
     </div>
   );
 }
