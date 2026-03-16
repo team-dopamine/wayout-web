@@ -19,9 +19,6 @@ export default function ProblemTable({
   pageSize,
   onPageChange,
 }: Props) {
-  const start = totalElements === 0 ? 0 : currentPage * pageSize + 1;
-  const end = Math.min((currentPage + 1) * pageSize, totalElements);
-
   const getVisiblePages = (): (number | '...')[] => {
     if (totalPages <= 7) {
       return Array.from({ length: totalPages }, (_, i) => i);
@@ -74,19 +71,7 @@ export default function ProblemTable({
         </table>
       </div>
 
-      <div className="flex items-center justify-between border-t border-gray-200 px-6 py-4">
-        <p className="text-sm text-gray-500">
-          {totalElements > 0 ? (
-            <>
-              Showing <span className="font-medium text-gray-900">{start}</span> to{' '}
-              <span className="font-medium text-gray-900">{end}</span> of{' '}
-              <span className="font-medium text-gray-900">{totalElements}</span> results
-            </>
-          ) : (
-            'Showing 0 results'
-          )}
-        </p>
-
+      <div className="flex justify-end border-t border-gray-200 px-6 py-4">
         <div className="flex items-center overflow-hidden rounded-lg border border-gray-200">
           <button
             type="button"
@@ -95,7 +80,7 @@ export default function ProblemTable({
             className="flex h-10 w-10 items-center justify-center text-gray-400 transition-colors hover:bg-gray-50 disabled:cursor-not-allowed disabled:text-gray-300"
             aria-label="Previous page"
           >
-            <span className="material-icons text-lg">chevron_left</span>
+            <span className="material-symbols-outlined text-lg">chevron_left</span>
           </button>
 
           {visiblePages.map((page, index) =>
@@ -129,7 +114,7 @@ export default function ProblemTable({
             className="flex h-10 w-10 items-center justify-center border-l border-gray-200 text-gray-400 transition-colors hover:bg-gray-50 disabled:cursor-not-allowed disabled:text-gray-300"
             aria-label="Next page"
           >
-            <span className="material-icons text-lg">chevron_right</span>
+            <span className="material-symbols-outlined text-lg">chevron_right</span>
           </button>
         </div>
       </div>
