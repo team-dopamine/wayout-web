@@ -1,4 +1,4 @@
-const HEADERS = ['ID / Time', '사용자', '문제', '언어', '수행'];
+const HEADERS = ['ID / 날짜', '사용자', '문제', '언어', '실행시간'];
 
 const SubmissionHeader = () => (
   <thead className="bg-slate-50/50 dark:bg-slate-800/50">
