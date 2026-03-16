@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import ProblemTable from '@/components/problems/ProblemTable';
 import ProblemSearchBar from '@/components/problems/ProblemSearchBar';
 import { getProblem, getProblemSearch } from '@/apis/problems/problems';
@@ -7,6 +8,8 @@ import type { Problem, ProblemSearch } from '@/apis/problems/problems.type';
 const PAGE_SIZE = 8;
 
 export default function ProblemsPage() {
+  const navigate = useNavigate();
+
   const [problems, setProblems] = useState<Problem[]>([]);
   const [searchKeyword, setSearchKeyword] = useState('');
   const [searchResults, setSearchResults] = useState<ProblemSearch[]>([]);
@@ -45,6 +48,7 @@ export default function ProblemsPage() {
 
     if (!trimmedKeyword) {
       setSearchResults([]);
+      setIsSearching(false);
       return;
     }
 
@@ -52,6 +56,7 @@ export default function ProblemsPage() {
 
     if (!isNumberKeyword && trimmedKeyword.length < 2) {
       setSearchResults([]);
+      setIsSearching(false);
       return;
     }
 
@@ -76,8 +81,9 @@ export default function ProblemsPage() {
   };
 
   const handleSelectSearchResult = (selectedProblem: ProblemSearch) => {
-    setSearchKeyword(`${selectedProblem.problemNo}. ${selectedProblem.title}`);
+    setSearchKeyword('');
     setSearchResults([]);
+    navigate(`/problems/${selectedProblem.platform}/${selectedProblem.problemNo}`);
   };
 
   const handleReset = () => {
