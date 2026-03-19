@@ -1,3 +1,4 @@
+import type { ReactNode } from 'react';
 import ProblemSearchList from '@/components/problems/ProblemSearchList';
 import type { ProblemSearch } from '@/apis/problems/problems.type';
 
@@ -22,19 +23,21 @@ export default function ProblemSearchBar({
   const hasResults = searchResults.length > 0;
 
   const dropdownClassName =
-    'absolute z-20 mt-2 w-full rounded-xl border border-gray-200 bg-white px-4 py-3 text-sm text-gray-500 shadow-md';
+    'absolute z-20 mt-2 w-full rounded-xl border border-gray-200 bg-white shadow-md';
 
-  let dropdownContent = null;
+  let dropdownContent: ReactNode = null;
 
   if (hasKeyword) {
     if (isSearching) {
-      dropdownContent = <div className={dropdownClassName}>검색 중...</div>;
+      dropdownContent = <div className="px-4 py-3 text-sm text-gray-500">검색 중...</div>;
     } else if (hasResults) {
       dropdownContent = (
         <ProblemSearchList results={searchResults} onSelect={onSelectSearchResult} />
       );
     } else {
-      dropdownContent = <div className={dropdownClassName}>검색 결과가 없습니다.</div>;
+      dropdownContent = (
+        <div className="px-4 py-3 text-sm text-gray-500">검색 결과가 없습니다.</div>
+      );
     }
   }
 
@@ -46,6 +49,7 @@ export default function ProblemSearchBar({
         </span>
 
         <input
+          type="text"
           value={searchKeyword}
           onChange={onChangeKeyword}
           placeholder="문제 제목 또는 번호를 검색하세요"
@@ -63,7 +67,7 @@ export default function ProblemSearchBar({
         )}
       </div>
 
-      {hasKeyword && <div className="relative">{dropdownContent}</div>}
+      {hasKeyword && dropdownContent && <div className={dropdownClassName}>{dropdownContent}</div>}
     </div>
   );
 }

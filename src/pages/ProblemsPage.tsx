@@ -1,24 +1,28 @@
 import { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
 import ProblemTable from '@/components/problems/ProblemTable';
 import ProblemSearchBar from '@/components/problems/ProblemSearchBar';
-import { getProblem, getProblemSearch } from '@/apis/problems/problems';
-import type { Problem, ProblemSearch } from '@/apis/problems/problems.type';
+import { getProblem } from '@/apis/problems/problems';
+import type { Problem } from '@/apis/problems/problems.type';
+import useProblemSearch from '@/hooks/useProblemSearch';
 
 const PAGE_SIZE = 8;
 
 export default function ProblemsPage() {
-  const navigate = useNavigate();
-
   const [problems, setProblems] = useState<Problem[]>([]);
-  const [searchKeyword, setSearchKeyword] = useState('');
-  const [searchResults, setSearchResults] = useState<ProblemSearch[]>([]);
   const [isLoading, setIsLoading] = useState(false);
-  const [isSearching, setIsSearching] = useState(false);
 
   const [page, setPage] = useState(0);
   const [totalPages, setTotalPages] = useState(0);
   const [totalElements, setTotalElements] = useState(0);
+
+  const {
+    searchKeyword,
+    searchResults,
+    isSearching,
+    handleChangeKeyword,
+    handleSelectSearchResult,
+    handleResetKeyword,
+  } = useProblemSearch();
 
   useEffect(() => {
     const fetchProblems = async () => {
@@ -43,52 +47,8 @@ export default function ProblemsPage() {
     fetchProblems();
   }, [page]);
 
-  useEffect(() => {
-    const trimmedKeyword = searchKeyword.trim();
-
-    if (!trimmedKeyword) {
-      setSearchResults([]);
-      setIsSearching(false);
-      return;
-    }
-
-    const isNumberKeyword = /^\d+$/.test(trimmedKeyword);
-
-    if (!isNumberKeyword && trimmedKeyword.length < 2) {
-      setSearchResults([]);
-      setIsSearching(false);
-      return;
-    }
-
-    const timer = setTimeout(async () => {
-      try {
-        setIsSearching(true);
-        const data = await getProblemSearch(trimmedKeyword);
-        setSearchResults(data);
-      } catch (error) {
-        console.error('문제 검색 실패:', error);
-        setSearchResults([]);
-      } finally {
-        setIsSearching(false);
-      }
-    }, 300);
-
-    return () => clearTimeout(timer);
-  }, [searchKeyword]);
-
-  const handleChangeKeyword = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setSearchKeyword(e.target.value);
-  };
-
-  const handleSelectSearchResult = (selectedProblem: ProblemSearch) => {
-    setSearchKeyword('');
-    setSearchResults([]);
-    navigate(`/problems/${selectedProblem.platform}/${selectedProblem.problemNo}`);
-  };
-
   const handleReset = () => {
-    setSearchKeyword('');
-    setSearchResults([]);
+    handleResetKeyword();
     setPage(0);
   };
 
