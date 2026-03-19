@@ -43,7 +43,7 @@ export default function SourceCodeEditor({
   onSubmitSolution,
 }: Props) {
   return (
-    <section className="flex h-full flex-col overflow-hidden rounded-xl border border-slate-200 bg-white shadow-sm dark:border-slate-700 dark:bg-slate-800">
+    <section className="flex h-full min-h-0 flex-col overflow-hidden rounded-xl border border-slate-200 bg-white shadow-sm dark:border-slate-700 dark:bg-slate-800">
       <div className="flex flex-shrink-0 items-center justify-between border-b border-slate-200 bg-slate-50 px-4 py-3 dark:border-slate-700 dark:bg-slate-800/50">
         <div className="flex items-center gap-4">
           <span className="text-sm font-semibold text-slate-700 dark:text-slate-200">{label}</span>
@@ -73,7 +73,7 @@ export default function SourceCodeEditor({
         </div>
       </div>
 
-      <div className="relative flex-grow overflow-hidden">
+      <div className="relative min-h-0 flex-1 overflow-hidden">
         <CodeEditor language={language} value={value} onChange={onChange} onSubmit={onSubmit} />
       </div>
 

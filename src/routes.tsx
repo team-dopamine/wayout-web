@@ -26,8 +26,7 @@ export const router = createBrowserRouter([
           { path: '/problems/:problemPlatform/:problemNo', element: <CounterExamplePage /> },
           { path: '/solution-submit/:problemPlatform/:problemNo', element: <SolutionSubmitPage /> },
 
-          // TODO: 추후 API 연동 후 링크 변경
-          { path: '/submissions/id', element: <ProblemSubmissionsPage /> },
+          { path: '/submissions/:problemId', element: <ProblemSubmissionsPage /> },
         ],
       },
 

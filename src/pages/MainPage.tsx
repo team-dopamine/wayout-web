@@ -9,7 +9,7 @@ const FEATURES = [
     iconWrapClassName: 'bg-green-50 text-green-600 dark:bg-green-900/30 dark:text-green-400',
     title: 'Submit Solution',
     description: 'Check if your logic holds against generated test cases.',
-    href: '/counter-example',
+    href: `/problems`,
   },
   {
     icon: 'library_books',

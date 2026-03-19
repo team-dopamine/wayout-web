@@ -20,7 +20,7 @@ export default function ProblemShellLayout() {
       return;
     }
 
-    if (key === 'find') navigate(`/counter-example/${problemId}`);
+    if (key === 'find') navigate(`/problems/${problemId}`);
     if (key === 'status') navigate(`/submissions/${problemId}`);
     if (key === 'contribute') navigate(`/solution-submit/${problemId}`);
   };
