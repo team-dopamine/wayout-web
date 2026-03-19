@@ -21,7 +21,7 @@ export default function ProblemTable({
 }: Props) {
   const getVisiblePages = (): (number | '...')[] => {
     if (totalPages <= 7) {
-      return Array.from({ length: totalPages }, (_, i) => i);
+      return Array.from({ length: totalPages }, (_, index) => index);
     }
 
     const pages: (number | '...')[] = [];
@@ -37,8 +37,8 @@ export default function ProblemTable({
     const startPage = Math.max(1, currentPage - 1);
     const endPage = Math.min(lastPage - 1, currentPage + 1);
 
-    for (let i = startPage; i <= endPage; i += 1) {
-      pages.push(i);
+    for (let page = startPage; page <= endPage; page += 1) {
+      pages.push(page);
     }
 
     if (currentPage < lastPage - 2) {
