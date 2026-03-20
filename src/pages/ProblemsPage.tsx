@@ -1,86 +1,82 @@
-import { useEffect, useMemo, useState } from 'react';
-import ProblemTable from '../components/problems/ProblemTable';
+import { useEffect, useState } from 'react';
+import ProblemTable from '@/components/problems/ProblemTable';
+import ProblemSearchBar from '@/components/problems/ProblemSearchBar';
 import { getProblem } from '@/apis/problems/problems';
-import { Problem } from '@/apis/problems/problems.type';
+import type { Problem } from '@/apis/problems/problems.type';
+import useProblemSearch from '@/hooks/useProblemSearch';
+
+const PAGE_SIZE = 8;
 
 export default function ProblemsPage() {
-  const [searchTerm, setSearchTerm] = useState<string>('');
+  const [problems, setProblems] = useState<Problem[]>([]);
+  const [isLoading, setIsLoading] = useState(false);
 
-  const [data, setData] = useState<Problem[]>([]);
+  const [page, setPage] = useState(0);
+  const [totalPages, setTotalPages] = useState(0);
+  const [totalElements, setTotalElements] = useState(0);
+
+  const {
+    searchKeyword,
+    searchResults,
+    isSearching,
+    handleChangeKeyword,
+    handleSelectSearchResult,
+    handleResetKeyword,
+  } = useProblemSearch();
+
   useEffect(() => {
-    (async () => {
-      const data = await getProblem();
-      setData(data);
-    })();
-  }, []);
+    const fetchProblems = async () => {
+      try {
+        setIsLoading(true);
 
-  // 검색 필터링 로직
-  const filteredRows = useMemo(() => {
-    return data.filter(
-      (content) =>
-        content.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        content.problemNo.toString().includes(searchTerm),
-    );
-  }, [data, searchTerm]);
+        const data = await getProblem(page, PAGE_SIZE);
+
+        setProblems(data.content);
+        setTotalPages(data.totalPages);
+        setTotalElements(data.totalElements);
+      } catch (error) {
+        console.error('문제 목록 조회 실패:', error);
+        setProblems([]);
+        setTotalPages(0);
+        setTotalElements(0);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    fetchProblems();
+  }, [page]);
+
+  const handleReset = () => {
+    handleResetKeyword();
+    setPage(0);
+  };
 
   return (
-    <div className="flex min-h-screen flex-col bg-slate-50 text-slate-900 transition-colors duration-300 dark:bg-slate-950 dark:text-slate-100">
-      <main className="relative flex flex-grow flex-col items-center px-4 py-10 sm:px-6 lg:px-8">
-        <div className="mx-auto w-full max-w-7xl space-y-6">
-          {/* 타이틀 영역 */}
-          <div>
-            <h1 className="text-3xl font-bold tracking-tight">문제 둘러보기</h1>
-            <p className="mt-2 text-slate-500 dark:text-slate-400">
-              다양한 알고리즘 문제를 해결하고 실력을 쌓아보세요.
-            </p>
-          </div>
+    <div className="mx-auto max-w-5xl space-y-6 px-4 py-6">
+      <ProblemSearchBar
+        searchKeyword={searchKeyword}
+        isSearching={isSearching}
+        searchResults={searchResults}
+        onChangeKeyword={handleChangeKeyword}
+        onReset={handleReset}
+        onSelectSearchResult={handleSelectSearchResult}
+      />
 
-          {/* 메인 카드 영역 */}
-          <div className="flex flex-col overflow-hidden rounded-xl border border-slate-200 bg-white shadow-sm dark:border-slate-800 dark:bg-slate-900">
-            {/* 검색바 섹션 */}
-            <div className="flex justify-center border-b border-slate-200 bg-slate-50/50 p-6 dark:border-slate-800 dark:bg-slate-900/50">
-              <div className="relative w-full max-w-2xl">
-                <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
-                  <svg
-                    className="h-5 w-5 text-slate-400"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    stroke="currentColor"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={2}
-                      d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
-                    />
-                  </svg>
-                </div>
-                <input
-                  type="text"
-                  placeholder="문제 제목 또는 번호로 검색하세요..."
-                  value={searchTerm}
-                  onChange={(e) => setSearchTerm(e.target.value)}
-                  className="block w-full rounded-lg border border-slate-200 bg-white py-3 pl-10 pr-3 leading-5 placeholder-slate-400 focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500 dark:border-slate-700 dark:bg-slate-800 dark:text-white dark:placeholder-slate-500 sm:text-sm"
-                />
-              </div>
-            </div>
-
-            {/* 테이블 컴포넌트 호출 */}
-            <ProblemTable problems={filteredRows} />
-
-            {/* 하단 푸터 영역 */}
-            {/* <div className="flex items-center justify-between border-t border-slate-200 bg-white px-4 py-3 dark:border-slate-800 dark:bg-slate-900 sm:px-6">
-              <div className="text-sm text-slate-500 dark:text-slate-400">
-                총{' '}
-                <span className="font-medium text-slate-900 dark:text-white">
-                  {filteredRows.length}
-                </span>
-                개의 결과
-              </div>
-            {/* </div> */}
-          </div>
+      {isLoading ? (
+        <div className="py-10 text-center text-sm text-gray-500">
+          문제 목록을 불러오는 중입니다...
         </div>
-      </main>
+      ) : (
+        <ProblemTable
+          problems={problems}
+          currentPage={page}
+          totalPages={totalPages}
+          totalElements={totalElements}
+          pageSize={PAGE_SIZE}
+          onPageChange={setPage}
+        />
+      )}
     </div>
   );
 }

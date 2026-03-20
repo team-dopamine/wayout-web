@@ -23,8 +23,8 @@ export const router = createBrowserRouter([
       {
         element: <ProblemShellLayout />,
         children: [
-          { path: '/problems/:problemId', element: <CounterExamplePage /> },
-          { path: '/solution-submit/:problemId', element: <SolutionSubmitPage /> },
+          { path: '/problems/:problemPlatform/:problemNo', element: <CounterExamplePage /> },
+          { path: '/solution-submit/:problemPlatform/:problemNo', element: <SolutionSubmitPage /> },
 
           { path: '/submissions/:problemId', element: <ProblemSubmissionsPage /> },
         ],
