@@ -1,64 +1,73 @@
-import { useMemo, useState } from 'react';
-import SubmissionTable, { Submission } from '@/components/submissions/SubmissionTable';
+import { useEffect, useState } from 'react';
+import SubmissionTable from '@/components/submissions/SubmissionTable';
 import Pagination from '@/components/common/Pagination';
-import { usePagination } from '@/hooks/usePagination';
-
-// Mock Data
-const mockSubmissions: Submission[] = Array.from({ length: 100 }, (_, i) => ({
-  id: `492${100 - i}`,
-  time: `${i + 1} mins ago`,
-  user: i % 2 === 0 ? 'AlgoMaster99' : 'CodeRunner',
-  problem: '1001. A+B Problem',
-  language: 'C++17',
-  performance: { time: '12 ms', memory: '4.2 MB' },
-}));
+import { getSubmissions } from '@/apis/submissions/submissions';
+import type { SubmissionTableItem } from '@/types/submissions.ui.type';
+import { mapSubmissionToTableItem } from '@/utils/submission.mapper';
 
 export default function SubmissionsPage() {
-  const [currentPage, setCurrentPage] = useState(1);
+  const [page, setPage] = useState(1);
   const itemsPerPage = 8;
 
-  const submissions = useMemo(() => mockSubmissions, []);
+  const [submissions, setSubmissions] = useState<SubmissionTableItem[]>([]);
+  const [totalItems, setTotalItems] = useState(0);
+  const [isLoading, setIsLoading] = useState(false);
 
-  const {
-    totalPages,
-    currentPage: safePage,
-    indexOfFirstItem,
-    indexOfLastItem,
-    currentItems,
-    totalItems,
-  } = usePagination(submissions, currentPage, itemsPerPage);
+  const totalPages = Math.ceil(totalItems / itemsPerPage);
+
+  useEffect(() => {
+    async function fetchSubmissions() {
+      try {
+        setIsLoading(true);
+
+        const data = await getSubmissions(page - 1, itemsPerPage);
+
+        setSubmissions(data.content.map(mapSubmissionToTableItem));
+        setTotalItems(data.totalElements);
+      } catch (error) {
+        console.error(error);
+        setSubmissions([]);
+        setTotalItems(0);
+      } finally {
+        setIsLoading(false);
+      }
+    }
+
+    fetchSubmissions();
+  }, [page]);
 
   return (
-    <div className="flex min-h-screen flex-col bg-slate-50 text-slate-900 transition-colors duration-300 dark:bg-slate-900 dark:text-white">
-      <main className="mx-auto w-full max-w-7xl flex-grow px-4 py-8 sm:px-6 lg:px-8">
-        <div className="mb-8">
-          <h2 className="text-2xl font-bold text-slate-900 dark:text-white sm:text-3xl">
-            모든 제출
-          </h2>
-          <p className="mt-1 text-sm text-slate-500 dark:text-slate-400">
-            커뮤니티의 시도들을 실시간으로 보여주는 피드
+    <div className="min-h-screen bg-slate-50 text-slate-700 dark:bg-slate-900 dark:text-slate-200">
+      <main className="mx-auto w-full max-w-5xl space-y-8 px-4 py-10 sm:px-6 lg:px-8">
+        <div className="space-y-2">
+          <h1 className="text-3xl font-bold text-slate-900 dark:text-white">제출 현황</h1>
+          <p className="text-sm text-slate-500 dark:text-slate-400">
+            사용자들의 제출 기록을 실시간으로 확인할 수 있습니다.
           </p>
         </div>
+        <section className="mx-auto mt-6 w-full max-w-[1000px] overflow-hidden rounded-xl border border-slate-200 bg-white shadow-sm dark:border-slate-700 dark:bg-slate-800">
+          <div className="border-t border-slate-200 dark:border-slate-700">
+            {isLoading ? (
+              <div className="py-10 text-center text-sm text-slate-500 dark:text-slate-400">
+                제출 목록을 불러오는 중입니다...
+              </div>
+            ) : (
+              <>
+                <SubmissionTable submissions={submissions} mode="problem" />
 
-        <div className="overflow-hidden rounded-xl border border-slate-200 bg-white shadow-sm dark:border-slate-700 dark:bg-slate-800">
-          <SubmissionTable submissions={currentItems} />
-
-          <div className="flex items-center justify-between border-t border-slate-200 bg-white px-4 py-3 dark:border-slate-700 dark:bg-slate-800 sm:px-6">
-            <div className="hidden sm:flex sm:flex-1 sm:items-center sm:justify-between">
-              <p className="text-sm text-slate-700 dark:text-slate-400">
-                Showing <span className="font-medium">{indexOfFirstItem + 1}</span> to{' '}
-                <span className="font-medium">{Math.min(indexOfLastItem, totalItems)}</span> of{' '}
-                <span className="font-medium">{totalItems}</span> results
-              </p>
-
-              <Pagination
-                currentPage={safePage}
-                totalPages={totalPages}
-                onChange={setCurrentPage}
-              />
-            </div>
+                <div className="border-t border-slate-200 bg-white px-4 py-3 dark:border-slate-700 dark:bg-slate-800 sm:px-6">
+                  <div className="hidden sm:flex sm:justify-end">
+                    <Pagination
+                      currentPage={page}
+                      totalPages={Math.max(totalPages, 1)}
+                      onChange={setPage}
+                    />
+                  </div>
+                </div>
+              </>
+            )}
           </div>
-        </div>
+        </section>
       </main>
     </div>
   );
