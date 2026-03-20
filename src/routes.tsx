@@ -9,7 +9,7 @@ import AuthOAuthRedirectPage from '@/pages/AuthOAuthRedirectPage';
 import MyProfilePage from '@/pages/MyProfilePage';
 
 import ProblemShellLayout from '@/components/layout/ProblemShellLayout';
-import ProblemSubmissionsPage from '@/pages/ProblemSubmissionPage';
+import ProblemSubmissionPage from '@/pages/ProblemSubmissionPage';
 
 import SubmissionsPage from '@/pages/SubmissionsPage';
 import NotFoundPage from '@/pages/NotFoundPage';
@@ -26,12 +26,11 @@ export const router = createBrowserRouter([
           { path: '/problems/:problemPlatform/:problemNo', element: <CounterExamplePage /> },
           { path: '/solution-submit/:problemPlatform/:problemNo', element: <SolutionSubmitPage /> },
 
-          { path: '/submissions/:problemId', element: <ProblemSubmissionsPage /> },
+          { path: '/submissions/:problemId', element: <ProblemSubmissionPage /> },
         ],
       },
 
       { path: '/submissions', element: <SubmissionsPage /> },
-
       { path: '/problems', element: <ProblemsPage /> },
       { path: '/onboarding', element: <OnboardingNicknamePage /> },
       { path: '/auth/oauth', element: <AuthOAuthRedirectPage /> },
