@@ -5,7 +5,6 @@ export interface Submission {
   id: string;
   time: string;
   user: string;
-  problem: string;
   language: string;
   performance: { time: string; memory: string };
 }

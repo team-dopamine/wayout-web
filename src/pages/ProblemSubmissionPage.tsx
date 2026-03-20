@@ -31,7 +31,6 @@ export default function ProblemSubmissionsPage() {
           id: String(item.id),
           time: getTimeAgo(item.createdAt),
           user: item.nickname,
-          problem: item.title,
           language: item.language,
           performance: {
             time: `${item.executionTime.toFixed(1)} ms`,

@@ -9,7 +9,8 @@ const SubmissionRow = ({ data }: SubmissionRowProps) => {
   return (
     <tr className="transition-colors hover:bg-slate-50 dark:hover:bg-slate-800/50">
       {/* 제출번호 */}
-      <td className="whitespace-nowrap px-6 py-4 text-sm">
+      {/* 제출번호 */}
+      <td className="whitespace-nowrap py-4 pl-10 pr-6 text-sm">
         <Link
           to={`/submission/${data.id}`}
           className="inline-block font-medium text-blue-600 hover:text-blue-500 hover:underline"
@@ -31,14 +32,6 @@ const SubmissionRow = ({ data }: SubmissionRowProps) => {
       </td>
 
       {/* 문제 */}
-      <td className="px-6 py-4">
-        <div
-          className="max-w-full truncate text-sm font-medium dark:text-white"
-          title={data.problem}
-        >
-          {data.problem}
-        </div>
-      </td>
 
       {/* 언어 */}
       <td className="whitespace-nowrap px-6 py-4 text-sm text-slate-500 dark:text-slate-400">
