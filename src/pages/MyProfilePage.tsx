@@ -4,16 +4,15 @@ import ContributionsSection, {
   type TabKey,
   type Contribution,
 } from '@/components/profile/ContributionsSection';
+import { mockContributions } from '@/components/profile/profile.mock';
 import { withdraw } from '@/apis/auth/withdraw';
 import { updateMyNickname, getMyProfile } from '@/apis/members/members';
-import { getMySolutionsApi } from '@/apis/solutions/solutions';
 import { MAX_LENGTH, validateNickname } from '@/constants/nickname';
-import { toContribution } from '@/utils/profile';
 
 const filterMap: Record<TabKey, (rows: Contribution[]) => Contribution[]> = {
   all: (rows) => rows,
-  correct: (rows) => rows.filter((row) => row.type === 'Correct Code'),
-  incorrect: (rows) => rows.filter((row) => row.type === 'Incorrect Code'),
+  correct: (rows) => rows.filter((c) => c.type === 'Correct Code'),
+  incorrect: (rows) => rows.filter((c) => c.type === 'Incorrect Code'),
 };
 
 export default function MyProfilePage() {
@@ -23,8 +22,6 @@ export default function MyProfilePage() {
   const [isWithdrawing, setIsWithdrawing] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
-  const [isContributionLoading, setIsContributionLoading] = useState(true);
-  const [contributions, setContributions] = useState<Contribution[]>([]);
 
   useEffect(() => {
     const fetchMyProfile = async () => {
@@ -43,46 +40,19 @@ export default function MyProfilePage() {
     fetchMyProfile();
   }, []);
 
-  useEffect(() => {
-    const fetchMySolutions = async () => {
-      try {
-        setIsContributionLoading(true);
-
-        const data = await getMySolutionsApi({
-          page: 0,
-          size: 100,
-          sort: ['createdAt,DESC'],
-        });
-
-        setContributions(data.content.map(toContribution));
-      } catch (error) {
-        console.error(error);
-        alert('기여 내역을 불러오지 못했어요.');
-      } finally {
-        setIsContributionLoading(false);
-      }
-    };
-
-    fetchMySolutions();
-  }, []);
-
-  const filteredContributions = useMemo(
-    () => filterMap[activeTab](contributions),
-    [activeTab, contributions],
-  );
+  const filteredContributions = useMemo(() => filterMap[activeTab](mockContributions), [activeTab]);
 
   const handleSaveNickname = useCallback(async () => {
-    const trimmedNickname = nickname.trim();
+    const trimmed = nickname.trim();
 
-    if (!validateNickname(trimmedNickname)) {
+    if (!validateNickname(trimmed)) {
       alert(`닉네임은 최대 ${MAX_LENGTH}자, 영문, 숫자만 사용할 수 있습니다.`);
       return;
     }
 
     try {
       setIsSaving(true);
-      await updateMyNickname({ nickname: trimmedNickname });
-      setNickname(trimmedNickname);
+      await updateMyNickname({ nickname: trimmed });
       alert('닉네임이 변경됐어요!');
     } catch (error) {
       console.error(error);
@@ -142,7 +112,6 @@ export default function MyProfilePage() {
             activeTab={activeTab}
             setActiveTab={setActiveTab}
             contributions={filteredContributions}
-            isLoading={isContributionLoading}
           />
 
           <div className="mt-6 flex justify-end">
