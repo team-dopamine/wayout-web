@@ -1,5 +1,7 @@
 export type SolutionLanguage = 'JAVA' | 'CPP' | 'PYTHON';
 
+export type SolutionType = 'CORRECT' | 'INCORRECT' | 'GENERATOR';
+
 export interface PostSolutionRequest {
   problemId: number;
   language: SolutionLanguage;
@@ -20,6 +22,7 @@ export interface MySolutionItem {
   problemTitle: string;
   language: SolutionLanguage;
   createdAt: string;
+  type?: SolutionType;
 }
 
 export interface GetMySolutionsResponse {
