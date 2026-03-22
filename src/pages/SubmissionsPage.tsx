@@ -16,24 +16,36 @@ export default function SubmissionsPage() {
   const totalPages = Math.ceil(totalItems / itemsPerPage);
 
   useEffect(() => {
+    let ignore = false;
+
     async function fetchSubmissions() {
       try {
         setIsLoading(true);
 
         const data = await getSubmissions(page - 1, itemsPerPage);
 
+        if (ignore) return;
+
         setSubmissions(data.content.map(mapSubmissionToTableItem));
         setTotalItems(data.totalElements);
       } catch (error) {
+        if (ignore) return;
+
         console.error(error);
         setSubmissions([]);
         setTotalItems(0);
       } finally {
-        setIsLoading(false);
+        if (!ignore) {
+          setIsLoading(false);
+        }
       }
     }
 
     fetchSubmissions();
+
+    return () => {
+      ignore = true;
+    };
   }, [page]);
 
   return (
@@ -45,6 +57,7 @@ export default function SubmissionsPage() {
             사용자들의 제출 기록을 실시간으로 확인할 수 있습니다.
           </p>
         </div>
+
         <section className="mx-auto mt-6 w-full max-w-[1000px] overflow-hidden rounded-xl border border-slate-200 bg-white shadow-sm dark:border-slate-700 dark:bg-slate-800">
           <div className="border-t border-slate-200 dark:border-slate-700">
             {isLoading ? (
