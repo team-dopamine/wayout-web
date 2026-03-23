@@ -1,54 +1,57 @@
 import { Link } from 'react-router-dom';
-import { Submission } from './SubmissionTable';
+import type { SubmissionTableItem, SubmissionTableMode } from '../../types/submissions.ui.type';
 
 interface SubmissionRowProps {
-  data: Submission;
+  data: SubmissionTableItem;
+  mode?: SubmissionTableMode;
 }
 
-const SubmissionRow = ({ data }: SubmissionRowProps) => {
+export default function SubmissionRow({ data, mode = 'problem' }: SubmissionRowProps) {
   return (
     <tr className="transition-colors hover:bg-slate-50 dark:hover:bg-slate-800/50">
-      {/* 제출번호 */}
-      {/* 제출번호 */}
-      <td className="whitespace-nowrap py-4 pl-10 pr-6 text-sm">
+      <td className="py-5 pl-20 pr-4 align-middle">
         <Link
           to={`/submission/${data.id}`}
-          className="inline-block font-medium text-blue-600 hover:text-blue-500 hover:underline"
+          className="block text-sm font-semibold text-blue-600 hover:underline dark:text-blue-400"
         >
           {data.id}
         </Link>
-        <div className="text-xs text-slate-400">{data.time}</div>
+        <div className="mt-1 text-sm text-slate-400 dark:text-slate-500">{data.dateLabel}</div>
       </td>
 
-      {/* 유저 */}
-      <td className="whitespace-nowrap px-6 py-4 text-sm font-medium dark:text-white">
+      {/* 사용자 */}
+      <td className="px-4 py-5 align-middle">
         <Link
           to={`/profile/${data.user}`}
-          className="block max-w-[180px] truncate text-left hover:text-blue-600 hover:underline dark:hover:text-blue-400"
+          className="block truncate text-sm font-semibold text-slate-900 hover:text-blue-600 hover:underline dark:text-white dark:hover:text-blue-400"
           title={data.user}
         >
           {data.user}
         </Link>
       </td>
 
-      {/* 문제 */}
-
-      {/* 언어 */}
-      <td className="whitespace-nowrap px-6 py-4 text-sm text-slate-500 dark:text-slate-400">
-        <span className="block max-w-[120px] truncate" title={data.language}>
-          {data.language}
-        </span>
+      {/* 문제 or 플랫폼 */}
+      <td className="px-4 py-5 align-middle">
+        <div
+          className="truncate text-sm font-semibold text-slate-900 dark:text-white"
+          title={mode === 'platform' ? (data.platform ?? '-') : data.problem}
+        >
+          {mode === 'platform' ? (data.platform ?? '-') : data.problem}
+        </div>
       </td>
 
-      {/* 성능 */}
-      <td className="whitespace-nowrap px-6 py-4 text-sm text-slate-500 dark:text-slate-400">
-        <div className="flex flex-col">
-          <span>{data.performance.time}</span>
-          <span className="text-xs text-slate-400">{data.performance.memory}</span>
+      {/* 언어 */}
+      <td className="px-4 py-5 align-middle text-sm text-slate-500 dark:text-slate-400">
+        {data.language}
+      </td>
+
+      {/* 실행시간 */}
+      <td className="px-4 py-5 align-middle">
+        <div className="flex flex-col text-sm text-slate-500 dark:text-slate-400">
+          <span>{data.executionTime}</span>
+          <span className="mt-1 text-sm text-slate-400 dark:text-slate-500">{data.memory}</span>
         </div>
       </td>
     </tr>
   );
-};
-
-export default SubmissionRow;
+}

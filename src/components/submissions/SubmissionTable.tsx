@@ -1,31 +1,24 @@
 import SubmissionHeader from './SubmissionHeader';
 import SubmissionRow from './SubmissionRow';
-
-export interface Submission {
-  id: string;
-  time: string;
-  user: string;
-  language: string;
-  performance: { time: string; memory: string };
-}
+import type { SubmissionTableItem, SubmissionTableMode } from '../../types/submissions.ui.type';
 
 interface SubmissionTableProps {
-  submissions: Submission[];
+  submissions: SubmissionTableItem[];
+  mode?: SubmissionTableMode;
 }
 
-const SubmissionTable = ({ submissions }: SubmissionTableProps) => {
+export default function SubmissionTable({ submissions, mode = 'problem' }: SubmissionTableProps) {
   return (
-    <div className="overflow-x-auto rounded-xl border border-slate-200 dark:border-slate-700">
-      <table className="w-full min-w-[900px] table-fixed divide-y divide-slate-200 dark:divide-slate-700">
-        <SubmissionHeader />
+    <div className="overflow-x-auto">
+      <table className="w-full border-collapse">
+        <SubmissionHeader mode={mode} />
+
         <tbody className="divide-y divide-slate-200 dark:divide-slate-700">
           {submissions.map((item) => (
-            <SubmissionRow key={item.id} data={item} />
+            <SubmissionRow key={item.id} data={item} mode={mode} />
           ))}
         </tbody>
       </table>
     </div>
   );
-};
-
-export default SubmissionTable;
+}
