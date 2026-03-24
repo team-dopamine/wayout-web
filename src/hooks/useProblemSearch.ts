@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { getProblemSearch } from '@/apis/problems/problems';
 import type { ProblemSearch } from '@/apis/problems/problems.type';
@@ -10,56 +10,71 @@ export default function useProblemSearch() {
   const [searchResults, setSearchResults] = useState<ProblemSearch[]>([]);
   const [isSearching, setIsSearching] = useState(false);
 
+  // 검색 실행 가능 여부 판단
+  const isValidKeyword = (keyword: string) => {
+    const trimmed = keyword.trim();
+    if (!trimmed) return false;
+    const isNumber = /^\d+$/.test(trimmed);
+    return isNumber || trimmed.length >= 2;
+  };
+
   useEffect(() => {
-    const trimmedKeyword = searchKeyword.trim();
+    const trimmed = searchKeyword.trim();
 
-    if (!trimmedKeyword) {
+    // 유효하지 않은 키워드 처리
+    if (!isValidKeyword(trimmed)) {
       setSearchResults([]);
       setIsSearching(false);
       return;
     }
 
-    const isNumberKeyword = /^\d+$/.test(trimmedKeyword);
+    let isCurrentRequest = true;
 
-    // 문자열 검색은 최소 2글자 이상일 때만 수행 (숫자 검색은 예외)
-    if (!isNumberKeyword && trimmedKeyword.length < 2) {
-      setSearchResults([]);
-      setIsSearching(false);
-      return;
-    }
+    setIsSearching(true);
 
-    // 디바운싱: 마지막 입력 후 0.3초 뒤에 API 호출
     const timer = setTimeout(async () => {
       try {
-        setIsSearching(true);
-        const data = await getProblemSearch(trimmedKeyword);
-        setSearchResults(data);
+        const data = await getProblemSearch(trimmed);
+
+        if (isCurrentRequest) {
+          setSearchResults(data);
+        }
       } catch (error) {
-        console.error('문제 검색 실패:', error);
-        setSearchResults([]);
+        if (isCurrentRequest) {
+          console.error('문제 검색 실패:', error);
+          setSearchResults([]);
+        }
       } finally {
-        setIsSearching(false);
+        if (isCurrentRequest) {
+          setIsSearching(false);
+        }
       }
     }, 300);
 
-    return () => clearTimeout(timer);
+    return () => {
+      isCurrentRequest = false;
+      clearTimeout(timer);
+    };
   }, [searchKeyword]);
 
   const handleChangeKeyword = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSearchKeyword(e.target.value);
   };
 
-  const handleSelectSearchResult = (selectedProblem: ProblemSearch) => {
-    setSearchKeyword('');
-    setSearchResults([]);
-    navigate(`/problems/${selectedProblem.platform}/${selectedProblem.problemNo}`);
-  };
+  const handleSelectSearchResult = useCallback(
+    (selectedProblem: ProblemSearch) => {
+      setSearchKeyword('');
+      setSearchResults([]);
+      navigate(`/problems/${selectedProblem.platform}/${selectedProblem.problemNo}`);
+    },
+    [navigate],
+  );
 
-  const handleResetKeyword = () => {
+  const handleResetKeyword = useCallback(() => {
     setSearchKeyword('');
     setSearchResults([]);
     setIsSearching(false);
-  };
+  }, []);
 
   return {
     searchKeyword,
