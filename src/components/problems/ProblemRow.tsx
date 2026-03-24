@@ -1,37 +1,52 @@
-import { Problem } from '@/apis/problems/problems.type';
 import { Link } from 'react-router-dom';
+import type { Problem } from '@/apis/problems/problems.type';
 
 type Props = {
   problem: Problem;
 };
 
 export default function ProblemRow({ problem }: Props) {
+  const problemPath = `/problems/${problem.platform}/${problem.problemNo}`;
+
+  // 제목 길이에 따른 정렬 결정 (20자 이하면 중앙, 넘으면 왼쪽)
+  const isShortTitle = problem.title.length <= 20;
+  const titleAlignment = isShortTitle ? 'text-center' : 'text-left';
+
+  const centerTdStyle = 'whitespace-nowrap px-6 py-6 align-middle text-center';
+
   return (
-    <tr className="border-b border-gray-100 bg-white transition-colors hover:bg-gray-50">
-      <td className="whitespace-nowrap px-6 py-6 text-sm font-medium text-gray-500">
+    <tr className="transition-colors hover:bg-slate-50 dark:hover:bg-slate-800/50">
+      <td className={centerTdStyle}>
         <Link
-          to={`/problems/${problem.platform}/${problem.problemNo}`}
-          className="transition-colors hover:text-blue-600"
+          to={problemPath}
+          className="text-sm font-semibold text-blue-600 hover:underline dark:text-blue-400"
         >
           {problem.problemNo}
         </Link>
       </td>
 
-      <td className="px-6 py-6">
+      {/* 제목: 길이에 따라 동적 정렬 */}
+      <td className={`px-6 py-6 align-middle ${titleAlignment}`}>
         <Link
-          to={`/problems/${problem.platform}/${problem.problemNo}`}
-          className="block text-base font-normal text-gray-900 transition-colors hover:text-blue-600"
+          to={problemPath}
+          className={`inline-block text-base font-medium text-slate-900 transition-colors hover:text-blue-600 hover:underline dark:text-white dark:hover:text-blue-400 ${
+            isShortTitle ? 'max-w-xs text-center' : 'text-left'
+          }`}
         >
           {problem.title}
         </Link>
       </td>
 
-      <td className="whitespace-nowrap px-6 py-6 text-sm text-gray-600">
-        {problem.totalSubmissions?.toLocaleString() ?? '-'}
+      <td className={`${centerTdStyle} text-sm text-slate-500 dark:text-slate-400`}>
+        <span className="font-medium">{problem.totalSubmissions?.toLocaleString() ?? '-'}</span>
+        <div className="mt-1 text-xs text-slate-400 sm:hidden">전체 제출</div>
       </td>
 
-      <td className="whitespace-nowrap px-6 py-6 text-sm text-gray-600">
-        {problem.foundSubmissions?.toLocaleString() ?? '-'}
+      <td className={`${centerTdStyle} text-sm text-slate-500 dark:text-slate-400`}>
+        <span className="font-medium text-slate-700 dark:text-slate-300">
+          {problem.foundSubmissions?.toLocaleString() ?? '-'}
+        </span>
+        <div className="mt-1 text-xs text-slate-400 sm:hidden">확인된 제출</div>
       </td>
     </tr>
   );
