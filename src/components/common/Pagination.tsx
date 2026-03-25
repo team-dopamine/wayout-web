@@ -1,5 +1,3 @@
-import React from 'react';
-
 interface PaginationProps {
   currentPage: number;
   totalPages: number;
@@ -39,9 +37,9 @@ export default function Pagination({
         return (
           <PageNumber
             key={`page-${page}`}
-            num={page}
+            num={page as number}
             active={currentPage === page}
-            onClick={() => onChange(page)}
+            onClick={() => onChange(page as number)}
           />
         );
       })}
@@ -58,9 +56,7 @@ export default function Pagination({
 
 function getPaginationRange(currentPage: number, totalPages: number) {
   const delta = 1;
-  const range: (number | string)[] = [];
-  const rangeWithDots: (number | string)[] = [];
-  let l: number | undefined;
+  const range: number[] = [];
 
   for (let i = 1; i <= totalPages; i++) {
     if (i === 1 || i === totalPages || (i >= currentPage - delta && i <= currentPage + delta)) {
@@ -68,16 +64,22 @@ function getPaginationRange(currentPage: number, totalPages: number) {
     }
   }
 
-  for (const i of range) {
-    if (l !== undefined) {
-      if (typeof i === 'number' && i - l === 2) rangeWithDots.push(l + 1);
-      else if (typeof i === 'number' && i - l !== 1) rangeWithDots.push('...');
+  const rangeWithDots: (number | '...')[] = [];
+  let previous: number | null = null;
+
+  for (const current of range) {
+    if (previous !== null) {
+      if (current - previous === 2) {
+        rangeWithDots.push(previous + 1);
+      } else if (current - previous > 2) {
+        rangeWithDots.push('...');
+      }
     }
-    rangeWithDots.push(i);
-    if (typeof i === 'number') l = i;
+    rangeWithDots.push(current);
+    previous = current;
   }
 
-  return rangeWithDots as (number | '...')[];
+  return rangeWithDots;
 }
 
 interface PageNumberProps {
@@ -87,15 +89,17 @@ interface PageNumberProps {
 }
 
 function PageNumber({ num, active, onClick }: PageNumberProps) {
+  const baseStyles =
+    'relative inline-flex items-center px-4 py-2 text-sm font-semibold ring-1 ring-inset ring-slate-300 transition-colors dark:ring-slate-700';
+  const activeStyles = 'z-10 bg-blue-600 text-white ring-blue-600';
+  const inactiveStyles =
+    'text-slate-900 hover:bg-slate-50 dark:text-slate-200 dark:hover:bg-slate-700';
+
   return (
     <button
       type="button"
       onClick={onClick}
-      className={`relative inline-flex items-center px-4 py-2 text-sm font-semibold ring-1 ring-inset ring-slate-300 transition-colors dark:ring-slate-700 ${
-        active
-          ? 'z-10 bg-blue-600 text-white ring-blue-600'
-          : 'text-slate-900 hover:bg-slate-50 dark:text-slate-200 dark:hover:bg-slate-700'
-      }`}
+      className={`${baseStyles} ${active ? activeStyles : inactiveStyles}`}
     >
       {num}
     </button>
@@ -111,14 +115,17 @@ interface PageButtonProps {
 }
 
 function PageButton({ icon, isFirst, isLast, disabled, onClick }: PageButtonProps) {
+  const baseStyles =
+    'relative inline-flex items-center px-2 py-2 text-slate-400 ring-1 ring-inset ring-slate-300 hover:bg-slate-50 dark:ring-slate-700 dark:hover:bg-slate-700';
+  const roundedStyles = `${isFirst ? 'rounded-l-md' : ''} ${isLast ? 'rounded-r-md' : ''}`;
+  const disabledStyles = disabled ? 'cursor-not-allowed opacity-50' : '';
+
   return (
     <button
       type="button"
       onClick={onClick}
       disabled={disabled}
-      className={`relative inline-flex items-center px-2 py-2 text-slate-400 ring-1 ring-inset ring-slate-300 hover:bg-slate-50 dark:ring-slate-700 dark:hover:bg-slate-700 ${
-        isFirst ? 'rounded-l-md' : ''
-      } ${isLast ? 'rounded-r-md' : ''} ${disabled ? 'cursor-not-allowed opacity-50' : ''}`}
+      className={`${baseStyles} ${roundedStyles} ${disabledStyles}`}
     >
       <span className="material-symbols-outlined text-xl">{icon}</span>
     </button>

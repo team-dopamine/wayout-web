@@ -23,28 +23,37 @@ export default function ProblemSearchBar({
   const hasResults = searchResults.length > 0;
 
   const dropdownClassName =
-    'absolute z-20 mt-2 w-full rounded-xl border border-gray-200 bg-white shadow-md';
+    'absolute z-30 mt-2 w-full rounded-xl border border-slate-200 bg-white shadow-lg dark:border-slate-700 dark:bg-slate-800';
 
   let dropdownContent: ReactNode = null;
 
   if (hasKeyword) {
     if (isSearching) {
-      dropdownContent = <div className="px-4 py-3 text-sm text-gray-500">검색 중...</div>;
+      dropdownContent = (
+        <div className="flex items-center gap-2 px-4 py-4 text-sm text-slate-500">
+          <span className="material-symbols-outlined animate-spin text-base">
+            progress_activity
+          </span>
+          검색 중...
+        </div>
+      );
     } else if (hasResults) {
       dropdownContent = (
         <ProblemSearchList results={searchResults} onSelect={onSelectSearchResult} />
       );
     } else {
       dropdownContent = (
-        <div className="px-4 py-3 text-sm text-gray-500">검색 결과가 없습니다.</div>
+        <div className="px-4 py-4 text-sm text-slate-500 dark:text-slate-400">
+          검색 결과가 없습니다.
+        </div>
       );
     }
   }
 
   return (
-    <div className="relative mx-auto mt-8 w-full max-w-5xl px-4">
-      <div className="relative">
-        <span className="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-xl text-gray-400">
+    <div className="relative w-full">
+      <div className="group relative">
+        <span className="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-xl text-slate-400 transition-colors group-focus-within:text-blue-500">
           search
         </span>
 
@@ -53,14 +62,14 @@ export default function ProblemSearchBar({
           value={searchKeyword}
           onChange={onChangeKeyword}
           placeholder="문제 제목 또는 번호를 검색하세요"
-          className="h-11 w-full rounded-xl border border-gray-200 bg-white pl-10 pr-14 text-sm text-gray-700 outline-none placeholder:text-gray-400 focus:border-gray-300"
+          className="h-12 w-full rounded-xl border border-slate-200 bg-slate-50/50 pl-12 pr-16 text-sm text-slate-700 outline-none transition-all placeholder:text-slate-400 focus:border-blue-500 focus:bg-white focus:ring-4 focus:ring-blue-500/5 dark:border-slate-700 dark:bg-slate-900/50 dark:text-slate-200 dark:focus:border-blue-400 dark:focus:bg-slate-900"
         />
 
         {hasKeyword && (
           <button
             type="button"
             onClick={onReset}
-            className="absolute inset-y-0 right-3 flex items-center text-xs text-gray-400 hover:text-gray-600"
+            className="absolute inset-y-0 right-4 flex items-center text-xs font-medium text-slate-400 hover:text-slate-600 dark:hover:text-slate-200"
           >
             초기화
           </button>
