@@ -27,7 +27,7 @@ export default function SubmissionDetailPage() {
 
   const [detail, setDetail] = useState<SubmissionDetailResponse | null>(null);
   const [isLoading, setIsLoading] = useState(true);
-  const [failedCases, setFailedCases] = useState<FailedCase[]>([]);
+  const [failedCases] = useState<FailedCase[]>([]);
 
   // 코드 복사 핸들러
   const handleCopy = useCallback(async (text: string) => {
