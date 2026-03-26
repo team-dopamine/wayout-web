@@ -11,4 +11,5 @@ export interface SubmissionTableItem {
   language: Language;
   executionTime: string;
   memory: string;
+  open: boolean;
 }
