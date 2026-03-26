@@ -1,7 +1,7 @@
 import { Outlet, useLocation, useNavigate, useParams, useSearchParams } from 'react-router-dom';
 import ProblemInfoCard from '@/components/common/ProblemInfoCard';
 
-type TabKey = 'find' | 'status' | 'contribute';
+type TabKey = 'find' | 'status' | 'contribute' | 'submission';
 
 export default function ProblemShellLayout() {
   const navigate = useNavigate();
@@ -21,7 +21,7 @@ export default function ProblemShellLayout() {
   // state가 없을 경우 URL 파라미터를 기본값으로 사용
   const problemHeaderData = location.state || {
     problemNo: problemNo,
-    problemTitle: '정보를 불러오는 중...',
+    problemTitle: null,
     platform: problemPlatform,
   };
 
@@ -29,6 +29,7 @@ export default function ProblemShellLayout() {
   const getActiveTab = (pathname: string): TabKey => {
     if (pathname.includes('/contribute')) return 'contribute';
     if (pathname.includes('/submissions')) return 'status';
+    if (pathname.includes('/submission')) return 'submission';
     return 'find'; // 기본값
   };
 
@@ -67,7 +68,7 @@ export default function ProblemShellLayout() {
               ? `P-${problemHeaderData.problemNo}`
               : `P-${problemNo || '0000'}`
           }
-          title={problemHeaderData.problemTitle}
+          title={problemHeaderData.problemTitle || problemHeaderData}
           activeTab={activeTab}
           onTabChange={handleTabChange}
         />
