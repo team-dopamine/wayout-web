@@ -6,7 +6,7 @@ type Props = {
 };
 
 export default function ProblemRow({ problem }: Props) {
-  const platform = problem.platform?.toLowerCase();
+  const platform = (problem.platform ?? 'swea').toLowerCase();
   const problemPath = `/problems/${platform}/${problem.problemNo}?id=${problem.problemId}`;
   // 제목 길이에 따른 정렬 결정 (20자 이하면 중앙, 넘으면 왼쪽)
   const isShortTitle = problem.title.length <= 20;

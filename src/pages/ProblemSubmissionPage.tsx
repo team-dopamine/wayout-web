@@ -44,8 +44,10 @@ export default function ProblemSubmissionsPage() {
         }
       } catch (error) {
         console.error('문제별 제출 목록 조회 실패:', error);
-        setSubmissions([]);
-        setTotalItems(0);
+        if (!isIgnore) {
+          setSubmissions([]);
+          setTotalItems(0);
+        }
       } finally {
         if (!isIgnore) setIsLoading(false);
       }
