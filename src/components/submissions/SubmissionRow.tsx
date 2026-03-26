@@ -1,4 +1,4 @@
-import { Link } from 'react-router-dom';
+import { Link, useParams, useSearchParams } from 'react-router-dom';
 import type { SubmissionTableItem, SubmissionTableMode } from '../../types/submissions.ui.type';
 
 interface SubmissionRowProps {
@@ -7,15 +7,34 @@ interface SubmissionRowProps {
 }
 
 export default function SubmissionRow({ data, mode = 'problem' }: SubmissionRowProps) {
+  const { problemPlatform, problemNo } = useParams();
+  const problemTitle = data.problem;
+
+  const [searchParams] = useSearchParams();
+  const problemId = searchParams.get('id');
+
+  const isLinkDisabled = !data.open;
+
   return (
     <tr className="transition-colors hover:bg-slate-50 dark:hover:bg-slate-800/50">
       <td className="py-5 pl-20 pr-4 align-middle">
-        <Link
-          to={`/submission/${data.id}`}
-          className="block text-sm font-semibold text-blue-600 hover:underline dark:text-blue-400"
-        >
-          {data.id}
-        </Link>
+        {isLinkDisabled ? (
+          // 비활성 상태
+          <span className="block text-sm font-semibold text-slate-400 dark:text-slate-500">
+            {data.id}
+          </span>
+        ) : (
+          // 활성 상태
+          <Link
+            to={`/submission/${problemPlatform}/${problemNo}?id=${problemId}`}
+            className="block text-sm font-semibold text-blue-600 hover:underline dark:text-blue-400"
+            state={problemTitle}
+          >
+            {data.id}
+          </Link>
+        )}
+
+        {/* 날짜 레이블 */}
         <div className="mt-1 text-sm text-slate-400 dark:text-slate-500">{data.dateLabel}</div>
       </td>
 
