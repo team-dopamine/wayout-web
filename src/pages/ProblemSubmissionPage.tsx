@@ -1,61 +1,64 @@
 import { useEffect, useMemo, useState } from 'react';
-import { Navigate, useParams } from 'react-router-dom';
+import { Navigate, useSearchParams } from 'react-router-dom';
 import SubmissionTable from '@/components/submissions/SubmissionTable';
 import Pagination from '@/components/common/Pagination';
 import { getProblemSubmissions } from '@/apis/submissions/submissions';
 import type { SubmissionTableItem } from '@/types/submissions.ui.type';
 import { mapSubmissionToTableItem } from '@/utils/submission.mapper';
 
-/** 각 문제에 대한 사용자 제출 현황 페이지 */
+const ITEMS_PER_PAGE = 8;
+
 export default function ProblemSubmissionsPage() {
-  const { problemId } = useParams<{ problemId: string }>();
+  const [searchParams] = useSearchParams();
+  const queryProblemId = searchParams.get('id');
 
   const numericProblemId = useMemo(() => {
-    if (!problemId) return null;
-
-    const parsedProblemId = Number(problemId);
-    return Number.isInteger(parsedProblemId) ? parsedProblemId : null;
-  }, [problemId]);
+    const parsed = Number(queryProblemId);
+    return Number.isInteger(parsed) && parsed > 0 ? parsed : null;
+  }, [queryProblemId]);
 
   const [page, setPage] = useState(1);
-  const itemsPerPage = 8;
-
   const [submissions, setSubmissions] = useState<SubmissionTableItem[]>([]);
   const [totalItems, setTotalItems] = useState(0);
   const [isLoading, setIsLoading] = useState(false);
 
-  const totalPages = Math.ceil(totalItems / itemsPerPage);
+  const totalPages = Math.ceil(totalItems / ITEMS_PER_PAGE);
 
   useEffect(() => {
-    if (numericProblemId === null) return;
+    if (!numericProblemId) return;
 
-    const validatedProblemId = numericProblemId;
+    let isIgnore = false;
 
     async function fetchSubmissions() {
       try {
         setIsLoading(true);
-
         const data = await getProblemSubmissions({
-          problemId: validatedProblemId,
-          page: page - 1,
-          size: itemsPerPage,
+          problemId: numericProblemId as number,
+          page: page - 1, // 서버에서 page 기본: 0
+          size: ITEMS_PER_PAGE,
         });
 
-        setSubmissions(data.content.map(mapSubmissionToTableItem));
-        setTotalItems(data.totalElements);
+        if (!isIgnore) {
+          setSubmissions(data.content.map(mapSubmissionToTableItem));
+          setTotalItems(data.totalElements);
+        }
       } catch (error) {
         console.error('문제별 제출 목록 조회 실패:', error);
         setSubmissions([]);
         setTotalItems(0);
       } finally {
-        setIsLoading(false);
+        if (!isIgnore) setIsLoading(false);
       }
     }
 
     fetchSubmissions();
+
+    return () => {
+      isIgnore = true;
+    };
   }, [page, numericProblemId]);
 
-  if (numericProblemId === null) {
+  if (!numericProblemId) {
     return <Navigate to="/not-found" replace />;
   }
 
@@ -63,22 +66,22 @@ export default function ProblemSubmissionsPage() {
     <section className="overflow-hidden rounded-xl border border-slate-200 bg-white shadow-sm dark:border-slate-700 dark:bg-slate-800">
       <div className="border-t border-slate-200 dark:border-slate-700">
         {isLoading ? (
-          <div className="py-10 text-center text-sm text-slate-500 dark:text-slate-400">
+          <div className="flex min-h-[400px] items-center justify-center text-sm text-slate-500">
             제출 목록을 불러오는 중입니다...
           </div>
         ) : (
           <>
             <SubmissionTable submissions={submissions} mode="platform" />
 
-            <div className="border-t border-slate-200 bg-white px-4 py-3 dark:border-slate-700 dark:bg-slate-800 sm:px-6">
-              <div className="hidden sm:flex sm:justify-end">
+            <footer className="border-t border-slate-200 bg-white px-4 py-3 dark:border-slate-700 dark:bg-slate-800 sm:px-6">
+              <div className="flex justify-end">
                 <Pagination
                   currentPage={page}
                   totalPages={Math.max(totalPages, 1)}
                   onChange={setPage}
                 />
               </div>
-            </div>
+            </footer>
           </>
         )}
       </div>
