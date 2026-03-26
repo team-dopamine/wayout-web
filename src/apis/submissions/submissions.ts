@@ -1,5 +1,5 @@
 import api from '@/apis/api';
-import type { Submission, PageResponse } from './submissions.type';
+import type { Submission, PageResponse, SubmissionDetailResponse } from './submissions.type';
 
 // 전체 제출 목록 조회
 export const getSubmissions = async (
@@ -35,5 +35,13 @@ export const getProblemSubmissions = async ({
     },
   });
 
+  return response.data;
+};
+
+// 특정 문제의 제출 기록 상세 조회
+export const getSubmissionDetail = async (
+  submissionId: number | string,
+): Promise<SubmissionDetailResponse> => {
+  const response = await api.get<SubmissionDetailResponse>(`/submissions/${submissionId}`);
   return response.data;
 };
