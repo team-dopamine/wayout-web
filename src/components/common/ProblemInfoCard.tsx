@@ -7,7 +7,8 @@ type ProblemInfoTab = {
 };
 
 type Props = {
-  problemId: string;
+  id: string | null;
+  problemNo: string;
   title: string;
   badgeText?: string;
   tabs?: ProblemInfoTab[];
@@ -23,56 +24,66 @@ const DEFAULT_TABS: ProblemInfoTab[] = [
 ];
 
 export default function ProblemInfoCard({
-  problemId,
+  id,
+  problemNo,
   title,
   badgeText,
   tabs = DEFAULT_TABS,
   activeTab = 'find',
   onTabChange,
-  className,
+  className = '',
 }: Props) {
   const showTabs = Boolean(tabs?.length);
 
+  const cn = (...classes: (string | boolean | undefined)[]) => classes.filter(Boolean).join(' ');
+
   return (
     <div
-      className={[
+      className={cn(
         'flex items-center justify-between rounded-xl border border-slate-200 bg-white px-6 py-4 shadow-sm',
         'dark:border-slate-700 dark:bg-slate-800',
-        className ?? '',
-      ].join(' ')}
+        className,
+      )}
     >
-      <h1 className="flex items-center text-xl font-bold tracking-tight text-slate-900 dark:text-white">
-        <span className="mr-3 font-mono text-lg text-blue-500">{problemId}</span>
-        {title}
-      </h1>
+      <div className="flex flex-col gap-1">
+        <h1 className="flex items-center text-xl font-bold tracking-tight text-slate-900 dark:text-white">
+          <span className="mr-3 font-mono text-lg text-blue-500">{problemNo}</span>
+          {title || '문제를 불러오는 중...'}
+        </h1>
+      </div>
 
-      {showTabs ? (
-        <div className="flex items-center rounded-lg bg-slate-100 p-1 dark:bg-slate-700/40">
-          {tabs.map((t) => {
-            const isActive = t.key === activeTab;
+      <div className="flex items-center gap-4">
+        {showTabs ? (
+          <nav
+            className="flex items-center rounded-lg bg-slate-100 p-1 dark:bg-slate-700/40"
+            aria-label="Problem tabs"
+          >
+            {tabs.map((t) => {
+              const isActive = t.key === activeTab;
 
-            return (
-              <button
-                key={t.key}
-                type="button"
-                onClick={() => onTabChange?.(t.key)}
-                className={[
-                  'rounded-md px-4 py-1.5 text-sm transition-all',
-                  isActive
-                    ? 'bg-white font-semibold text-blue-600 shadow-sm dark:bg-slate-700 dark:text-blue-300'
-                    : 'font-medium text-slate-500 hover:text-slate-700 dark:text-slate-300 dark:hover:text-slate-100',
-                ].join(' ')}
-              >
-                {t.label}
-              </button>
-            );
-          })}
-        </div>
-      ) : badgeText ? (
-        <span className="inline-flex items-center rounded-full bg-red-100 px-2.5 py-0.5 text-xs font-medium text-red-800 dark:bg-red-900/30 dark:text-red-300">
-          {badgeText}
-        </span>
-      ) : null}
+              return (
+                <button
+                  key={t.key}
+                  type="button"
+                  onClick={() => (id ? onTabChange?.(t.key) : alert('데이터 로딩 중입니다.'))}
+                  className={cn(
+                    'rounded-md px-4 py-1.5 text-sm transition-all duration-200',
+                    isActive
+                      ? 'bg-white font-semibold text-blue-600 shadow-sm dark:bg-slate-700 dark:text-blue-300'
+                      : 'font-medium text-slate-500 hover:text-slate-700 dark:text-slate-400 dark:hover:text-slate-100',
+                  )}
+                >
+                  {t.label}
+                </button>
+              );
+            })}
+          </nav>
+        ) : badgeText ? (
+          <span className="inline-flex items-center rounded-full bg-red-100 px-3 py-1 text-xs font-medium text-red-800 dark:bg-red-900/30 dark:text-red-300">
+            {badgeText}
+          </span>
+        ) : null}
+      </div>
     </div>
   );
 }
