@@ -1,86 +1,59 @@
+import { useMemo } from 'react';
 import { Outlet, useLocation, useNavigate, useParams, useSearchParams } from 'react-router-dom';
 import ProblemInfoCard from '@/components/common/ProblemInfoCard';
 
-type TabKey = 'find' | 'status' | 'contribute' | 'submission';
-
 export default function ProblemShellLayout() {
   const navigate = useNavigate();
-  const location = useLocation();
-
-  // 라우터 파라미터 추출
-  const { problemPlatform, problemNo } = useParams<{
-    problemPlatform: string;
-    problemNo: string;
-  }>();
-
-  // 쿼리 스트링 추출
+  const { pathname, state } = useLocation();
+  const { problemPlatform, problemNo } = useParams();
   const [searchParams] = useSearchParams();
-  const queryProblemId = searchParams.get('id');
-  const currentProblemId: string | null = queryProblemId || null;
 
-  // state가 없을 경우 URL 파라미터를 기본값으로 사용
-  const problemHeaderData = location.state || {
-    problemNo: problemNo,
-    problemTitle: null,
-    platform: problemPlatform,
-  };
+  const currentProblemId = searchParams.get('id');
 
-  // 현재 URL 경로를 기반으로 활성 탭 결정 (/contribute, /submissions, /problems)
-  const getActiveTab = (pathname: string): TabKey => {
+  // 문제 정보 ( 플랫폼, 문제번호, 제목, ID )
+  const problemInfo = useMemo(() => {
+    const isStateObject = state && typeof state === 'object';
+    return {
+      platform: (problemPlatform || state?.platform || 'boj').toLowerCase(),
+      problemNo: problemNo || state?.problemNo || '0000',
+      title: !isStateObject ? state : state?.problemTitle || 'Loading...',
+      id: currentProblemId,
+    };
+  }, [problemPlatform, problemNo, state, currentProblemId]);
+
+  const activeTab = useMemo(() => {
     if (pathname.includes('/contribute')) return 'contribute';
     if (pathname.includes('/submissions')) return 'status';
     if (pathname.includes('/submission')) return 'submission';
-    return 'find'; // 기본값
-  };
+    return 'find';
+  }, [pathname]);
 
-  const activeTab = getActiveTab(location.pathname);
+  const handleTabChange = (key: string) => {
+    if (!problemInfo.id) return alert('ID가 필요합니다.');
 
-  const handleTabChange = (key: TabKey) => {
-    if (!currentProblemId) {
-      alert('문제 고유 ID를 찾을 수 없습니다.');
-      return;
-    }
+    const pathMap: Record<string, string> = {
+      find: `/problems/${problemInfo.platform}/${problemInfo.problemNo}`,
+      status: `/submissions/${problemInfo.platform}/${problemInfo.problemNo}`,
+      contribute: `/contribute/${problemInfo.platform}/${problemInfo.problemNo}`,
+    };
 
-    // 경로 구성을 위한 변수 (파라미터 우선 -> state 우선 -> 기본값 순)
-    const platform = (problemPlatform || problemHeaderData.platform || 'boj').toLowerCase();
-    const pNo = problemNo || problemHeaderData.problemNo || '0000';
-
-    const queryString = `?id=${currentProblemId}`;
-    const navigateOptions = { state: problemHeaderData };
-
-    if (key === 'find') {
-      navigate(`/problems/${platform}/${pNo}${queryString}`, navigateOptions);
-    } else if (key === 'status') {
-      navigate(`/submissions/${platform}/${pNo}${queryString}`, navigateOptions);
-    } else if (key === 'contribute') {
-      navigate(`/contribute/${platform}/${pNo}${queryString}`, navigateOptions);
+    if (pathMap[key]) {
+      navigate(`${pathMap[key]}?id=${problemInfo.id}`, { state });
     }
   };
 
   return (
-    <div className="min-h-screen bg-slate-50 text-slate-700 dark:bg-slate-900 dark:text-slate-200">
-      <main className="mx-auto w-full max-w-5xl space-y-8 px-4 py-10 sm:px-6 lg:px-8">
+    <div className="min-h-screen bg-slate-50 dark:bg-slate-900">
+      <main className="mx-auto max-w-5xl px-4 py-10">
         <ProblemInfoCard
-          id={currentProblemId}
-          // 문제 번호 표시 로직 (ex: P-1234 형식)
-          problemNo={
-            problemHeaderData.problemNo
-              ? `P-${problemHeaderData.problemNo}`
-              : `P-${problemNo || '0000'}`
-          }
-          title={problemHeaderData.problemTitle || problemHeaderData}
+          id={problemInfo.id}
+          problemNo={`P-${problemInfo.problemNo}`}
+          title={problemInfo.title}
           activeTab={activeTab}
           onTabChange={handleTabChange}
         />
-
         <div className="mt-6">
-          <Outlet
-            context={{
-              problemId: currentProblemId,
-              platform: problemPlatform,
-              problemNo: problemNo,
-            }}
-          />
+          <Outlet context={problemInfo} />
         </div>
       </main>
     </div>
