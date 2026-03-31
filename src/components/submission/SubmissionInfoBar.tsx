@@ -1,4 +1,5 @@
 import type { SubmissionDetailResponse } from '@/apis/submissions/submissions.type';
+import { formatSubmissionDate } from '@/utils/formatSubmissionDate';
 
 interface SubmissionInfoBarProps {
   data: SubmissionDetailResponse;
@@ -6,7 +7,7 @@ interface SubmissionInfoBarProps {
 
 export default function SubmissionInfoBar({ data }: SubmissionInfoBarProps) {
   // 날짜 포맷팅
-  const formattedDate = new Date(data.createdAt).toLocaleString();
+  const formattedDate = formatSubmissionDate(data.createdAt);
 
   return (
     <div className="mb-6 flex flex-wrap items-center gap-x-6 gap-y-4 rounded-xl border border-slate-200 bg-white px-6 py-3 shadow-sm dark:border-slate-700 dark:bg-slate-800">
