@@ -4,7 +4,7 @@ import SolutionEditorPanel from '@/components/counterexample/SolutionEditorPanel
 import CounterExampleStatusPanel from '@/components/counterexample/CounterExampleStatusPanel';
 import SubmissionInfoBar from '@/components/submission/SubmissionInfoBar';
 import { getSubmissionDetail } from '@/apis/submissions/submissions';
-import type { FailedCase, Language } from '@/types/counterexample';
+import type { Language } from '@/types/counterexample';
 import type { SubmissionDetailResponse } from '@/apis/submissions/submissions.type';
 
 const SUPPORTED_LANGUAGES: Record<string, Language> = {
@@ -27,8 +27,6 @@ export default function SubmissionDetailPage() {
 
   const [detail, setDetail] = useState<SubmissionDetailResponse | null>(null);
   const [isLoading, setIsLoading] = useState(true);
-  const [failedCases] = useState<FailedCase[]>([]);
-
   // 코드 복사 핸들러
   const handleCopy = useCallback(async (text: string) => {
     try {
@@ -39,13 +37,22 @@ export default function SubmissionDetailPage() {
     }
   }, []);
 
+  // 다른 문제 상세로 이동할 때 이전 데이터가 남아있지 않도록 비우기
   useEffect(() => {
-    if (!problemId) return;
+    setDetail(null);
+  }, [problemId]);
+
+  useEffect(() => {
+    // problemId가 없을 때 무한 로딩 방지
+    if (!problemId) {
+      setIsLoading(false);
+      return;
+    }
 
     const fetchDetail = async () => {
       setIsLoading(true);
       try {
-        const targetId = Number(problemId) + 1; // API 명세에 따른 보정
+        const targetId = Number(problemId);
         const data = await getSubmissionDetail(targetId);
         setDetail(data);
       } catch (error) {
@@ -58,7 +65,10 @@ export default function SubmissionDetailPage() {
     fetchDetail();
   }, [problemId]);
 
+  // 로딩 상태 우선 처리
   if (isLoading) return <LoadingView />;
+
+  // 데이터가 없는 경우 처리
   if (!detail) return <EmptyView />;
 
   return (
@@ -79,10 +89,10 @@ export default function SubmissionDetailPage() {
 
         <div className="h-full min-h-0 lg:col-span-1">
           <CounterExampleStatusPanel
-            failedCount={failedCases.length}
-            cases={failedCases}
+            failedCount={detail.foundSubmissions ?? 0}
+            cases={[]} // 상세 목록 배열이 API 응답에 추가되기 전까지는 빈 배열 전달
             isLoading={false}
-            hasSearched
+            hasSearched={true}
           />
         </div>
       </main>
@@ -91,11 +101,17 @@ export default function SubmissionDetailPage() {
 }
 
 function LoadingView() {
-  return <div className="p-10 text-center font-medium text-slate-500">데이터 로딩 중...</div>;
+  return (
+    <div className="flex h-[400px] items-center justify-center font-medium text-slate-500">
+      데이터 로딩 중...
+    </div>
+  );
 }
 
 function EmptyView() {
   return (
-    <div className="p-10 text-center font-medium text-slate-500">정보를 찾을 수 없습니다.</div>
+    <div className="flex h-[400px] items-center justify-center font-medium text-slate-500">
+      정보를 찾을 수 없습니다.
+    </div>
   );
 }
