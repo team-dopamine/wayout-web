@@ -1,4 +1,4 @@
-import { Link, useParams, useSearchParams } from 'react-router-dom';
+import { Link, useParams } from 'react-router-dom';
 import type { SubmissionTableItem, SubmissionTableMode } from '../../types/submissions.ui.type';
 
 interface SubmissionRowProps {
@@ -9,9 +9,6 @@ interface SubmissionRowProps {
 export default function SubmissionRow({ data, mode = 'problem' }: SubmissionRowProps) {
   const { problemPlatform, problemNo } = useParams();
   const problemTitle = data.problem;
-
-  const [searchParams] = useSearchParams();
-  const problemId = searchParams.get('id');
 
   const isLinkDisabled = !data.open;
 
@@ -26,7 +23,7 @@ export default function SubmissionRow({ data, mode = 'problem' }: SubmissionRowP
         ) : (
           // 활성 상태
           <Link
-            to={`/submission/${problemPlatform}/${problemNo}?id=${problemId}`}
+            to={`/submission/${problemPlatform}/${problemNo}?id=${data.id}`}
             className="block text-sm font-semibold text-blue-600 hover:underline dark:text-blue-400"
             state={problemTitle}
           >
