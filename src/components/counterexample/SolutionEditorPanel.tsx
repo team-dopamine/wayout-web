@@ -85,7 +85,7 @@ export default function SolutionEditorPanel({
 
       {/** 하단바 */}
       {!readOnly && (
-        <div className="...">
+        <div className="flex flex-shrink-0 items-center justify-between border-t border-slate-200 bg-slate-50 px-4 py-3 dark:border-slate-700 dark:bg-slate-800/50">
           <div className="-mt-2">
             <PublicSubmissionCheckbox
               checked={isPublic ?? false} // isPublic이 없으면 false 기본값
@@ -97,7 +97,7 @@ export default function SolutionEditorPanel({
             type="button"
             onClick={onFindCounterExample}
             disabled={isFindingCounterExample}
-            className="..."
+            className="inline-flex items-center rounded-md bg-blue-500 px-4 py-2 text-sm font-medium text-white shadow-sm transition-colors hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 disabled:cursor-not-allowed disabled:opacity-60"
           >
             {isFindingCounterExample ? '반례 찾는 중...' : '반례 찾기'}
           </button>
