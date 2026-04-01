@@ -1,5 +1,5 @@
 /** 문제 정보와 관련 기능 탭을 함께 표시하는 상단 카드 공통 컴포넌트 */
-type ProblemInfoTabKey = 'find' | 'status' | 'contribute';
+type ProblemInfoTabKey = 'find' | 'status' | 'contribute' | 'submission';
 
 type ProblemInfoTab = {
   key: ProblemInfoTabKey;
@@ -52,38 +52,40 @@ export default function ProblemInfoCard({
         </h1>
       </div>
 
-      <div className="flex items-center gap-4">
-        {showTabs ? (
-          <nav
-            className="flex items-center rounded-lg bg-slate-100 p-1 dark:bg-slate-700/40"
-            aria-label="Problem tabs"
-          >
-            {tabs.map((t) => {
-              const isActive = t.key === activeTab;
+      {activeTab !== 'submission' && (
+        <div className="flex items-center gap-4">
+          {showTabs ? (
+            <nav
+              className="flex items-center rounded-lg bg-slate-100 p-1 dark:bg-slate-700/40"
+              aria-label="Problem tabs"
+            >
+              {tabs.map((t) => {
+                const isActive = t.key === activeTab;
 
-              return (
-                <button
-                  key={t.key}
-                  type="button"
-                  onClick={() => (id ? onTabChange?.(t.key) : alert('데이터 로딩 중입니다.'))}
-                  className={cn(
-                    'rounded-md px-4 py-1.5 text-sm transition-all duration-200',
-                    isActive
-                      ? 'bg-white font-semibold text-blue-600 shadow-sm dark:bg-slate-700 dark:text-blue-300'
-                      : 'font-medium text-slate-500 hover:text-slate-700 dark:text-slate-400 dark:hover:text-slate-100',
-                  )}
-                >
-                  {t.label}
-                </button>
-              );
-            })}
-          </nav>
-        ) : badgeText ? (
-          <span className="inline-flex items-center rounded-full bg-red-100 px-3 py-1 text-xs font-medium text-red-800 dark:bg-red-900/30 dark:text-red-300">
-            {badgeText}
-          </span>
-        ) : null}
-      </div>
+                return (
+                  <button
+                    key={t.key}
+                    type="button"
+                    onClick={() => (id ? onTabChange?.(t.key) : alert('데이터 로딩 중입니다.'))}
+                    className={cn(
+                      'rounded-md px-4 py-1.5 text-sm transition-all duration-200',
+                      isActive
+                        ? 'bg-white font-semibold text-blue-600 shadow-sm dark:bg-slate-700 dark:text-blue-300'
+                        : 'font-medium text-slate-500 hover:text-slate-700 dark:text-slate-400 dark:hover:text-slate-100',
+                    )}
+                  >
+                    {t.label}
+                  </button>
+                );
+              })}
+            </nav>
+          ) : badgeText ? (
+            <span className="inline-flex items-center rounded-full bg-red-100 px-3 py-1 text-xs font-medium text-red-800 dark:bg-red-900/30 dark:text-red-300">
+              {badgeText}
+            </span>
+          ) : null}
+        </div>
+      )}
     </div>
   );
 }

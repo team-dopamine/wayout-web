@@ -15,25 +15,35 @@ type Props = {
   value: string;
   onChange: (next: string) => void;
   onSubmit?: () => void;
+  readOnly?: boolean;
 };
 
-export default function CodeEditor({ language, value, onChange, onSubmit }: Props) {
+export default function CodeEditor({
+  language,
+  value,
+  onChange,
+  onSubmit,
+  readOnly = false,
+}: Props) {
   const viewRef = useRef<EditorView | null>(null);
   const detachScrollRef = useRef<(() => void) | null>(null);
 
   const [lineCount, setLineCount] = useState(1);
   const [scrollTop, setScrollTop] = useState(0);
 
+  // 단축키 핸들러 (Ctrl/Cmd + Enter 제출)
   const handleKeyDown = useCallback(
     (e: React.KeyboardEvent) => {
-      if (!onSubmit) return;
+      // 읽기 전용이거나 onSubmit이 없으면 무시
+      if (readOnly || !onSubmit) return;
+
       const isCmdEnter = (e.metaKey || e.ctrlKey) && e.key === 'Enter';
       if (isCmdEnter) {
         e.preventDefault();
         onSubmit();
       }
     },
-    [onSubmit],
+    [onSubmit, readOnly],
   );
 
   const languageExtension = useMemo(() => getLanguageExtension(language), [language]);
@@ -59,6 +69,7 @@ export default function CodeEditor({ language, value, onChange, onSubmit }: Prop
         },
         '.cm-content': {
           padding: '1rem 1rem 1rem 3.5rem',
+          cursor: readOnly ? 'default' : 'text',
         },
         '.cm-gutters': {
           display: 'none',
@@ -66,8 +77,16 @@ export default function CodeEditor({ language, value, onChange, onSubmit }: Prop
         '.cm-line': {
           lineHeight: '1.5rem',
         },
+        ...(readOnly && {
+          '.cm-cursor': {
+            display: 'none !important',
+          },
+          '&.cm-focused .cm-selectionBackground, .cm-selectionBackground, ::selection': {
+            backgroundColor: '#3e4451 !important',
+          },
+        }),
       }),
-    [],
+    [readOnly],
   );
 
   const attachScrollListener = useCallback((view: EditorView) => {
@@ -104,17 +123,24 @@ export default function CodeEditor({ language, value, onChange, onSubmit }: Prop
     () => [
       indentUnit.of('    '),
       EditorState.tabSize.of(4),
-      history(),
-      keymap.of([...defaultKeymap, ...historyKeymap, indentWithTab]),
+      ...(!readOnly
+        ? [history(), keymap.of([...defaultKeymap, ...historyKeymap, indentWithTab])]
+        : []),
       languageExtension,
       oneDark,
       editorTheme,
+      EditorView.editable.of(!readOnly),
+      EditorState.readOnly.of(readOnly),
     ],
-    [languageExtension, editorTheme],
+    [languageExtension, editorTheme, readOnly],
   );
 
   return (
-    <div className="relative h-full min-h-0 w-full overflow-hidden rounded-md bg-[#1e1e1e] text-sm text-slate-300">
+    <div
+      className={`relative h-full min-h-0 w-full overflow-hidden rounded-md bg-[#1e1e1e] text-sm text-slate-300 ${
+        readOnly ? 'cursor-default' : ''
+      }`}
+    >
       <div className="pointer-events-none absolute inset-y-0 left-0 z-10 w-12 select-none border-r border-[#333] bg-[#1e1e1e] pr-2 text-slate-500">
         <div className="pt-4 text-right" style={{ transform: `translateY(-${scrollTop}px)` }}>
           {Array.from({ length: lineCount }).map((_, idx) => (
@@ -129,7 +155,9 @@ export default function CodeEditor({ language, value, onChange, onSubmit }: Prop
         <CodeMirror
           className="h-full"
           value={value}
-          onChange={(val) => onChange(val)}
+          onChange={(val) => {
+            if (!readOnly) onChange(val);
+          }}
           onKeyDown={handleKeyDown}
           spellCheck={false}
           height="100%"
@@ -140,15 +168,18 @@ export default function CodeEditor({ language, value, onChange, onSubmit }: Prop
             lineNumbers: false,
             foldGutter: false,
             highlightActiveLineGutter: false,
-            autocompletion: true,
+            autocompletion: !readOnly,
             bracketMatching: true,
-            closeBrackets: true,
+            closeBrackets: !readOnly,
             highlightSelectionMatches: true,
-            indentOnInput: true,
+            indentOnInput: !readOnly,
+            highlightActiveLine: !readOnly,
           }}
           onCreateEditor={handleCreateEditor}
           onUpdate={(vu) => {
-            setLineCount(Math.max(1, vu.state.doc.lines));
+            if (vu.docChanged) {
+              setLineCount(Math.max(1, vu.state.doc.lines));
+            }
           }}
         />
       </div>
