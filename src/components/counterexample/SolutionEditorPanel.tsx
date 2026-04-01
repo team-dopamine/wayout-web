@@ -24,7 +24,7 @@ type Props = {
 };
 
 export default function SolutionEditorPanel({
-  readOnly = false, // 기본값 false로 설정
+  readOnly = false,
   language,
   languageOptions,
   onChangeLanguage,
@@ -88,7 +88,7 @@ export default function SolutionEditorPanel({
         <div className="flex flex-shrink-0 items-center justify-between border-t border-slate-200 bg-slate-50 px-4 py-3 dark:border-slate-700 dark:bg-slate-800/50">
           <div className="-mt-2">
             <PublicSubmissionCheckbox
-              checked={isPublic ?? false} // isPublic이 없으면 false 기본값
+              checked={isPublic ?? false}
               onChange={onPublicChange ?? (() => {})}
             />
           </div>
