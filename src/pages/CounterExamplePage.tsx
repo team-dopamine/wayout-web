@@ -28,21 +28,31 @@ export default function CounterExamplePage() {
 
   // 문제 상세 데이터 요청
   useEffect(() => {
-    if (!currentProblemId) return;
+    const problemId = Number(currentProblemId);
+
+    if (!currentProblemId || !Number.isFinite(problemId)) return;
+
+    let isCancelled = false;
 
     const fetchDetail = async () => {
       setIsLoadingDetail(true);
+
       try {
-        const data = await getProblemDetail(Number(currentProblemId));
-        setDetail(data);
+        const data = await getProblemDetail(problemId);
+
+        if (!isCancelled) setDetail(data);
       } catch (error) {
-        console.error('문제 정보를 불러오는 데 실패했습니다.', error);
+        if (!isCancelled) console.error('문제 정보를 불러오는 데 실패했습니다.', error);
       } finally {
-        setIsLoadingDetail(false);
+        if (!isCancelled) setIsLoadingDetail(false);
       }
     };
 
     fetchDetail();
+
+    return () => {
+      isCancelled = true;
+    };
   }, [currentProblemId]);
 
   // 복사 핸들러
