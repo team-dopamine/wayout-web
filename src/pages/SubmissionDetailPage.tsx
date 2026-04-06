@@ -77,8 +77,8 @@ export default function SubmissionDetailPage() {
         <SubmissionInfoBar data={detail} />
       </header>
 
-      <main className="grid h-[750px] min-h-0 w-full grid-cols-1 gap-6 lg:grid-cols-3">
-        <div className="h-full min-h-0 lg:col-span-2">
+      <main className="grid h-[750px] min-h-0 w-full grid-cols-1 gap-6 lg:grid-cols-4">
+        <div className="h-full min-h-0 lg:col-span-3">
           <SolutionEditorPanel
             readOnly
             language={formatLanguage(detail.language)}
