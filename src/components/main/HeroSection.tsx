@@ -15,8 +15,9 @@ export default function HeroSection() {
 
       {/* 설명 문구 */}
       <p className="mx-auto max-w-2xl text-lg text-slate-600 dark:text-slate-400 md:text-xl">
-        Generate counter-examples for competitive programming problems. Submit your solution, find
-        the edge case, and debug smarter.
+        코딩테스트 문제를 위한 반례를 생성해 보세요.
+        <br />
+        제출한 풀이의 엣지 케이스를 찾아 더 똑똑하게 디버깅할 수 있습니다.
       </p>
     </div>
   );
