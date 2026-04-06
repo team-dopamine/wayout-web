@@ -68,7 +68,8 @@ export default function CodeEditor({
             'ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace',
         },
         '.cm-content': {
-          padding: '1rem 1rem 1rem 3.5rem',
+          padding: '1rem 0.75rem 1rem 3rem',
+          whiteSpace: 'pre',
           cursor: readOnly ? 'default' : 'text',
         },
         '.cm-gutters': {
@@ -76,6 +77,7 @@ export default function CodeEditor({
         },
         '.cm-line': {
           lineHeight: '1.5rem',
+          whiteSpace: 'pre',
         },
         ...(readOnly && {
           '.cm-cursor': {
@@ -141,7 +143,7 @@ export default function CodeEditor({
         readOnly ? 'cursor-default' : ''
       }`}
     >
-      <div className="pointer-events-none absolute inset-y-0 left-0 z-10 w-12 select-none border-r border-[#333] bg-[#1e1e1e] pr-2 text-slate-500">
+      <div className="pointer-events-none absolute inset-y-0 left-0 z-10 w-10 select-none border-r border-[#333] bg-[#1e1e1e] pr-2 text-slate-500">
         <div className="pt-4 text-right" style={{ transform: `translateY(-${scrollTop}px)` }}>
           {Array.from({ length: lineCount }).map((_, idx) => (
             <div key={idx} className="leading-6">

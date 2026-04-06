@@ -83,27 +83,31 @@ export default function CounterExamplePage() {
   }, [code, isPublic, language, problemId]);
 
   return (
-    <div className="grid h-[700px] min-h-0 grid-cols-1 gap-6 lg:grid-cols-3">
-      <SolutionEditorPanel
-        language={language}
-        languageOptions={LANG_OPTIONS}
-        onChangeLanguage={handleChangeLanguage}
-        code={code}
-        onChangeCode={setCode}
-        onCopy={handleCopy}
-        onFindCounterExample={handleFindCounterExample}
-        onSubmit={handleSubmit}
-        isPublic={isPublic}
-        onPublicChange={setIsPublic}
-        isFindingCounterExample={isFindingCounterExample}
-      />
+    <div className="grid h-[700px] min-h-0 grid-cols-1 gap-6 lg:grid-cols-4">
+      <div className="h-full min-h-0 lg:col-span-3">
+        <SolutionEditorPanel
+          language={language}
+          languageOptions={LANG_OPTIONS}
+          onChangeLanguage={handleChangeLanguage}
+          code={code}
+          onChangeCode={setCode}
+          onCopy={handleCopy}
+          onFindCounterExample={handleFindCounterExample}
+          onSubmit={handleSubmit}
+          isPublic={isPublic}
+          onPublicChange={setIsPublic}
+          isFindingCounterExample={isFindingCounterExample}
+        />
+      </div>
 
-      <CounterExampleStatusPanel
-        failedCount={failedCount}
-        cases={failedCases}
-        isLoading={isFindingCounterExample}
-        hasSearched={hasSearched}
-      />
+      <div className="h-full min-h-0 lg:col-span-1">
+        <CounterExampleStatusPanel
+          failedCount={failedCount}
+          cases={failedCases}
+          isLoading={isFindingCounterExample}
+          hasSearched={hasSearched}
+        />
+      </div>
     </div>
   );
 }
