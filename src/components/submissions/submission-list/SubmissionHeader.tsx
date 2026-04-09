@@ -1,4 +1,4 @@
-import type { SubmissionTableMode } from '../../types/submissions.ui.type';
+import type { SubmissionTableMode } from '@/types/submissions.ui.type';
 
 interface SubmissionHeaderProps {
   mode?: SubmissionTableMode;

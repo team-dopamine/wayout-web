@@ -1,6 +1,6 @@
 import SubmissionHeader from './SubmissionHeader';
 import SubmissionRow from './SubmissionRow';
-import type { SubmissionTableItem, SubmissionTableMode } from '../../types/submissions.ui.type';
+import type { SubmissionTableItem, SubmissionTableMode } from '@/types/submissions.ui.type';
 
 interface SubmissionTableProps {
   submissions: SubmissionTableItem[];

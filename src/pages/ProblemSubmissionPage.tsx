@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState } from 'react';
 import { Navigate, useSearchParams } from 'react-router-dom';
-import SubmissionTable from '@/components/submissions/SubmissionTable';
+import SubmissionTable from '@/components/submissions/submission-list/SubmissionTable';
 import Pagination from '@/components/common/Pagination';
 import { getProblemSubmissions } from '@/apis/submissions/submissions';
 import type { SubmissionTableItem } from '@/types/submissions.ui.type';
