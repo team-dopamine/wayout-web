@@ -2,6 +2,7 @@ export type Language = 'JAVA' | 'CPP' | 'PYTHON';
 
 export interface Submission {
   id: number;
+  problemNo: number;
   nickname: string;
   title: string;
   platform: string;
