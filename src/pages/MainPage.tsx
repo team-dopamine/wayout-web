@@ -5,24 +5,17 @@ import SearchBar from '@/components/main/SearchBar';
 
 const FEATURES = [
   {
-    icon: 'check_circle',
-    iconWrapClassName: 'bg-green-50 text-green-600 dark:bg-green-900/30 dark:text-green-400',
-    title: 'Submit Solution',
-    description: 'Check if your logic holds against generated test cases.',
-    href: '/submissions',
-  },
-  {
     icon: 'library_books',
     iconWrapClassName: 'bg-purple-50 text-purple-600 dark:bg-purple-900/30 dark:text-purple-400',
-    title: 'Browse Problems',
-    description: 'Explore a database of problems with known tricky cases.',
+    title: '문제 둘러보기',
+    description: '문제들을 한눈에 살펴보세요.',
     href: '/problems',
   },
   {
     icon: 'history',
     iconWrapClassName: 'bg-orange-50 text-orange-600 dark:bg-orange-900/30 dark:text-orange-400',
-    title: 'Recent Attempts',
-    description: "View the community's latest generated counter-examples.",
+    title: '최근 시도',
+    description: '최근 생성한 반례들을 확인해 보세요.',
     href: '/submissions',
   },
 ];
@@ -41,7 +34,7 @@ export default function MainPage() {
         <SearchBar />
 
         {/* 하단 카드 섹션 */}
-        <div className="mx-auto grid max-w-4xl grid-cols-1 gap-6 pt-8 text-left md:grid-cols-3">
+        <div className="mx-auto grid w-full max-w-2xl grid-cols-1 gap-6 pt-8 text-left sm:grid-cols-2">
           {FEATURES.map((feature, idx) => (
             <FeatureCard key={idx} {...feature} />
           ))}
