@@ -35,7 +35,7 @@ export default function ProblemInfoBar({ data }: ProblemInfoBarProps) {
       {/* 총 제출 수 */}
       <div className="flex flex-col">
         <span className="text-[10px] font-bold uppercase leading-tight tracking-widest text-slate-400 dark:text-slate-500">
-          이 문제에 대한 총 제출
+          해당 문제에 대한 제출 수
         </span>
         <span className="text-sm font-medium text-slate-700 dark:text-slate-200">
           {data.totalSubmissions ?? 0}
@@ -47,7 +47,7 @@ export default function ProblemInfoBar({ data }: ProblemInfoBarProps) {
       {/* 찾은 반례 수 */}
       <div className="flex flex-col">
         <span className="text-[10px] font-bold uppercase leading-tight tracking-widest text-slate-400 dark:text-slate-500">
-          이 문제에 대한 찾은 총 반례
+          해당 문제에 대해 찾은 반례 수
         </span>
         <span className="text-sm font-semibold text-red-500">{data.foundSubmissions ?? 0}</span>
       </div>
