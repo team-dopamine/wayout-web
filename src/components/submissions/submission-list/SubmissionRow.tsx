@@ -1,5 +1,5 @@
-import { Link, useParams } from 'react-router-dom';
-import type { SubmissionTableItem, SubmissionTableMode } from '../../types/submissions.ui.type';
+import { Link } from 'react-router-dom';
+import type { SubmissionTableItem, SubmissionTableMode } from '@/types/submissions.ui.type';
 
 interface SubmissionRowProps {
   data: SubmissionTableItem;
@@ -7,7 +7,6 @@ interface SubmissionRowProps {
 }
 
 export default function SubmissionRow({ data, mode = 'problem' }: SubmissionRowProps) {
-  const { problemPlatform, problemNo } = useParams();
   const problemTitle = data.problem;
 
   const isLinkDisabled = !data.open;
@@ -23,7 +22,7 @@ export default function SubmissionRow({ data, mode = 'problem' }: SubmissionRowP
         ) : (
           // 활성 상태
           <Link
-            to={`/submission/${problemPlatform}/${problemNo}?id=${data.id}`}
+            to={`/submission/${data.platform}/${data.problemNo}?id=${data.id}`}
             className="block text-sm font-semibold text-blue-600 hover:underline dark:text-blue-400"
             state={problemTitle}
           >
@@ -36,23 +35,15 @@ export default function SubmissionRow({ data, mode = 'problem' }: SubmissionRowP
       </td>
 
       {/* 사용자 */}
-      <td className="px-4 py-5 align-middle">
-        <Link
-          to={`/profile/${data.user}`}
-          className="block truncate text-sm font-semibold text-slate-900 hover:text-blue-600 hover:underline dark:text-white dark:hover:text-blue-400"
-          title={data.user}
-        >
-          {data.user}
-        </Link>
-      </td>
+      <td className="px-4 py-5 align-middle">{data.user}</td>
 
       {/* 문제 or 플랫폼 */}
       <td className="px-4 py-5 align-middle">
         <div
           className="truncate text-sm font-semibold text-slate-900 dark:text-white"
-          title={mode === 'platform' ? (data.platform ?? '-') : data.problem}
+          title={mode === 'platform' ? data.platform : data.problem}
         >
-          {mode === 'platform' ? (data.platform ?? '-') : data.problem}
+          {mode === 'platform' ? data.platform : data.problem}
         </div>
       </td>
 
@@ -65,7 +56,6 @@ export default function SubmissionRow({ data, mode = 'problem' }: SubmissionRowP
       <td className="px-4 py-5 align-middle">
         <div className="flex flex-col text-sm text-slate-500 dark:text-slate-400">
           <span>{data.executionTime}</span>
-          <span className="mt-1 text-sm text-slate-400 dark:text-slate-500">{data.memory}</span>
         </div>
       </td>
     </tr>

@@ -47,7 +47,7 @@ export default function ProblemShellLayout() {
       <main className="mx-auto max-w-7xl px-4 py-10">
         <ProblemInfoCard
           id={problemInfo.id}
-          problemNo={`P-${problemInfo.problemNo}`}
+          problemNo={`${problemInfo.problemNo}`}
           title={problemInfo.title}
           activeTab={activeTab}
           onTabChange={handleTabChange}

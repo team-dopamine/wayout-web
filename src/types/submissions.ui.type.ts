@@ -4,12 +4,12 @@ export type SubmissionTableMode = 'problem' | 'platform';
 
 export interface SubmissionTableItem {
   id: number;
+  problemNo: number;
   dateLabel: string;
   user: string;
   problem: string;
   platform?: string;
   language: Language;
   executionTime: string;
-  memory: string;
   open: boolean;
 }

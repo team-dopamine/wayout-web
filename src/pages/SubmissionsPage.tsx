@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import SubmissionTable from '@/components/submissions/SubmissionTable';
+import SubmissionTable from '@/components/submissions/submission-list/SubmissionTable';
 import Pagination from '@/components/common/Pagination';
 import { getSubmissions } from '@/apis/submissions/submissions';
 import type { SubmissionTableItem } from '@/types/submissions.ui.type';

@@ -2,7 +2,7 @@ import { useEffect, useState, useCallback } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import SolutionEditorPanel from '@/components/counterexample/SolutionEditorPanel';
 import CounterExampleStatusPanel from '@/components/counterexample/CounterExampleStatusPanel';
-import SubmissionInfoBar from '@/components/submission/SubmissionInfoBar';
+import SubmissionInfoBar from '@/components/submissions/submission-detail/SubmissionInfoBar';
 import { getSubmissionDetail } from '@/apis/submissions/submissions';
 import type { Language } from '@/types/counterexample';
 import type { SubmissionDetailResponse } from '@/apis/submissions/submissions.type';
