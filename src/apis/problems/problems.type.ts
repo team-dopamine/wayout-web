@@ -25,3 +25,12 @@ export interface ProblemSearch {
 }
 
 export type GetProblemSearchResponse = ProblemSearch[];
+
+export interface ProblemDetail {
+  problemId: number;
+  problemNo: number;
+  title: string;
+  platform: string;
+  totalSubmissions: number;
+  foundSubmissions: number;
+}

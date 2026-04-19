@@ -1,5 +1,10 @@
 import api from '@/apis/api';
-import type { GetProblemResponse, GetProblemSearchResponse, ProblemSearch } from './problems.type';
+import type {
+  GetProblemResponse,
+  GetProblemSearchResponse,
+  ProblemDetail,
+  ProblemSearch,
+} from './problems.type';
 
 // 문제 목록 조회
 export async function getProblem(
@@ -27,5 +32,11 @@ export async function getProblemSearch(keyword: string, limit = 10): Promise<Pro
     },
   });
 
+  return res.data;
+}
+
+// 특정 문제 상세 조회
+export async function getProblemDetail(problemId: number): Promise<ProblemDetail> {
+  const res = await api.get<ProblemDetail>(`/problems/${problemId}`);
   return res.data;
 }
