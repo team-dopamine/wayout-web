@@ -1,7 +1,18 @@
 import { useEffect, useState, useCallback } from 'react';
+import type { ChangeEvent } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { getProblemSearch } from '@/apis/problems/problems';
 import type { ProblemSearch } from '@/apis/problems/problems.type';
+
+const SEARCH_DEBOUNCE_MS = 300;
+
+function isValidKeyword(keyword: string) {
+  const trimmed = keyword.trim();
+  if (!trimmed) return false;
+
+  const isNumber = /^\d+$/.test(trimmed);
+  return isNumber || trimmed.length >= 2;
+}
 
 export default function useProblemSearch() {
   const navigate = useNavigate();
@@ -9,14 +20,6 @@ export default function useProblemSearch() {
   const [searchKeyword, setSearchKeyword] = useState('');
   const [searchResults, setSearchResults] = useState<ProblemSearch[]>([]);
   const [isSearching, setIsSearching] = useState(false);
-
-  // 검색 실행 가능 여부 판단
-  const isValidKeyword = (keyword: string) => {
-    const trimmed = keyword.trim();
-    if (!trimmed) return false;
-    const isNumber = /^\d+$/.test(trimmed);
-    return isNumber || trimmed.length >= 2;
-  };
 
   useEffect(() => {
     const trimmed = searchKeyword.trim();
@@ -49,7 +52,7 @@ export default function useProblemSearch() {
           setIsSearching(false);
         }
       }
-    }, 300);
+    }, SEARCH_DEBOUNCE_MS);
 
     return () => {
       isCurrentRequest = false;
@@ -57,7 +60,7 @@ export default function useProblemSearch() {
     };
   }, [searchKeyword]);
 
-  const handleChangeKeyword = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleChangeKeyword = (e: ChangeEvent<HTMLInputElement>) => {
     setSearchKeyword(e.target.value);
   };
 
