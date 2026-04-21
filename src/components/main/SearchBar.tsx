@@ -1,3 +1,4 @@
+import type { ReactNode } from 'react';
 import useProblemSearch from '@/hooks/useProblemSearch';
 
 export default function MainSearchBar() {
@@ -11,6 +12,43 @@ export default function MainSearchBar() {
 
   const hasKeyword = searchKeyword.trim().length > 0;
   const hasResults = searchResults.length > 0;
+  const dropdownClassName =
+    'absolute z-20 mt-2 w-full rounded-lg border border-slate-200 bg-white shadow-md dark:border-slate-700 dark:bg-slate-900';
+
+  let dropdownContent: ReactNode = null;
+
+  if (hasKeyword) {
+    if (isSearching) {
+      dropdownContent = (
+        <div className="px-4 py-3 text-sm text-slate-500 dark:text-slate-400">검색 중...</div>
+      );
+    } else if (hasResults) {
+      dropdownContent = (
+        <ul>
+          {searchResults.map((problem) => (
+            <li key={problem.problemId}>
+              <button
+                type="button"
+                onClick={() => handleSelectSearchResult(problem)}
+                className="w-full px-4 py-3 text-left hover:bg-slate-50 dark:hover:bg-slate-800"
+              >
+                <span className="text-sm text-slate-500 dark:text-slate-400">
+                  {problem.problemNo}
+                </span>
+                <span className="ml-2 text-sm text-slate-900 dark:text-white">{problem.title}</span>
+              </button>
+            </li>
+          ))}
+        </ul>
+      );
+    } else {
+      dropdownContent = (
+        <div className="px-4 py-3 text-sm text-slate-500 dark:text-slate-400">
+          검색 결과가 없습니다.
+        </div>
+      );
+    }
+  }
 
   return (
     <div className="group relative mx-auto w-full max-w-2xl">
@@ -30,36 +68,7 @@ export default function MainSearchBar() {
         />
       </div>
 
-      {hasKeyword && (
-        <div className="absolute z-20 mt-2 w-full rounded-lg border border-slate-200 bg-white shadow-md dark:border-slate-700 dark:bg-slate-900">
-          {isSearching ? (
-            <div className="px-4 py-3 text-sm text-slate-500 dark:text-slate-400">검색 중...</div>
-          ) : hasResults ? (
-            <ul>
-              {searchResults.map((problem) => (
-                <li key={problem.problemId}>
-                  <button
-                    type="button"
-                    onClick={() => handleSelectSearchResult(problem)}
-                    className="w-full px-4 py-3 text-left hover:bg-slate-50 dark:hover:bg-slate-800"
-                  >
-                    <span className="text-sm text-slate-500 dark:text-slate-400">
-                      {problem.problemNo}
-                    </span>
-                    <span className="ml-2 text-sm text-slate-900 dark:text-white">
-                      {problem.title}
-                    </span>
-                  </button>
-                </li>
-              ))}
-            </ul>
-          ) : (
-            <div className="px-4 py-3 text-sm text-slate-500 dark:text-slate-400">
-              검색 결과가 없습니다.
-            </div>
-          )}
-        </div>
-      )}
+      {hasKeyword && dropdownContent && <div className={dropdownClassName}>{dropdownContent}</div>}
     </div>
   );
 }
