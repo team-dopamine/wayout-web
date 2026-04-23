@@ -1,5 +1,6 @@
 import type { Contribution } from '@/components/profile/ContributionsSection';
 import type { MySolutionItem, SolutionType } from '@/apis/solutions/solutions.type';
+import { MySubmission } from '@/apis/members/members.type';
 
 function formatLanguage(language: MySolutionItem['language']) {
   switch (language) {
@@ -47,6 +48,15 @@ export function toContribution(item: MySolutionItem): Contribution {
   return {
     codeId: String(item.problemId),
     problemName: item.problemTitle,
+    language: formatLanguage(item.language),
+    type: mapSolutionTypeToContributionType(item.type),
+    submittedAt: formatSubmittedAt(item.submissionDate),
+  };
+}
+export function toSubmission(item: MySubmission): Contribution {
+  return {
+    codeId: String(item.id),
+    problemName: item.title,
     language: formatLanguage(item.language),
     type: mapSolutionTypeToContributionType(item.type),
     submittedAt: formatSubmittedAt(item.createdAt),

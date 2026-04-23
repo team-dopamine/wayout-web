@@ -21,7 +21,7 @@ export interface MySolutionItem {
   platform: string;
   problemTitle: string;
   language: SolutionLanguage;
-  createdAt: string;
+  submissionDate: string;
   type?: SolutionType;
 }
 
