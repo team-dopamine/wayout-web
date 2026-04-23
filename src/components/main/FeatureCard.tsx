@@ -1,9 +1,11 @@
-type FeatureCardProps = {
+import { Link } from 'react-router-dom';
+
+export type FeatureCardProps = {
   icon: string;
   iconWrapClassName: string;
   title: string;
   description: string;
-  href: string;
+  to: string;
 };
 
 export default function FeatureCard({
@@ -11,12 +13,12 @@ export default function FeatureCard({
   iconWrapClassName,
   title,
   description,
-  href,
+  to,
 }: FeatureCardProps) {
   return (
-    <a
+    <Link
       className="group block rounded-xl border border-slate-200 bg-white p-6 shadow-sm transition-all duration-200 hover:border-blue-500 hover:shadow-lg dark:border-slate-700 dark:bg-slate-800 dark:hover:border-blue-400"
-      href={href}
+      to={to}
     >
       <div className="mb-4 flex items-center justify-between">
         <div className={`rounded-lg p-2.5 ${iconWrapClassName}`}>
@@ -30,6 +32,6 @@ export default function FeatureCard({
 
       <h3 className="mb-2 text-lg font-semibold text-slate-900 dark:text-white">{title}</h3>
       <p className="text-sm leading-relaxed text-slate-500 dark:text-slate-400">{description}</p>
-    </a>
+    </Link>
   );
 }

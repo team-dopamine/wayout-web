@@ -2,21 +2,22 @@ import FeatureCard from '@/components/main/FeatureCard';
 import BackgroundBlobs from '@/components/main/BackgroundBlobs';
 import HeroSection from '@/components/main/HeroSection';
 import SearchBar from '@/components/main/SearchBar';
+import type { FeatureCardProps } from '@/components/main/FeatureCard';
 
-const FEATURES = [
+const FEATURES: FeatureCardProps[] = [
   {
     icon: 'library_books',
     iconWrapClassName: 'bg-purple-50 text-purple-600 dark:bg-purple-900/30 dark:text-purple-400',
     title: '문제 둘러보기',
     description: '문제들을 한눈에 살펴보세요.',
-    href: '/problems',
+    to: '/problems',
   },
   {
     icon: 'history',
     iconWrapClassName: 'bg-orange-50 text-orange-600 dark:bg-orange-900/30 dark:text-orange-400',
     title: '최근 시도',
     description: '최근 생성한 반례들을 확인해 보세요.',
-    href: '/submissions',
+    to: '/submissions',
   },
 ];
 
@@ -35,8 +36,8 @@ export default function MainPage() {
 
         {/* 하단 카드 섹션 */}
         <div className="mx-auto grid w-full max-w-2xl grid-cols-1 gap-6 pt-8 text-left sm:grid-cols-2">
-          {FEATURES.map((feature, idx) => (
-            <FeatureCard key={idx} {...feature} />
+          {FEATURES.map((feature) => (
+            <FeatureCard key={feature.to} {...feature} />
           ))}
         </div>
       </div>
