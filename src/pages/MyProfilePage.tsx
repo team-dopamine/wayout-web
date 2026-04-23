@@ -10,6 +10,8 @@ import { getMySolutionsApi } from '@/apis/solutions/solutions';
 import { MAX_LENGTH, validateNickname } from '@/constants/nickname';
 import { toContribution } from '@/utils/profile';
 
+const CONTRIBUTION_PAGE_SIZE = 100;
+
 const filterMap: Record<TabKey, (rows: Contribution[]) => Contribution[]> = {
   all: (rows) => rows,
   correct: (rows) => rows.filter((row) => row.type === 'Correct Code'),
@@ -27,43 +29,68 @@ export default function MyProfilePage() {
   const [contributions, setContributions] = useState<Contribution[]>([]);
 
   useEffect(() => {
+    let isCancelled = false;
+
     const fetchMyProfile = async () => {
       try {
         const data = await getMyProfile();
+
+        if (isCancelled) return;
+
         setNickname(data.nickname);
         setEmail(data.email);
       } catch (error) {
+        if (isCancelled) return;
+
         console.error(error);
         alert('프로필 정보를 불러오지 못했어요.');
       } finally {
-        setIsLoading(false);
+        if (!isCancelled) {
+          setIsLoading(false);
+        }
       }
     };
 
     fetchMyProfile();
+
+    return () => {
+      isCancelled = true;
+    };
   }, []);
 
   useEffect(() => {
+    let isCancelled = false;
+
     const fetchMySolutions = async () => {
       try {
         setIsContributionLoading(true);
 
         const data = await getMySolutionsApi({
           page: 0,
-          size: 100,
+          size: CONTRIBUTION_PAGE_SIZE,
           sort: ['createdAt,DESC'],
         });
 
+        if (isCancelled) return;
+
         setContributions(data.content.map(toContribution));
       } catch (error) {
+        if (isCancelled) return;
+
         console.error(error);
         alert('기여 내역을 불러오지 못했어요.');
       } finally {
-        setIsContributionLoading(false);
+        if (!isCancelled) {
+          setIsContributionLoading(false);
+        }
       }
     };
 
     fetchMySolutions();
+
+    return () => {
+      isCancelled = true;
+    };
   }, []);
 
   const filteredContributions = useMemo(
