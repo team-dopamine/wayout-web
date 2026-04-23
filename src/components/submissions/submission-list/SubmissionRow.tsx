@@ -8,8 +8,9 @@ interface SubmissionRowProps {
 
 export default function SubmissionRow({ data, mode = 'problem' }: SubmissionRowProps) {
   const problemTitle = data.problem;
-
+  const summaryLabel = mode === 'platform' ? data.platform : data.problem;
   const isLinkDisabled = !data.open;
+  const executionTimeLabel = data.executionTime;
 
   return (
     <tr className="transition-colors hover:bg-slate-50 dark:hover:bg-slate-800/50">
@@ -41,9 +42,9 @@ export default function SubmissionRow({ data, mode = 'problem' }: SubmissionRowP
       <td className="px-4 py-5 align-middle">
         <div
           className="truncate text-sm font-semibold text-slate-900 dark:text-white"
-          title={mode === 'platform' ? data.platform : data.problem}
+          title={summaryLabel}
         >
-          {mode === 'platform' ? data.platform : data.problem}
+          {summaryLabel}
         </div>
       </td>
 
@@ -55,7 +56,7 @@ export default function SubmissionRow({ data, mode = 'problem' }: SubmissionRowP
       {/* 실행시간 */}
       <td className="px-4 py-5 align-middle">
         <div className="flex flex-col text-sm text-slate-500 dark:text-slate-400">
-          <span>{data.executionTime}</span>
+          <span>{executionTimeLabel}</span>
         </div>
       </td>
     </tr>
