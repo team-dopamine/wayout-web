@@ -5,6 +5,11 @@ import CodeEditor from '@/components/common/CodeEditor';
 import { PublicSubmissionCheckbox } from '@/components/common/PublicSubmissionCheckbox';
 
 type LangOption = { value: Language; label: string };
+const NOOP = () => {};
+
+function isLanguage(value: string): value is Language {
+  return value === 'cpp' || value === 'java' || value === 'python';
+}
 
 type Props = {
   readOnly?: boolean;
@@ -37,6 +42,13 @@ export default function SolutionEditorPanel({
   onPublicChange,
   isFindingCounterExample,
 }: Props) {
+  const resolvedLanguageOptions = languageOptions?.length
+    ? languageOptions
+    : [{ value: language, label: language }];
+  const handleCodeChange = readOnly ? NOOP : (onChangeCode ?? NOOP);
+  const handleSubmit = readOnly ? NOOP : (onSubmit ?? NOOP);
+  const handlePublicChange = onPublicChange ?? NOOP;
+
   return (
     <section className="flex h-full min-h-0 flex-col overflow-hidden rounded-xl border border-slate-200 bg-white shadow-sm dark:border-slate-700 dark:bg-slate-800">
       {/** 상단바 */}
@@ -50,18 +62,22 @@ export default function SolutionEditorPanel({
           <select
             value={language}
             disabled={readOnly}
-            onChange={(e) => onChangeLanguage?.(e.target.value as Language)}
+            onChange={(e) => {
+              if (isLanguage(e.target.value)) {
+                onChangeLanguage?.(e.target.value);
+              }
+            }}
             className={`rounded-md border border-slate-300 bg-white py-1.5 pl-3 pr-8 text-sm shadow-sm outline-none transition-colors dark:border-slate-600 dark:bg-slate-700 dark:text-white ${
               readOnly
                 ? 'cursor-default opacity-80'
                 : 'cursor-pointer focus:border-blue-500 focus:ring-2 focus:ring-blue-500'
             }`}
           >
-            {languageOptions?.map((opt) => (
+            {resolvedLanguageOptions.map((opt) => (
               <option key={opt.value} value={opt.value}>
                 {opt.label}
               </option>
-            )) || <option value={language}>{language}</option>}
+            ))}
           </select>
         </div>
 
@@ -78,8 +94,8 @@ export default function SolutionEditorPanel({
       <CodeEditor
         language={language}
         value={code}
-        onChange={readOnly ? () => {} : (onChangeCode ?? (() => {}))}
-        onSubmit={readOnly ? () => {} : (onSubmit ?? (() => {}))}
+        onChange={handleCodeChange}
+        onSubmit={handleSubmit}
         readOnly={readOnly}
       />
 
@@ -87,10 +103,7 @@ export default function SolutionEditorPanel({
       {!readOnly && (
         <div className="flex flex-shrink-0 items-center justify-between border-t border-slate-200 bg-slate-50 px-4 py-3 dark:border-slate-700 dark:bg-slate-800/50">
           <div className="-mt-2">
-            <PublicSubmissionCheckbox
-              checked={isPublic ?? false}
-              onChange={onPublicChange ?? (() => {})}
-            />
+            <PublicSubmissionCheckbox checked={isPublic ?? false} onChange={handlePublicChange} />
           </div>
 
           <button
