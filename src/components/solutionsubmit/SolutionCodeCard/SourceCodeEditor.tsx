@@ -3,6 +3,10 @@ import CodeEditor from '@/components/common/CodeEditor';
 import type { EditorLang } from '@/constants/editor';
 import { PublicSubmissionCheckbox } from '@/components/common/PublicSubmissionCheckbox';
 
+function isEditorLang(value: string): value is EditorLang {
+  return value === 'cpp' || value === 'java' || value === 'python';
+}
+
 type Props = {
   label?: string;
   language: EditorLang;
@@ -50,7 +54,11 @@ export default function SourceCodeEditor({
           <div className="h-4 w-px bg-slate-300 dark:bg-slate-600" />
           <select
             value={language}
-            onChange={(e) => onChangeLanguage(e.target.value as EditorLang)}
+            onChange={(e) => {
+              if (isEditorLang(e.target.value)) {
+                onChangeLanguage(e.target.value);
+              }
+            }}
             className="cursor-pointer rounded-md border border-slate-300 bg-white py-1.5 pl-3 pr-8 text-sm shadow-sm outline-none transition-colors focus:border-blue-500 focus:ring-2 focus:ring-blue-500 dark:border-slate-600 dark:bg-slate-700 dark:text-white"
           >
             {languageOptions.map((opt) => (
