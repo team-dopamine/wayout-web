@@ -1,5 +1,6 @@
 import type React from 'react';
 import MaterialSymbol from '@/components/common/MaterialSymbol';
+import { MAX_LENGTH } from '@/constants/nickname';
 
 type Props = {
   nickname: string;
@@ -33,7 +34,7 @@ export default function ProfileSettings({ nickname, setNickname, email, onSave, 
             type="text"
             value={nickname}
             onChange={(e) => setNickname(e.target.value)}
-            maxLength={12}
+            maxLength={MAX_LENGTH}
             spellCheck={false}
             className="w-full rounded-lg border border-slate-200 bg-white px-4 py-2.5 text-slate-900 focus:border-slate-200 focus:outline-none focus:ring-0 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-100"
           />
