@@ -7,11 +7,10 @@ import type { ProblemSearch } from '@/apis/problems/problems.type';
 const SEARCH_DEBOUNCE_MS = 300;
 
 function isValidKeyword(keyword: string) {
-  const trimmed = keyword.trim();
-  if (!trimmed) return false;
+  if (!keyword) return false;
 
-  const isNumber = /^\d+$/.test(trimmed);
-  return isNumber || trimmed.length >= 2;
+  const isNumber = /^\d+$/.test(keyword);
+  return isNumber || keyword.length >= 2;
 }
 
 export default function useProblemSearch() {
@@ -22,10 +21,10 @@ export default function useProblemSearch() {
   const [isSearching, setIsSearching] = useState(false);
 
   useEffect(() => {
-    const trimmed = searchKeyword.trim();
+    const keyword = searchKeyword.trim();
 
     // 유효하지 않은 키워드 처리
-    if (!isValidKeyword(trimmed)) {
+    if (!isValidKeyword(keyword)) {
       setSearchResults([]);
       setIsSearching(false);
       return;
@@ -37,7 +36,7 @@ export default function useProblemSearch() {
 
     const timer = setTimeout(async () => {
       try {
-        const data = await getProblemSearch(trimmed);
+        const data = await getProblemSearch(keyword);
 
         if (isCurrentRequest) {
           setSearchResults(data);
@@ -60,9 +59,9 @@ export default function useProblemSearch() {
     };
   }, [searchKeyword]);
 
-  const handleChangeKeyword = (e: ChangeEvent<HTMLInputElement>) => {
+  const handleChangeKeyword = useCallback((e: ChangeEvent<HTMLInputElement>) => {
     setSearchKeyword(e.target.value);
-  };
+  }, []);
 
   const handleSelectSearchResult = useCallback(
     (selectedProblem: ProblemSearch) => {
