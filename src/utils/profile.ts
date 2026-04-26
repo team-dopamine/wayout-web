@@ -1,6 +1,6 @@
-import type { Contribution } from '@/components/profile/ContributionsSection';
-import type { MySolutionItem, SolutionType } from '@/apis/solutions/solutions.type';
-import { MySubmission } from '@/apis/members/members.type';
+import type { MySolutionItem } from '@/apis/solutions/solutions.type';
+import { MySubmission } from '@/apis/submissions/submissions.type';
+import { Contribution } from '@/components/profile/contributions.constants';
 
 function formatLanguage(language: MySolutionItem['language']) {
   switch (language) {
@@ -17,10 +17,7 @@ function formatLanguage(language: MySolutionItem['language']) {
 
 function formatSubmittedAt(dateString: string) {
   const date = new Date(dateString);
-
-  if (Number.isNaN(date.getTime())) {
-    return dateString;
-  }
+  if (Number.isNaN(date.getTime())) return dateString;
 
   const year = date.getFullYear();
   const month = String(date.getMonth() + 1).padStart(2, '0');
@@ -31,34 +28,22 @@ function formatSubmittedAt(dateString: string) {
   return `${year}.${month}.${day} ${hour}:${minute}`;
 }
 
-function mapSolutionTypeToContributionType(type?: SolutionType): Contribution['type'] {
-  switch (type) {
-    case 'CORRECT':
-      return 'Correct Code';
-    case 'INCORRECT':
-      return 'Incorrect Code';
-    case 'GENERATOR':
-      return 'Generator';
-    default:
-      return 'Correct Code';
-  }
-}
-
 export function toContribution(item: MySolutionItem): Contribution {
   return {
     codeId: String(item.problemId),
     problemName: item.problemTitle,
     language: formatLanguage(item.language),
-    type: mapSolutionTypeToContributionType(item.type),
+    platform: item.platform,
     submittedAt: formatSubmittedAt(item.submissionDate),
   };
 }
+
 export function toSubmission(item: MySubmission): Contribution {
   return {
     codeId: String(item.id),
     problemName: item.title,
     language: formatLanguage(item.language),
-    type: mapSolutionTypeToContributionType(item.type),
+    platform: item.platform,
     submittedAt: formatSubmittedAt(item.createdAt),
   };
 }
