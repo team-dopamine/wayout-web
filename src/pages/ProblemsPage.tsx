@@ -25,24 +25,36 @@ export default function ProblemsPage() {
   } = useProblemSearch();
 
   useEffect(() => {
+    let isCancelled = false;
+
     const fetchProblems = async () => {
       try {
         setIsLoading(true);
 
         const data = await getProblem(page, PAGE_SIZE);
 
+        if (isCancelled) return;
+
         setProblems(data.content);
         setTotalPages(data.totalPages);
       } catch (error) {
+        if (isCancelled) return;
+
         console.error('문제 목록 조회 실패:', error);
         setProblems([]);
         setTotalPages(0);
       } finally {
-        setIsLoading(false);
+        if (!isCancelled) {
+          setIsLoading(false);
+        }
       }
     };
 
     fetchProblems();
+
+    return () => {
+      isCancelled = true;
+    };
   }, [page]);
 
   const handleReset = () => {

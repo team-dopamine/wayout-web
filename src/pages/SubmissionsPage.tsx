@@ -5,15 +5,16 @@ import { getSubmissions } from '@/apis/submissions/submissions';
 import type { SubmissionTableItem } from '@/types/submissions.ui.type';
 import { mapSubmissionToTableItem } from '@/utils/submission.mapper';
 
+const ITEMS_PER_PAGE = 8;
+
 export default function SubmissionsPage() {
   const [page, setPage] = useState(1);
-  const itemsPerPage = 8;
 
   const [submissions, setSubmissions] = useState<SubmissionTableItem[]>([]);
   const [totalItems, setTotalItems] = useState(0);
   const [isLoading, setIsLoading] = useState(false);
 
-  const totalPages = Math.ceil(totalItems / itemsPerPage);
+  const totalPages = Math.max(1, Math.ceil(totalItems / ITEMS_PER_PAGE));
 
   useEffect(() => {
     let ignore = false;
@@ -22,7 +23,7 @@ export default function SubmissionsPage() {
       try {
         setIsLoading(true);
 
-        const data = await getSubmissions(page - 1, itemsPerPage);
+        const data = await getSubmissions(page - 1, ITEMS_PER_PAGE);
 
         if (ignore) return;
 
@@ -70,11 +71,7 @@ export default function SubmissionsPage() {
 
                 <div className="border-t border-slate-200 bg-white px-4 py-3 dark:border-slate-700 dark:bg-slate-800 sm:px-6">
                   <div className="hidden sm:flex sm:justify-end">
-                    <Pagination
-                      currentPage={page}
-                      totalPages={Math.max(totalPages, 1)}
-                      onChange={setPage}
-                    />
+                    <Pagination currentPage={page} totalPages={totalPages} onChange={setPage} />
                   </div>
                 </div>
               </>
