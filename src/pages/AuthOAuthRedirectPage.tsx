@@ -9,17 +9,31 @@ export default function AuthOAuthRedirectPage() {
   const navigate = useNavigate();
 
   useEffect(() => {
+    let isCancelled = false;
+
+    const moveToHome = () => {
+      if (!isCancelled) {
+        navigate('/', { replace: true });
+      }
+    };
+
+    const moveToNext = (isNewMember: boolean) => {
+      if (!isCancelled) {
+        navigate(isNewMember ? '/onboarding' : '/', { replace: true });
+      }
+    };
+
     const run = async () => {
       const params = new URLSearchParams(window.location.search);
       const isNewMember = params.get('isNewMember') === 'true';
 
       try {
         await getAuthApi();
-        navigate(isNewMember ? '/onboarding' : '/', { replace: true });
+        moveToNext(isNewMember);
       } catch (e) {
         if (e instanceof AuthMeError) {
           if (e.status === 404) {
-            navigate('/', { replace: true });
+            moveToHome();
             return;
           }
 
@@ -27,20 +41,24 @@ export default function AuthOAuthRedirectPage() {
             try {
               await requestReissue(api);
               await getAuthApi();
-              navigate(isNewMember ? '/onboarding' : '/', { replace: true });
+              moveToNext(isNewMember);
               return;
             } catch {
-              navigate('/', { replace: true });
+              moveToHome();
               return;
             }
           }
         }
 
-        navigate('/', { replace: true });
+        moveToHome();
       }
     };
 
     run();
+
+    return () => {
+      isCancelled = true;
+    };
   }, [navigate]);
 
   return <div className="p-6">로그인 처리 중...</div>;

@@ -8,6 +8,8 @@ interface SubmissionInfoBarProps {
 export default function SubmissionInfoBar({ data }: SubmissionInfoBarProps) {
   // 날짜 포맷팅
   const formattedDate = formatSubmissionDate(data.createdAt);
+  const executionTime = Number(data.executionTime);
+  const safeExecutionTime = Number.isFinite(executionTime) ? executionTime.toFixed(1) : '0.0';
 
   return (
     <div className="mb-6 flex flex-wrap items-center gap-x-6 gap-y-4 rounded-xl border border-slate-200 bg-white px-6 py-3 shadow-sm dark:border-slate-700 dark:bg-slate-800">
@@ -31,7 +33,7 @@ export default function SubmissionInfoBar({ data }: SubmissionInfoBarProps) {
           실행시간
         </span>
         <span className="text-sm font-medium text-slate-700 dark:text-slate-200">
-          {Number(data.executionTime).toFixed(1)} ms
+          {safeExecutionTime} ms
         </span>
       </div>
 
