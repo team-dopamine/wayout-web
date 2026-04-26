@@ -14,7 +14,7 @@ export async function postSolutionApi(body: PostSolutionRequest) {
 export async function getMySolutionsApi({
   page = 0,
   size = 8,
-  sort = ['createdAt,DESC'],
+  sort = ['submissionDate,DESC'],
 }: GetMySolutionsRequest = {}) {
   const response = await api.get<GetMySolutionsResponse>('/solutions/me', {
     params: {
