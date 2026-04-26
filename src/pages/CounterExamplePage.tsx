@@ -1,5 +1,5 @@
 /**반례 찾기 페이지*/
-import { useCallback, useEffect, useState, useReducer } from 'react';
+import { useCallback, useEffect, useMemo, useState, useReducer } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import SolutionEditorPanel from '@/components/counterexample/SolutionEditorPanel';
 import CounterExampleStatusPanel from '@/components/counterexample/CounterExampleStatusPanel';
@@ -17,9 +17,25 @@ const LANGUAGE_TO_API = {
   python: 'PYTHON',
 } as const;
 
+function mapFailedCases(
+  counterExamples: Array<{ input: string; expectedOutput: string; actualOutput: string }> = [],
+): FailedCase[] {
+  return counterExamples.map((item, index) => ({
+    id: index + 1,
+    input: item.input,
+    expected: item.expectedOutput,
+    output: item.actualOutput,
+    timeMs: 0,
+  }));
+}
+
 export default function CounterExamplePage() {
   const [searchParams] = useSearchParams();
   const currentProblemId = searchParams.get('id');
+  const numericProblemId = useMemo(() => {
+    const parsed = Number(currentProblemId);
+    return Number.isInteger(parsed) && parsed > 0 ? parsed : null;
+  }, [currentProblemId]);
 
   const [state, dispatch] = useReducer(counterExampleReducer, initialState);
 
@@ -28,9 +44,11 @@ export default function CounterExamplePage() {
 
   // 문제 상세 데이터 요청
   useEffect(() => {
-    const problemId = Number(currentProblemId);
-
-    if (!currentProblemId || !Number.isFinite(problemId)) return;
+    if (!numericProblemId) {
+      setDetail(null);
+      setIsLoadingDetail(false);
+      return;
+    }
 
     let isCancelled = false;
 
@@ -38,7 +56,7 @@ export default function CounterExamplePage() {
       setIsLoadingDetail(true);
 
       try {
-        const data = await getProblemDetail(problemId);
+        const data = await getProblemDetail(numericProblemId);
 
         if (!isCancelled) setDetail(data);
       } catch (error) {
@@ -53,48 +71,52 @@ export default function CounterExamplePage() {
     return () => {
       isCancelled = true;
     };
-  }, [currentProblemId]);
+  }, [numericProblemId]);
 
   // 복사 핸들러
-  const handleCopy = async () => {
+  const handleCopy = useCallback(async () => {
     try {
       await navigator.clipboard.writeText(state.code);
       alert('코드가 복사되었습니다.');
     } catch {
       alert('복사에 실패했습니다.');
     }
-  };
+  }, [state.code]);
+
+  const handleChangeLanguage = useCallback((val: (typeof LANG_OPTIONS)[number]['value']) => {
+    dispatch({ type: 'SET_LANGUAGE', value: val });
+  }, []);
+
+  const handleChangeCode = useCallback((val: string) => {
+    dispatch({ type: 'SET_CODE', value: val });
+  }, []);
+
+  const handlePublicChange = useCallback((val: boolean) => {
+    dispatch({ type: 'SET_PUBLIC', value: val });
+  }, []);
 
   // 코드 제출 및 반례 찾기
   const handleFindCounterExample = useCallback(async () => {
     if (!state.code.trim()) return alert('코드를 입력해주세요.');
-    if (!currentProblemId) return alert('문제 정보를 찾을 수 없습니다.');
+    if (!numericProblemId) return alert('문제 정보를 찾을 수 없습니다.');
 
     dispatch({ type: 'START_SEARCH' });
 
     try {
       const data = await postCounterexampleApi({
-        problemId: Number(currentProblemId),
+        problemId: numericProblemId,
         language: LANGUAGE_TO_API[state.language],
         sourceCode: state.code,
         isOpen: state.isPublic,
       });
 
-      const mappedCases: FailedCase[] = (data.counterExamples ?? []).map((item, index) => ({
-        id: index + 1,
-        input: item.input,
-        expected: item.expectedOutput,
-        output: item.actualOutput,
-        timeMs: 0,
-      }));
-
-      dispatch({ type: 'SEARCH_SUCCESS', payload: mappedCases });
+      dispatch({ type: 'SEARCH_SUCCESS', payload: mapFailedCases(data.counterExamples) });
     } catch (error) {
       console.error(error);
       dispatch({ type: 'SEARCH_FAILURE' });
       alert('반례 탐색에 실패했습니다.');
     }
-  }, [state.code, state.isPublic, state.language, currentProblemId]);
+  }, [state.code, state.isPublic, state.language, numericProblemId]);
 
   if (isLoadingDetail)
     return <div className="flex h-[400px] items-center justify-center">로딩 중...</div>;
@@ -114,14 +136,14 @@ export default function CounterExamplePage() {
           <SolutionEditorPanel
             language={state.language}
             languageOptions={LANG_OPTIONS}
-            onChangeLanguage={(val) => dispatch({ type: 'SET_LANGUAGE', value: val })}
+            onChangeLanguage={handleChangeLanguage}
             code={state.code}
-            onChangeCode={(val) => dispatch({ type: 'SET_CODE', value: val })}
+            onChangeCode={handleChangeCode}
             onCopy={handleCopy}
             onFindCounterExample={handleFindCounterExample}
             onSubmit={handleFindCounterExample}
             isPublic={state.isPublic}
-            onPublicChange={(val) => dispatch({ type: 'SET_PUBLIC', value: val })}
+            onPublicChange={handlePublicChange}
             isFindingCounterExample={state.isLoading}
           />
         </div>

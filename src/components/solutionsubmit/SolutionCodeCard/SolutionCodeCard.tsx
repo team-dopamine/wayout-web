@@ -18,7 +18,6 @@ type Props = {
   isPublic?: boolean;
   onPublicChange?: (checked: boolean) => void;
 
-  onClear?: () => void;
   onSubmit?: () => void;
 
   className?: string;
@@ -29,6 +28,15 @@ const DEFAULT_LANGUAGES: LanguageOption[] = [
   { value: 'java', label: 'Java', filename: 'main.java' },
   { value: 'python', label: 'Python 3', filename: 'main.py' },
 ];
+const DEFAULT_EDITOR_LANGUAGE_OPTIONS: Array<{ value: EditorLang; label: string }> = [
+  { value: 'cpp', label: 'C++' },
+  { value: 'java', label: 'Java' },
+  { value: 'python', label: 'Python 3' },
+];
+
+function isEditorLang(lang: string): lang is EditorLang {
+  return lang === 'cpp' || lang === 'java' || lang === 'python';
+}
 
 export default function SolutionCodeCard({
   value,
@@ -37,7 +45,6 @@ export default function SolutionCodeCard({
   enableLoadFromFile = true,
   isPublic,
   onPublicChange,
-  onClear,
   onSubmit,
   className,
 }: Props) {
@@ -45,16 +52,28 @@ export default function SolutionCodeCard({
 
   const fileInputRef = useRef<HTMLInputElement | null>(null);
   const accept = useMemo(() => '.txt,.py,.js,.ts,.cpp,.c,.java,.go,.rs', []);
+  const currentLanguage = useMemo(() => {
+    return isEditorLang(value.language) ? value.language : 'cpp';
+  }, [value.language]);
+  const resolvedLanguageOptions = useMemo(() => {
+    const mapped = options.flatMap((option) => {
+      if (!isEditorLang(option.value)) {
+        return [];
+      }
+
+      return [{ value: option.value, label: option.label }];
+    });
+
+    return mapped.length > 0 ? mapped : DEFAULT_EDITOR_LANGUAGE_OPTIONS;
+  }, [options]);
 
   const handleChangeLanguage = useCallback(
-    (nextLang: string) => {
-      const lang = (['cpp', 'java', 'python'] as const).includes(nextLang as any)
-        ? (nextLang as EditorLang)
-        : 'cpp';
+    (nextLang: EditorLang) => {
+      const lang = isEditorLang(nextLang) ? nextLang : 'cpp';
 
       onChange({
         ...value,
-        language: nextLang,
+        language: lang,
         code: DEFAULT_CODE_BY_LANG[lang],
       });
     },
@@ -98,11 +117,8 @@ export default function SolutionCodeCard({
       <div className="h-[600px]">
         <SourceCodeEditor
           label="정답 코드"
-          language={value.language as EditorLang}
-          languageOptions={options.map((o) => ({
-            value: o.value as EditorLang,
-            label: o.label,
-          }))}
+          language={currentLanguage}
+          languageOptions={resolvedLanguageOptions}
           onChangeLanguage={handleChangeLanguage}
           value={value.code}
           onChange={(code) => onChange({ ...value, code })}

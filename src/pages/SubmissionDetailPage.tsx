@@ -7,23 +7,19 @@ import { getSubmissionDetail } from '@/apis/submissions/submissions';
 import type { Language } from '@/types/counterexample';
 import type { SubmissionDetailResponse } from '@/apis/submissions/submissions.type';
 
-const SUPPORTED_LANGUAGES: Record<string, Language> = {
-  cpp: 'cpp',
-  java: 'java',
-  python: 'python',
-};
+const DEFAULT_LANGUAGE: Language = 'cpp';
 
 const formatLanguage = (lang: string | undefined): Language => {
   const normalized = lang?.toLowerCase() || '';
-  if (normalized.includes('c++') || normalized.includes('cpp')) return SUPPORTED_LANGUAGES.cpp;
-  if (normalized.includes('java')) return SUPPORTED_LANGUAGES.java;
-  if (normalized.includes('python')) return SUPPORTED_LANGUAGES.python;
-  return SUPPORTED_LANGUAGES.cpp;
+  if (normalized.includes('c++') || normalized.includes('cpp')) return 'cpp';
+  if (normalized.includes('java')) return 'java';
+  if (normalized.includes('python')) return 'python';
+  return DEFAULT_LANGUAGE;
 };
 
 export default function SubmissionDetailPage() {
   const [searchParams] = useSearchParams();
-  const problemId = searchParams.get('id');
+  const submissionIdParam = searchParams.get('id');
 
   const [detail, setDetail] = useState<SubmissionDetailResponse | null>(null);
   const [isLoading, setIsLoading] = useState(true);
@@ -37,33 +33,45 @@ export default function SubmissionDetailPage() {
     }
   }, []);
 
-  // 다른 문제 상세로 이동할 때 이전 데이터가 남아있지 않도록 비우기
   useEffect(() => {
-    setDetail(null);
-  }, [problemId]);
+    const submissionId = Number(submissionIdParam);
 
-  useEffect(() => {
-    // problemId가 없을 때 무한 로딩 방지
-    if (!problemId) {
+    if (!submissionIdParam || !Number.isInteger(submissionId) || submissionId <= 0) {
+      setDetail(null);
       setIsLoading(false);
       return;
     }
 
+    let isCancelled = false;
+
     const fetchDetail = async () => {
       setIsLoading(true);
+      setDetail(null);
+
       try {
-        const targetId = Number(problemId);
-        const data = await getSubmissionDetail(targetId);
-        setDetail(data);
+        const data = await getSubmissionDetail(submissionId);
+
+        if (!isCancelled) {
+          setDetail(data);
+        }
       } catch (error) {
-        console.error('[SubmissionDetail] 로딩 실패:', error);
+        if (!isCancelled) {
+          console.error('[SubmissionDetail] 로딩 실패:', error);
+          setDetail(null);
+        }
       } finally {
-        setIsLoading(false);
+        if (!isCancelled) {
+          setIsLoading(false);
+        }
       }
     };
 
     fetchDetail();
-  }, [problemId]);
+
+    return () => {
+      isCancelled = true;
+    };
+  }, [submissionIdParam]);
 
   // 로딩 상태 우선 처리
   if (isLoading) return <LoadingView />;

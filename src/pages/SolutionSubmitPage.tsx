@@ -1,8 +1,9 @@
-import { useCallback, useState } from 'react';
+import { useCallback, useMemo, useState } from 'react';
 import { SolutionCodeCard } from '@/components/solutionsubmit/SolutionCodeCard';
 import { CustomTestCasesSection } from '@/components/solutionsubmit';
 import { DEFAULT_CODE_BY_LANG } from '@/constants/counterexample';
 import { postSolutionApi } from '@/apis/solutions/solutions';
+import type { SolutionCodeCardValue } from '@/components/solutionsubmit/SolutionCodeCard/types';
 
 const LANGUAGE_MAP = {
   cpp: 'CPP',
@@ -11,24 +12,39 @@ const LANGUAGE_MAP = {
 } as const;
 
 type ClientLang = keyof typeof LANGUAGE_MAP;
+type SubmitFormValue = Omit<SolutionCodeCardValue, 'language'> & { language: ClientLang };
+
+function isClientLang(language: string): language is ClientLang {
+  return language === 'cpp' || language === 'java' || language === 'python';
+}
+
+function getApiLanguage(language: ClientLang) {
+  return LANGUAGE_MAP[language];
+}
 
 export default function SolutionSubmitPage() {
-  const [value, setValue] = useState({
+  const [value, setValue] = useState<SubmitFormValue>({
     problemId: '',
     language: 'cpp',
     code: DEFAULT_CODE_BY_LANG.cpp,
   });
 
   const [isPublic, setIsPublic] = useState(false);
+  const numericProblemId = useMemo(() => Number(value.problemId), [value.problemId]);
+  const handleChangeValue = useCallback((next: SolutionCodeCardValue) => {
+    setValue({
+      ...next,
+      language: isClientLang(next.language) ? next.language : 'cpp',
+    });
+  }, []);
 
   const handleSubmitSolution = useCallback(async () => {
-    const problemId = Number(value.problemId);
-    if (!Number.isInteger(problemId) || problemId <= 0) {
+    if (!Number.isInteger(numericProblemId) || numericProblemId <= 0) {
       console.error('[기여하기] Invalid problemId detected. Current value:', value.problemId);
       return;
     }
 
-    const language = LANGUAGE_MAP[value.language as ClientLang];
+    const language = getApiLanguage(value.language);
     if (!language) {
       console.error('[기여하기] Invalid language detected. Current value:', value.language);
       return;
@@ -42,7 +58,7 @@ export default function SolutionSubmitPage() {
 
     try {
       await postSolutionApi({
-        problemId,
+        problemId: numericProblemId,
         language,
         isOpen: isPublic,
         sourceCode,
@@ -52,24 +68,21 @@ export default function SolutionSubmitPage() {
     } catch (error) {
       alert('정답 코드 등록에 실패했습니다.');
     }
-  }, [value.problemId, value.language, value.code, isPublic]);
+  }, [numericProblemId, value.problemId, value.language, value.code, isPublic]);
 
   return (
     <section className="space-y-8">
       <div className="h-[700px]">
         <SolutionCodeCard
           value={value}
-          onChange={setValue}
+          onChange={handleChangeValue}
           isPublic={isPublic}
           onPublicChange={setIsPublic}
-          onClear={() => {
-            setValue((prev) => ({ ...prev, problemId: '', code: '' }));
-          }}
           onSubmit={handleSubmitSolution}
         />
       </div>
 
-      <CustomTestCasesSection problemId={Number(value.problemId)} onChange={() => {}} />
+      <CustomTestCasesSection problemId={numericProblemId} onChange={() => {}} />
     </section>
   );
 }

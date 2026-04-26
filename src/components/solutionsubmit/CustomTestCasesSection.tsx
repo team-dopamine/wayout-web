@@ -1,5 +1,5 @@
 /** 커스텀 테스트 케이스 전체 섹션 컴포넌트 */
-import { useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import type { CustomTestCase, CustomTestCasesChangePayload } from './types';
 import { CustomTestCaseItem } from './CustomTestCaseItem';
 import FormActionButtons from '../common/FormActionButtons';
@@ -23,23 +23,29 @@ export default function CustomTestCasesSection({ problemId, onChange }: Props) {
     onChangeRef.current({ cases, isPublic: false });
   }, [cases]);
 
-  const addCase = () => {
+  const addCase = useCallback(() => {
     setCases((prev) => [...prev, { id: crypto.randomUUID(), input: '', output: '' }]);
-  };
+  }, []);
 
-  const clearForm = () => {
+  const clearForm = useCallback(() => {
     setCases([]);
-  };
+  }, []);
 
-  const submit = async () => {
+  const submit = useCallback(async () => {
     if (!Number.isInteger(problemId) || problemId <= 0) {
       alert('유효한 문제 번호가 필요합니다.');
       return;
     }
 
-    const hasIncompleteCase = cases.some((c) => {
-      const hasInput = c.input.trim() !== '';
-      const hasOutput = c.output.trim() !== '';
+    const normalizedCases = cases.map((c) => ({
+      ...c,
+      input: c.input.trim(),
+      output: c.output.trim(),
+    }));
+
+    const hasIncompleteCase = normalizedCases.some((c) => {
+      const hasInput = c.input !== '';
+      const hasOutput = c.output !== '';
       return hasInput !== hasOutput;
     });
 
@@ -48,7 +54,7 @@ export default function CustomTestCasesSection({ problemId, onChange }: Props) {
       return;
     }
 
-    const validCases = cases.filter((c) => c.input.trim() !== '' && c.output.trim() !== '');
+    const validCases = normalizedCases.filter((c) => c.input !== '' && c.output !== '');
 
     if (validCases.length === 0) {
       alert('제출할 테스트 케이스를 1개 이상 작성해주세요.');
@@ -69,6 +75,7 @@ export default function CustomTestCasesSection({ problemId, onChange }: Props) {
       const failedCaseIds = validCases
         .filter((_, index) => results[index].status === 'rejected')
         .map((c) => c.id);
+      const failedCaseIdSet = new Set(failedCaseIds);
 
       const successCount = results.filter((result) => result.status === 'fulfilled').length;
 
@@ -81,7 +88,7 @@ export default function CustomTestCasesSection({ problemId, onChange }: Props) {
       setCases((prev) =>
         prev.filter((c) => {
           const isEmpty = c.input.trim() === '' && c.output.trim() === '';
-          const isFailed = failedCaseIds.includes(c.id);
+          const isFailed = failedCaseIdSet.has(c.id);
 
           return isEmpty || isFailed;
         }),
@@ -93,18 +100,18 @@ export default function CustomTestCasesSection({ problemId, onChange }: Props) {
       }
 
       alert(`${successCount}개의 테스트 케이스가 등록되었습니다.`);
-    } catch (error) {
+    } catch {
       alert('테스트 케이스 등록에 실패했습니다.');
     }
-  };
+  }, [cases, problemId]);
 
-  const updateCase = (id: string, field: 'input' | 'output', value: string) => {
+  const updateCase = useCallback((id: string, field: 'input' | 'output', value: string) => {
     setCases((prev) => prev.map((c) => (c.id === id ? { ...c, [field]: value } : c)));
-  };
+  }, []);
 
-  const removeCase = (id: string) => {
+  const removeCase = useCallback((id: string) => {
     setCases((prev) => prev.filter((c) => c.id !== id));
-  };
+  }, []);
 
   return (
     <section className="shadow-soft rounded-xl border border-slate-200 bg-white dark:border-slate-700 dark:bg-slate-800">

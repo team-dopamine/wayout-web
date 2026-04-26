@@ -1,3 +1,4 @@
+import type { ReactNode } from 'react';
 import ProblemHeader from './ProblemHeader';
 import ProblemRow from './ProblemRow';
 import type { Problem } from '@/apis/problems/problems.type';
@@ -18,37 +19,36 @@ export default function ProblemTable({
   currentPage,
   onPageChange,
 }: Props) {
-  const renderContent = () => {
-    if (isLoading) {
-      return (
-        <tr>
-          <td colSpan={4} className="py-20 text-center text-sm text-slate-500">
-            <span className="material-symbols-outlined animate-spin text-4xl text-blue-500">
-              progress_activity
-            </span>
-          </td>
-        </tr>
-      );
-    }
+  let content: ReactNode;
 
-    if (problems.length === 0) {
-      return (
-        <tr>
-          <td colSpan={4}>
-            <div className="flex min-h-[400px] w-full flex-col items-center justify-center space-y-4">
-              <div className="flex h-16 w-16 items-center justify-center rounded-full bg-slate-50 dark:bg-slate-800/50">
-                <span className="material-symbols-outlined text-4xl text-slate-300 dark:text-slate-600">
-                  upcoming
-                </span>
-              </div>
-              <p className="text-sm text-slate-500 dark:text-slate-400">등록된 문제가 없습니다.</p>
+  if (isLoading) {
+    content = (
+      <tr>
+        <td colSpan={4} className="py-20 text-center text-sm text-slate-500">
+          <span className="material-symbols-outlined animate-spin text-4xl text-blue-500">
+            progress_activity
+          </span>
+        </td>
+      </tr>
+    );
+  } else if (problems.length === 0) {
+    content = (
+      <tr>
+        <td colSpan={4}>
+          <div className="flex min-h-[400px] w-full flex-col items-center justify-center space-y-4">
+            <div className="flex h-16 w-16 items-center justify-center rounded-full bg-slate-50 dark:bg-slate-800/50">
+              <span className="material-symbols-outlined text-4xl text-slate-300 dark:text-slate-600">
+                upcoming
+              </span>
             </div>
-          </td>
-        </tr>
-      );
-    }
-    return problems.map((problem) => <ProblemRow key={problem.problemId} problem={problem} />);
-  };
+            <p className="text-sm text-slate-500 dark:text-slate-400">등록된 문제가 없습니다.</p>
+          </div>
+        </td>
+      </tr>
+    );
+  } else {
+    content = problems.map((problem) => <ProblemRow key={problem.problemId} problem={problem} />);
+  }
 
   return (
     <div className="w-full">
@@ -56,7 +56,7 @@ export default function ProblemTable({
         <table className="min-w-full table-fixed divide-y divide-slate-200 dark:divide-slate-700">
           <ProblemHeader />
           <tbody className="divide-y divide-slate-100 bg-white dark:divide-slate-700/50 dark:bg-transparent">
-            {renderContent()}
+            {content}
           </tbody>
         </table>
       </div>

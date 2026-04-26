@@ -22,10 +22,11 @@ export default function ProblemSubmissionsPage() {
   const [totalItems, setTotalItems] = useState(0);
   const [isLoading, setIsLoading] = useState(false);
 
-  const totalPages = Math.ceil(totalItems / ITEMS_PER_PAGE);
+  const totalPages = Math.max(1, Math.ceil(totalItems / ITEMS_PER_PAGE));
 
   useEffect(() => {
     if (!numericProblemId) return;
+    const problemId = numericProblemId;
 
     let isIgnore = false;
 
@@ -33,7 +34,7 @@ export default function ProblemSubmissionsPage() {
       try {
         setIsLoading(true);
         const data = await getProblemSubmissions({
-          problemId: numericProblemId as number,
+          problemId,
           page: page - 1, // 서버에서 page 기본: 0
           size: ITEMS_PER_PAGE,
         });
@@ -77,11 +78,7 @@ export default function ProblemSubmissionsPage() {
 
             <footer className="border-t border-slate-200 bg-white px-4 py-3 dark:border-slate-700 dark:bg-slate-800 sm:px-6">
               <div className="flex justify-end">
-                <Pagination
-                  currentPage={page}
-                  totalPages={Math.max(totalPages, 1)}
-                  onChange={setPage}
-                />
+                <Pagination currentPage={page} totalPages={totalPages} onChange={setPage} />
               </div>
             </footer>
           </>

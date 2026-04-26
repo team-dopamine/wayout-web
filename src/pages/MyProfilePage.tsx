@@ -10,6 +10,14 @@ import { getMySolutionsApi } from '@/apis/solutions/solutions';
 import { MAX_LENGTH, validateNickname } from '@/constants/nickname';
 import { toContribution, toSubmission } from '@/utils/profile';
 
+const CONTRIBUTION_PAGE_SIZE = 100;
+
+const filterMap: Record<TabKey, (rows: Contribution[]) => Contribution[]> = {
+  all: (rows) => rows,
+  correct: (rows) => rows.filter((row) => row.type === 'Correct Code'),
+  incorrect: (rows) => rows.filter((row) => row.type === 'Incorrect Code'),
+};
+
 export default function MyProfilePage() {
   const [nickname, setNickname] = useState('');
   const [email, setEmail] = useState('');
@@ -24,24 +32,40 @@ export default function MyProfilePage() {
 
   // 프로필 정보 조회
   useEffect(() => {
+    let isCancelled = false;
+
     const fetchMyProfile = async () => {
       try {
         const data = await getMyProfile();
+
+        if (isCancelled) return;
+
         setNickname(data.nickname);
         setEmail(data.email);
       } catch (error) {
+        if (isCancelled) return;
+
         console.error(error);
         alert('프로필 정보를 불러오지 못했어요.');
       } finally {
-        setIsLoading(false);
+        if (!isCancelled) {
+          setIsLoading(false);
+        }
       }
     };
     fetchMyProfile();
+
+    return () => {
+      isCancelled = true;
+    };
   }, []);
 
   // 기여 & 제출 조회
   useEffect(() => {
     const fetchContributions = async () => {
+    let isCancelled = false;
+
+    const fetchMySolutions = async () => {
       try {
         setIsContributionLoading(true);
         const [solRes, subRes] = await Promise.all([
@@ -51,14 +75,32 @@ export default function MyProfilePage() {
 
         setSolutions(solRes.content.map(toContribution));
         setSubmissions(subRes.content.map(toSubmission));
+        const data = await getMySolutionsApi({
+          page: 0,
+          size: CONTRIBUTION_PAGE_SIZE,
+          sort: ['createdAt,DESC'],
+        });
+
+        if (isCancelled) return;
+
+        setContributions(data.content.map(toContribution));
       } catch (error) {
+        if (isCancelled) return;
+
         console.error(error);
         alert('내역을 불러오지 못했어요.');
       } finally {
-        setIsContributionLoading(false);
+        if (!isCancelled) {
+          setIsContributionLoading(false);
+        }
       }
     };
     fetchContributions();
+    fetchMySolutions();
+
+    return () => {
+      isCancelled = true;
+    };
   }, []);
 
   // 탭 선택에 따른 데이터 필터링 로직
