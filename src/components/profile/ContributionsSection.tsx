@@ -53,7 +53,11 @@ export default function ContributionsSection({
             </tr>
           </thead>
 
-          <ContributionTableBody contributions={contributions} isLoading={isLoading} />
+          <ContributionTableBody
+            contributions={contributions}
+            isLoading={isLoading}
+            tabKey={activeTab}
+          />
         </table>
       </div>
     </div>
