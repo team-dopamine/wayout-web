@@ -33,3 +33,30 @@ export interface SubmissionDetailResponse {
   totalSubmissions: number;
   foundSubmissions: number;
 }
+
+// 내 제출 목록 조회
+
+export type SolutionType = 'CORRECT' | 'GENERATOR';
+export interface MySubmission {
+  id: number;
+  problemNo: number;
+  platform: string;
+  title: string;
+  language: Language;
+  createdAt: string;
+  type?: SolutionType;
+}
+
+export interface GetSubmissionsParams {
+  page?: number;
+  size?: number;
+  sort?: string[];
+}
+
+export interface PagedSubmissionResponse {
+  content: MySubmission[];
+  totalPages: number;
+  totalElements: number;
+  size: number;
+  number: number;
+}
