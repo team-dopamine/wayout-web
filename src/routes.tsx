@@ -11,6 +11,7 @@ import ProblemShellLayout from '@/components/layout/ProblemShellLayout';
 import ProblemSubmissionPage from '@/pages/ProblemSubmissionPage';
 import SubmissionsPage from '@/pages/SubmissionsPage';
 import SubmissionDetailPage from '@/pages/SubmissionDetailPage';
+import MyContributionDetailPage from '@/pages/MyContributionDetailPage';
 import NotFoundPage from '@/pages/NotFoundPage';
 
 export const router = createBrowserRouter([
@@ -29,6 +30,10 @@ export const router = createBrowserRouter([
           { path: 'contribute/:problemPlatform/:problemNo', element: <SolutionSubmitPage /> }, // 정답/솔루션 기여 페이지
           { path: 'submissions/:problemPlatform/:problemNo', element: <ProblemSubmissionPage /> }, // 특정 문제의 제출 현황 목록 페이지
           { path: 'submission/:problemPlatform/:problemNo', element: <SubmissionDetailPage /> }, // 특정 문제의 제출 기록 페이지
+          {
+            path: 'my-contribution/:problemPlatform/:problemNo',
+            element: <MyContributionDetailPage />,
+          },
         ],
       },
       // 인증 및 사용자 계정 관련
