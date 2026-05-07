@@ -16,6 +16,8 @@ export interface GetMySolutionsRequest {
 }
 
 export interface MySolutionItem {
+  id?: number;
+  solutionId?: number;
   problemId: number;
   problemNo: number;
   platform: string;
@@ -31,4 +33,15 @@ export interface GetMySolutionsResponse {
   totalPages: number;
   size: number;
   number: number;
+}
+
+export interface MySolutionDetailResponse {
+  id: number;
+  problemId: number;
+  problemNo: number;
+  title: string;
+  sourceCode: string;
+  language: SolutionLanguage;
+  contributionDate: string;
+  isOpen: boolean;
 }
