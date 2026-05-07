@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import { useLocation, useNavigate, useSearchParams } from 'react-router-dom';
 import { getMySolutionDetailApi } from '@/apis/solutions/solutions';
 import type { MySolutionDetailResponse } from '@/apis/solutions/solutions.type';
@@ -28,16 +28,17 @@ export default function MyContributionDetailPage() {
   const location = useLocation();
   const [searchParams] = useSearchParams();
   const contributionIdParam = searchParams.get('id');
-  const locationState = useMemo(
-    () =>
-      location.state && typeof location.state === 'object'
-        ? (location.state as Record<string, unknown>)
-        : {},
-    [location.state],
-  );
+  const locationStateRef = useRef<Record<string, unknown>>({});
 
   const [detail, setDetail] = useState<MySolutionDetailResponse | null>(null);
   const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    locationStateRef.current =
+      location.state && typeof location.state === 'object'
+        ? (location.state as Record<string, unknown>)
+        : {};
+  }, [location.state]);
 
   const handleCopy = useCallback(async (text: string) => {
     try {
@@ -67,6 +68,7 @@ export default function MyContributionDetailPage() {
 
         if (!isCancelled) {
           setDetail(data);
+          const locationState = locationStateRef.current;
           const shouldUpdateHeaderState =
             locationState.problemTitle !== data.title ||
             locationState.language !== data.language ||
@@ -107,7 +109,7 @@ export default function MyContributionDetailPage() {
     return () => {
       isCancelled = true;
     };
-  }, [contributionIdParam, location.pathname, location.search, locationState, navigate]);
+  }, [contributionIdParam, location.pathname, location.search, navigate]);
 
   if (isLoading) return <LoadingView />;
   if (!detail) return <EmptyView />;
