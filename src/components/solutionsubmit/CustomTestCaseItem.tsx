@@ -28,26 +28,26 @@ export function CustomTestCaseItem({
       <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
         <div>
           <label className="mb-1 block text-xs font-medium uppercase tracking-wide text-slate-500 dark:text-slate-400">
-            Input
+            입력값
           </label>
           <textarea
             value={input}
             onChange={(e) => onChangeInput(e.target.value)}
             rows={4}
-            placeholder="Enter test case input..."
+            placeholder="테스트 케이스 입력값을 입력해주세요."
             className="w-full resize-none rounded-md border border-slate-300 bg-white p-3 font-mono text-sm shadow-sm focus:border-blue-500 focus:ring-blue-500 dark:border-slate-600 dark:bg-slate-800 dark:text-slate-200"
           />
         </div>
 
         <div>
           <label className="mb-1 block text-xs font-medium uppercase tracking-wide text-slate-500 dark:text-slate-400">
-            Expected Output
+            예상 결과값
           </label>
           <textarea
             value={output}
             onChange={(e) => onChangeOutput(e.target.value)}
             rows={4}
-            placeholder="Enter expected output..."
+            placeholder="테스트 케이스의 예상 결과값을 입력해주세요."
             className="w-full resize-none rounded-md border border-slate-300 bg-white p-3 font-mono text-sm shadow-sm focus:border-blue-500 focus:ring-blue-500 dark:border-slate-600 dark:bg-slate-800 dark:text-slate-200"
           />
         </div>
