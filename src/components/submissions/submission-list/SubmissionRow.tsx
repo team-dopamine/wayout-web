@@ -7,10 +7,14 @@ interface SubmissionRowProps {
 }
 
 export default function SubmissionRow({ data, mode = 'problem' }: SubmissionRowProps) {
-  const problemTitle = data.problem;
   const summaryLabel = mode === 'platform' ? data.platform : data.problem;
   const isLinkDisabled = !data.open;
   const executionTimeLabel = data.executionTime;
+
+  const summaryClassName =
+    mode === 'platform'
+      ? 'text-sm font-medium text-slate-500 dark:text-slate-400'
+      : 'text-sm font-semibold text-slate-900 dark:text-white';
 
   return (
     <tr className="transition-colors hover:bg-slate-50 dark:hover:bg-slate-800/50">
@@ -25,7 +29,7 @@ export default function SubmissionRow({ data, mode = 'problem' }: SubmissionRowP
           <Link
             to={`/submission/${data.platform}/${data.problemNo}?id=${data.id}`}
             className="block text-sm font-semibold text-blue-600 hover:underline dark:text-blue-400"
-            state={problemTitle}
+            state={{ title: data.problem }}
           >
             {data.id}
           </Link>
@@ -36,14 +40,13 @@ export default function SubmissionRow({ data, mode = 'problem' }: SubmissionRowP
       </td>
 
       {/* 사용자 */}
-      <td className="px-4 py-5 align-middle">{data.user}</td>
+      <td className="px-4 py-5 align-middle text-sm text-slate-500 dark:text-slate-400">
+        {data.user}
+      </td>
 
       {/* 문제 or 플랫폼 */}
       <td className="px-4 py-5 align-middle">
-        <div
-          className="truncate text-sm font-semibold text-slate-900 dark:text-white"
-          title={summaryLabel}
-        >
+        <div className={`truncate ${summaryClassName}`} title={summaryLabel}>
           {summaryLabel}
         </div>
       </td>
