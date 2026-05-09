@@ -29,8 +29,12 @@ function formatSubmittedAt(dateString: string) {
 }
 
 export function toContribution(item: MySolutionItem): Contribution {
+  const solutionId = item.id ?? item.solutionId;
+
   return {
-    codeId: String(item.problemId),
+    codeId: String(solutionId ?? item.problemId),
+    problemId: item.problemId,
+    problemNo: item.problemNo,
     problemName: item.problemTitle,
     language: formatLanguage(item.language),
     platform: item.platform,
@@ -41,6 +45,8 @@ export function toContribution(item: MySolutionItem): Contribution {
 export function toSubmission(item: MySubmission): Contribution {
   return {
     codeId: String(item.id),
+    problemId: item.problemNo,
+    problemNo: item.problemNo,
     problemName: item.title,
     language: formatLanguage(item.language),
     platform: item.platform,

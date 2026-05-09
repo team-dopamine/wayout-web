@@ -1,3 +1,4 @@
+import { useNavigate } from 'react-router-dom';
 import { type Contribution } from '@/components/profile/contributions.constants';
 
 function EmptyRow({ message, isLoading = false }: { message: string; isLoading?: boolean }) {
@@ -62,6 +63,31 @@ export default function ContributionTableBody({
   isLoading?: boolean;
   tabKey: string;
 }) {
+  const navigate = useNavigate();
+  const isContributionTab = tabKey === 'contributions';
+
+  const handleContributionDetailClick = (item: Contribution) => {
+    navigate(`/my-contribution/${item.platform}/${item.problemNo}?id=${item.codeId}`, {
+      state: {
+        platform: item.platform,
+        problemNo: item.problemNo,
+        problemTitle: item.problemName,
+        language: item.language,
+        submittedAt: item.submittedAt,
+      },
+    });
+  };
+
+  const handleProblemClick = (item: Contribution) => {
+    navigate(`/problems/${item.platform.toLowerCase()}/${item.problemNo}?id=${item.problemId}`, {
+      state: {
+        platform: item.platform,
+        problemNo: item.problemNo,
+        problemTitle: item.problemName,
+      },
+    });
+  };
+
   return (
     <tbody className="divide-y divide-slate-100 dark:divide-slate-800">
       {isLoading ? (
@@ -72,13 +98,43 @@ export default function ContributionTableBody({
         contributions.map((item, index) => (
           <tr
             key={`${tabKey}-${item.codeId}-${index}`}
-            className="hover:bg-slate-50/70 dark:hover:bg-slate-800/50"
+            onClick={() =>
+              isContributionTab ? handleContributionDetailClick(item) : handleProblemClick(item)
+            }
+            className="cursor-pointer hover:bg-slate-50/70 dark:hover:bg-slate-800/50"
           >
             <td className="px-6 py-4 text-sm font-medium text-blue-600 dark:text-blue-400">
-              {item.codeId}
+              {isContributionTab ? (
+                <button
+                  type="button"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    handleContributionDetailClick(item);
+                  }}
+                  className="font-medium text-blue-600 underline-offset-4 hover:underline dark:text-blue-400"
+                >
+                  {item.codeId}
+                </button>
+              ) : (
+                item.codeId
+              )}
             </td>
             <td className="px-6 py-4 text-sm font-medium text-slate-800 dark:text-slate-200">
-              {item.problemName}
+              <button
+                type="button"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  if (isContributionTab) {
+                    handleContributionDetailClick(item);
+                    return;
+                  }
+
+                  handleProblemClick(item);
+                }}
+                className="text-left font-medium text-slate-800 underline-offset-4 hover:text-blue-600 hover:underline dark:text-slate-200 dark:hover:text-blue-400"
+              >
+                {item.problemName}
+              </button>
             </td>
             <td className="px-6 py-4 text-sm text-slate-600 dark:text-slate-400">
               {item.language}

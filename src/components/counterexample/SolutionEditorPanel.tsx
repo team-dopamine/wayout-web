@@ -57,38 +57,48 @@ export default function SolutionEditorPanel({
           <span className="text-sm font-semibold text-slate-700 dark:text-slate-200">
             {readOnly ? '제출된 코드' : '제출할 소스코드'}
           </span>
-          <div className="h-4 w-px bg-slate-300 dark:bg-slate-600" />
 
-          <select
-            value={language}
-            disabled={readOnly}
-            onChange={(e) => {
-              if (isLanguage(e.target.value)) {
-                onChangeLanguage?.(e.target.value);
-              }
-            }}
-            className={`rounded-md border border-slate-300 bg-white py-1.5 pl-3 pr-8 text-sm shadow-sm outline-none transition-colors dark:border-slate-600 dark:bg-slate-700 dark:text-white ${
-              readOnly
-                ? 'cursor-default opacity-80'
-                : 'cursor-pointer focus:border-blue-500 focus:ring-2 focus:ring-blue-500'
-            }`}
-          >
-            {resolvedLanguageOptions.map((opt) => (
-              <option key={opt.value} value={opt.value}>
-                {opt.label}
-              </option>
-            ))}
-          </select>
+          {readOnly ? (
+            <button
+              type="button"
+              onClick={onCopy}
+              className="text-slate-400 transition-colors hover:text-slate-600 dark:hover:text-slate-200"
+              aria-label="코드 복사"
+            >
+              ⧉
+            </button>
+          ) : (
+            <>
+              <div className="h-4 w-px bg-slate-300 dark:bg-slate-600" />
+              <select
+                value={language}
+                onChange={(e) => {
+                  if (isLanguage(e.target.value)) {
+                    onChangeLanguage?.(e.target.value);
+                  }
+                }}
+                className="cursor-pointer rounded-md border border-slate-300 bg-white py-1.5 pl-3 pr-8 text-sm shadow-sm outline-none transition-colors focus:border-blue-500 focus:ring-2 focus:ring-blue-500 dark:border-slate-600 dark:bg-slate-700 dark:text-white"
+              >
+                {resolvedLanguageOptions.map((opt) => (
+                  <option key={opt.value} value={opt.value}>
+                    {opt.label}
+                  </option>
+                ))}
+              </select>
+            </>
+          )}
         </div>
 
-        <button
-          type="button"
-          onClick={onCopy}
-          className="text-slate-400 transition-colors hover:text-slate-600 dark:hover:text-slate-200"
-          aria-label="코드 복사"
-        >
-          ⧉
-        </button>
+        {!readOnly && (
+          <button
+            type="button"
+            onClick={onCopy}
+            className="text-slate-400 transition-colors hover:text-slate-600 dark:hover:text-slate-200"
+            aria-label="코드 복사"
+          >
+            ⧉
+          </button>
+        )}
       </div>
 
       <CodeEditor
