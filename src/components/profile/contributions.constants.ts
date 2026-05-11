@@ -6,6 +6,8 @@ export type ContributionType = (typeof CONTRIBUTION_TYPES)[number];
 
 export type Contribution = {
   codeId: string;
+  problemId: number;
+  problemNo: number;
   problemName: string;
   language: string;
   platform: string;
