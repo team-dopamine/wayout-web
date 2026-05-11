@@ -1,4 +1,6 @@
 /** 문제 정보와 관련 기능 탭을 함께 표시하는 상단 카드 공통 컴포넌트 */
+import type { ReactNode } from 'react';
+
 type ProblemInfoTabKey = 'find' | 'status' | 'contribute' | 'submission';
 
 type ProblemInfoTab = {
@@ -14,6 +16,7 @@ type Props = {
   tabs?: ProblemInfoTab[];
   activeTab?: ProblemInfoTabKey;
   onTabChange?: (key: ProblemInfoTabKey) => void;
+  rightContent?: ReactNode;
   className?: string;
 };
 
@@ -31,9 +34,11 @@ export default function ProblemInfoCard({
   tabs = DEFAULT_TABS,
   activeTab = 'find',
   onTabChange,
+  rightContent,
   className = '',
 }: Props) {
   const showTabs = Boolean(tabs?.length);
+  const shouldRenderRight = Boolean(rightContent) || activeTab !== 'submission';
 
   const cn = (...classes: (string | boolean | undefined)[]) => classes.filter(Boolean).join(' ');
 
@@ -52,9 +57,11 @@ export default function ProblemInfoCard({
         </h1>
       </div>
 
-      {activeTab !== 'submission' && (
+      {shouldRenderRight && (
         <div className="flex items-center gap-4">
-          {showTabs ? (
+          {rightContent ? (
+            rightContent
+          ) : showTabs ? (
             <nav
               className="flex items-center rounded-lg bg-slate-100 p-1 dark:bg-slate-700/40"
               aria-label="Problem tabs"

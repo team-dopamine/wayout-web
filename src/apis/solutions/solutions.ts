@@ -3,6 +3,7 @@ import type {
   PostSolutionRequest,
   GetMySolutionsRequest,
   GetMySolutionsResponse,
+  MySolutionDetailResponse,
 } from './solutions.type';
 
 // 정답 코드 등록 API
@@ -24,5 +25,13 @@ export async function getMySolutionsApi({
     },
   });
 
+  return response.data;
+}
+
+// 로그인한 사용자의 정답 코드 기여 상세 조회 API
+export async function getMySolutionDetailApi(
+  solutionId: number | string,
+): Promise<MySolutionDetailResponse> {
+  const response = await api.get<MySolutionDetailResponse>(`/solutions/me/${solutionId}`);
   return response.data;
 }
