@@ -45,7 +45,6 @@ export default function ProblemShellLayout() {
   };
 
   const problemInfo = useMemo(() => {
-<<<<<<< HEAD
     const hasValidState = isProblemState(state);
 
     return {
@@ -66,28 +65,6 @@ export default function ProblemShellLayout() {
     if (pathname.includes(paths.contribute)) return 'contribute';
     if (pathname.includes(paths.status)) return 'status';
     if (pathname.includes(paths.submission)) return 'submission';
-=======
-    return {
-      platform: (problemPlatform || String(locationState.platform || 'boj')).toLowerCase(),
-      problemNo: problemNo || String(locationState.problemNo || '0000'),
-      title: String(locationState.problemTitle || 'Loading...'),
-      id: currentProblemId,
-    };
-  }, [
-    problemPlatform,
-    problemNo,
-    locationState.platform,
-    locationState.problemNo,
-    locationState.problemTitle,
-    currentProblemId,
-  ]);
-
-  const activeTab = useMemo(() => {
-    if (pathname.includes('/my-contribution')) return 'submission';
-    if (pathname.includes('/contribute')) return 'contribute';
-    if (pathname.includes('/submissions')) return 'status';
-    if (pathname.includes('/submission')) return 'submission';
->>>>>>> 1d36fecf29891c93cc9c23676bb6191ff8372783
     return 'find';
   }, [pathname]);
   const isMyContributionDetail = pathname.includes('/my-contribution');
