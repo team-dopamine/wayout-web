@@ -67,7 +67,14 @@ export default function useProblemSearch() {
     (selectedProblem: ProblemSearch) => {
       setSearchKeyword('');
       setSearchResults([]);
-      navigate(`/problems/${selectedProblem.platform}/${selectedProblem.problemNo}`);
+      navigate(
+        `/problems/${selectedProblem.platform}/${selectedProblem.problemNo}?id=${selectedProblem.problemId}`,
+        {
+          state: {
+            title: selectedProblem.title,
+          },
+        },
+      );
     },
     [navigate],
   );
