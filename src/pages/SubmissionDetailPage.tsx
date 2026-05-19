@@ -4,7 +4,7 @@ import SolutionEditorPanel from '@/components/counterexample/SolutionEditorPanel
 import CounterExampleStatusPanel from '@/components/counterexample/CounterExampleStatusPanel';
 import SubmissionInfoBar from '@/components/submissions/submission-detail/SubmissionInfoBar';
 import { getSubmissionDetail } from '@/apis/submissions/submissions';
-import type { Language } from '@/types/counterexample';
+import type { Language, FailedCase } from '@/types/counterexample';
 import type { SubmissionDetailResponse } from '@/apis/submissions/submissions.type';
 
 const DEFAULT_LANGUAGE: Language = 'cpp';
@@ -23,7 +23,7 @@ export default function SubmissionDetailPage() {
 
   const [detail, setDetail] = useState<SubmissionDetailResponse | null>(null);
   const [isLoading, setIsLoading] = useState(true);
-  // 코드 복사 핸들러
+
   const handleCopy = useCallback(async (text: string) => {
     try {
       await navigator.clipboard.writeText(text);
@@ -50,7 +50,6 @@ export default function SubmissionDetailPage() {
 
       try {
         const data = await getSubmissionDetail(submissionId);
-
         if (!isCancelled) {
           setDetail(data);
         }
@@ -73,11 +72,15 @@ export default function SubmissionDetailPage() {
     };
   }, [submissionIdParam]);
 
-  // 로딩 상태 우선 처리
   if (isLoading) return <LoadingView />;
-
-  // 데이터가 없는 경우 처리
   if (!detail) return <EmptyView />;
+
+  const failedCases: FailedCase[] = (detail.counterExamples ?? []).map((ce, index) => ({
+    id: index + 1,
+    input: ce.input,
+    expected: ce.expectedOutput,
+    output: ce.actualOutput,
+  }));
 
   return (
     <div className="flex w-full flex-col space-y-6">
@@ -97,8 +100,8 @@ export default function SubmissionDetailPage() {
 
         <div className="h-full min-h-0 lg:col-span-1">
           <CounterExampleStatusPanel
-            failedCount={detail.foundSubmissions ?? 0}
-            cases={[]} // 상세 목록 배열이 API 응답에 추가되기 전까지는 빈 배열 전달
+            failedCount={detail.counterExampleCount ?? 0}
+            cases={failedCases}
             isLoading={false}
             hasSearched={true}
           />

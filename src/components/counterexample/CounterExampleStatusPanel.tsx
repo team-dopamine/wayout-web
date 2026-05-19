@@ -65,7 +65,7 @@ export default function CounterExampleStatusPanel({
                   입력값
                 </span>
                 <div className="mt-1 overflow-x-auto whitespace-pre-wrap rounded border border-slate-200 bg-white p-2 font-mono text-xs text-slate-700 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-300">
-                  {tc.input}
+                  {tc.input.replace(/\\n/g, '\n')}
                 </div>
               </div>
 
@@ -75,7 +75,7 @@ export default function CounterExampleStatusPanel({
                     예상 출력
                   </span>
                   <div className="mt-1 inline-block rounded border border-green-100 bg-green-50 px-2 py-1 font-mono text-xs text-green-600 dark:border-green-900/30 dark:bg-green-900/20 dark:text-green-400">
-                    {tc.expected}
+                    {tc.expected.replace(/\\n/g, '\n')}
                   </div>
                 </div>
 
@@ -84,7 +84,7 @@ export default function CounterExampleStatusPanel({
                     실제 출력
                   </span>
                   <div className="mt-1 inline-block rounded border border-red-100 bg-red-50 px-2 py-1 font-mono text-xs font-bold text-red-600 dark:border-red-900/30 dark:bg-red-900/20 dark:text-red-400">
-                    {tc.output}
+                    {tc.output.replace(/\\n/g, '\n')}
                   </div>
                 </div>
               </div>

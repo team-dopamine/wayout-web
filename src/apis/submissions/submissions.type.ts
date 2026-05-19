@@ -20,23 +20,32 @@ export interface PageResponse<T> {
   number: number;
 }
 
+// 반례 상세 타입
+export interface CounterExample {
+  input: string;
+  expectedOutput: string;
+  actualOutput: string;
+}
+
 // 특정 문제의 제출 기록 상세 조회 응답 타입
 export interface SubmissionDetailResponse {
-  problemId: number;
+  id: number;
   problemNo: number;
   title: string;
   sourceCode: string;
+  found: boolean;
+  totalTestcaseCount: number;
+  counterExampleCount: number;
+  counterExamples: CounterExample[];
   language: string;
   platform: 'BOJ' | 'SWEA';
-  executionTime: string;
+  executionTime: number;
   createdAt: string;
-  totalSubmissions: number;
-  foundSubmissions: number;
 }
 
 // 내 제출 목록 조회
-
 export type SolutionType = 'CORRECT' | 'GENERATOR';
+
 export interface MySubmission {
   id: number;
   problemNo: number;
